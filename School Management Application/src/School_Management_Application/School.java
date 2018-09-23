@@ -1,4 +1,4 @@
-package nhat_buoi1;
+package School_Management_Application;
 
 public class School {
 	private String name;

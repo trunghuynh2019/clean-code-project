@@ -1,10 +1,10 @@
-package nhat_buoi1;
+package School_Management_Application;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 // Nhap danh sach truong hoc vaf hien thi
 
-public class Nhat_Buoi1 {
+public class School_Management_Application {
     private static ArrayList<School> schoolList = new ArrayList<School>();
     private static Scanner sc = new Scanner(System.in);
 
