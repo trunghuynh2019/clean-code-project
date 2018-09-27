@@ -5,26 +5,27 @@
  * @date Sep 26, 2018
  * @version 1.0
  */
-package model;
+package sma.object;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class School {
 	private String name;
 	private String address;
-	private List<Teacher> teacherList;
-	private List<Student> studentList;
+	private List<Teacher> teacherList = new ArrayList<>();
+	private int numOfStudents;
 	
 	public School() {
 		super();
 	}
 
-	public School(String name, String address, List<Teacher> teacherList, List<Student> studentList) {
+	public School(String name, String address, List<Teacher> teacherList, int numOfStudents) {
 		super();
 		this.name = name;
 		this.address = address;
 		this.teacherList = teacherList;
-		this.studentList = studentList;
+		this.numOfStudents = numOfStudents;
 	}
 
 
@@ -45,28 +46,30 @@ public class School {
 		this.address = address;
 	}
 
-	public List<Teacher> getNumOfTeachers() {
+	public List<Teacher> getTeacherList() {
 		return teacherList;
 	}
 
-	public void setNumOfTeachers(List<Teacher> teacherList) {
+	public void setTeacherList(List<Teacher> teacherList) {
 		this.teacherList = teacherList;
 	}
 
-	public List<Student> getNumOfStudents() {
-		return studentList;
+	public int getNumOfStudents() {
+		return numOfStudents;
 	}
 
-	public void setNumOfStudents(List<Student> studentList) {
-		this.studentList = studentList;
+	public void setNumOfStudents(int numOfStudents) {
+		this.numOfStudents = numOfStudents;
 	}
 
 	@Override
 	public String toString() {
-		return "Name: " + name + "\n"
+		return "===========================================\n" 
+				+ "School's name: " + name + "\n"
 				+ "Address: " + address + "\n"
 				+ "The number of teachers: " + teacherList.size() + "\n"
-				+ "The number of students: " + studentList.size() + "\n";
+				+ "The number of students: " + numOfStudents + "\n"
+				+ "===========================================\n";
 	}
 	
 }
