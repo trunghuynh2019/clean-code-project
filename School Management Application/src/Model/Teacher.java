@@ -1,4 +1,4 @@
-package School_Management_Application;
+package Model;
 
 public class Teacher {
     private String name;

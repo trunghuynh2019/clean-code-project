@@ -1,4 +1,4 @@
-package School_Management_Application;
+package Model;
 
 import java.util.ArrayList;
 import java.util.Iterator;

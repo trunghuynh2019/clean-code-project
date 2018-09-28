@@ -1,4 +1,5 @@
 package School_Management_Application;
+import Model.School;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
