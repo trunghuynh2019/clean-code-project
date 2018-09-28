@@ -12,6 +12,10 @@ public class SchoolView {
 		System.out.println(school.toString());
 		System.out.println("--------------------------------");
 	}
+	
+	public static void displaySchoolNotFound() {
+		System.out.println("School not found!");
+	}
 
 	public static void displayAllSchool(List<School> schoolList) {
 		if (schoolList.isEmpty()) {

@@ -6,8 +6,10 @@ import java.util.Scanner;
 
 import sms.function.Function;
 import sms.model.School;
+import sms.model.Teacher;
 import sms.view.MainView;
 import sms.view.SchoolView;
+import sms.view.TeacherView;
 
 public class Application {
 
@@ -24,25 +26,16 @@ public class Application {
 
 			switch (choice) {
 			case 1: {
-				SchoolView.displayAllSchool(schoolList);
-				MainView.loopAgain(scanner);
+				viewAllSchool(schoolList, scanner);
 				break;
 			}
 			case 2: {
-				/*
-				 * Add a new school to school list.
-				 */
-				School school = new School();
-				SchoolView.insertSchoolData(school, scanner);
-				function.addSchool(schoolList, school);
-				MainView.loopAgain(scanner);
+				addNewSchool(schoolList, scanner, function);
 				break;
 			}
 			case 3: {
-				/*
-				 * Choose a school and show options to do with its teacher list
-				 */
-				MainView.loopAgain(scanner);
+				// Choose a school and show options to do with its teacher list.
+				manageTeachersList(schoolList, scanner, function);
 				break;
 			}
 			case 4:
@@ -53,4 +46,60 @@ public class Application {
 
 	}
 
+	public static void viewAllSchool(List<School> schoolList, Scanner scanner) {
+		SchoolView.displayAllSchool(schoolList);
+		MainView.loopAgain(scanner);
+	}
+
+	public static void addNewSchool(List<School> schoolList, Scanner scanner, Function function) {
+		School school = new School();
+		SchoolView.insertSchoolData(school, scanner);
+		function.addSchool(schoolList, school);
+		MainView.loopAgain(scanner);
+	}
+
+	public static void manageTeachersList(List<School> schoolList, Scanner scanner, Function function) {
+		SchoolView.displayAllSchool(schoolList);
+		MainView.enterSchoolName();
+		School school = function.findSchoolByName(schoolList, scanner.nextLine());
+		if (school == null) {
+			SchoolView.displaySchoolNotFound();
+			return;
+		} else {
+			MainView.displayManageTeacherMenu(school);
+			List<Teacher> teacherList = school.getTeacherList();
+			int _choice = scanner.nextInt();
+			scanner.nextLine();
+			switch (_choice) {
+			case 1: {
+				TeacherView.displayAllTeachersOfSchool(school);
+				break;
+			}
+			case 2: {
+				MainView.enterTeacherName();
+				Teacher teacher = function.findTeacherByName(teacherList, scanner.nextLine());
+				if (teacher == null) {
+					TeacherView.displayTeacherNotFound();
+				} else {
+					TeacherView.displayTeacher(teacher);
+				}
+				break;
+			}
+			case 3: {
+				MainView.enterTeacherAddress();
+				Teacher teacher = function.findTeacherByAddress(teacherList, scanner.nextLine());
+				if (teacher == null) {
+					TeacherView.displayTeacherNotFound();
+				} else {
+					TeacherView.displayTeacher(teacher);
+				}
+				break;
+			}
+			case 4: {
+
+			}
+			}
+		}
+		MainView.loopAgain(scanner);
+	}
 }

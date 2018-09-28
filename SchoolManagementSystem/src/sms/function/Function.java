@@ -18,5 +18,35 @@ public class Function implements FunctionInterface{
 		school.getTeacherList().add(teacher);
 	}
 
+	@Override
+	public School findSchoolByName(List<School> schoolList, String name) {
+		for (School school : schoolList) {
+			if (school.getName().equals(name)) {
+				return school;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Teacher findTeacherByName(List<Teacher> teacherList, String name) {
+		for (Teacher teacher : teacherList) {
+			if (teacher.getName().equals(name)) {
+				return teacher;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Teacher findTeacherByAddress(List<Teacher> teacherList, String address) {
+		for (Teacher teacher : teacherList) {
+			if (teacher.getName().equals(address)) {
+				return teacher;
+			}
+		}
+		return null;
+	}
+
 
 }

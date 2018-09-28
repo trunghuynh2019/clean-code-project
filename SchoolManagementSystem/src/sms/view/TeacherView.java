@@ -1,12 +1,32 @@
 package sms.view;
 
+import java.util.List;
 import java.util.Scanner;
 
+import sms.model.School;
 import sms.model.Teacher;
 
 public class TeacherView {
 	public static void displayTeacher(Teacher teacher) {
 		System.out.println(teacher.toString());
+	}
+
+	public static void displayTeacherNotFound() {
+		System.out.println("Teacher not found!");
+	}
+	
+	public static void displayAllTeachersOfSchool(School school) {
+		if (school.getNumOfTeachers() == 0) {
+			System.out.println("There is no teacher...");
+		} else {
+			int i = 1;
+			List<Teacher> teacherList = school.getTeacherList();
+			for (Teacher teacher : teacherList) {
+				System.out.println("Teacher #" + i++ + ":");
+				displayTeacher(teacher);
+				System.out.println("------");
+			}
+		}
 	}
 
 	public static void insertTeacherData(Teacher teacher, Scanner scanner) {
