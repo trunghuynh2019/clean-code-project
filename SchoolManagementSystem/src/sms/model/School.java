@@ -1,5 +1,6 @@
 package sms.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class School {
@@ -7,7 +8,7 @@ public class School {
 	private String address;
 	private int numOfTeachers;
 	private int numOfStudents;
-	private List<Teacher> teacherList;
+	private List<Teacher> teacherList = new ArrayList<>();
 	
 	public School(String name, String address, int numOfTeachers, int numOfStudents) {
 		super();
