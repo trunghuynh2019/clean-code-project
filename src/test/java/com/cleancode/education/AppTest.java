@@ -2,6 +2,7 @@ package com.cleancode.education;
 
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
+import com.cleancode.education.views.ShowNameWithSpecialCharView;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -52,6 +53,11 @@ public class AppTest
         school.signContractWith(teacher);
         // see how logic is test here!
         assertEquals(1, school.getNumberOfTeacher());
+    }
+    
+    public void nameShouldHaveStartInConsole() {
+    	ShowNameWithSpecialCharView view = new ShowNameWithSpecialCharView();
+    	assertEquals("***name***", view.nameWithThreeStartAround("name"));
     }
     
 }
