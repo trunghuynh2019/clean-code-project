@@ -12,11 +12,12 @@ import java.util.Vector;
  * @author Admin
  */
 public class School {
+
     String name;
     String address;
     int telephoneNumber;
     int numberOfStudent;
-    Vector<Teacher> listTeacher= new Vector<Teacher>();
+    Vector<Teacher> listTeacher = new Vector<Teacher>();
 
     public School(String name, String address, int telephoneNumber, int numberOfStudent) {
         this.name = name;
@@ -27,39 +28,50 @@ public class School {
 
     School() {
     }
-    
-    void addTeacher(Teacher teacher){
+
+    void addTeacher(Teacher teacher) {
         listTeacher.add(teacher);
     }
-    
-    void displayTeacher(){
+
+    void displayTeacher() {
         for (int i = 0; i < listTeacher.size(); i++) {
-            listTeacher.get(i).output();
+            System.out.println(listTeacher.get(i).toString());
         }
     }
-    
-    Teacher findTeacherById(String id){
+
+    Teacher findTeacherById(String id) {
         for (int i = 0; i < listTeacher.size(); i++) {
-            if(listTeacher.get(i).getTeacherId().equals(id))
+            if (listTeacher.get(i).getTeacherId().equals(id)) {
                 return listTeacher.get(i);
             }
+        }
         return null;
     }
-  
-    int findTeacherById2(String id){
+
+    Teacher findTeacherByName(String name) {
         for (int i = 0; i < listTeacher.size(); i++) {
-            if(listTeacher.get(i).getTeacherId().equals(id))
-                return i; 
+            if (listTeacher.get(i).getName().equals(name)) {
+                return listTeacher.get(i);
             }
+        }
+        return null;
+    }
+
+    int findTeacherById2(String id) {
+        for (int i = 0; i < listTeacher.size(); i++) {
+            if (listTeacher.get(i).getTeacherId().equals(id)) {
+                return i;
+            }
+        }
         return -1;
     }
-    
-    void removeTeacher(String id){
-    int position=findTeacherById2(id);
-        if (position==-1){
-          System.out.println("Không có giáo viên này trong trường");
-          return;
-          }
+
+    void removeTeacher(String id) {
+        int position = findTeacherById2(id);
+        if (position == -1) {
+            System.out.println("Không có giáo viên này trong trường");
+            return;
+        }
         listTeacher.remove(position);
     }
 
@@ -105,15 +117,10 @@ public class School {
 
     @Override
     public String toString() {
-        return "School{" + "name=" + name + ", address=" + address + ", telephoneNumber=" + telephoneNumber + ", numberOfStudent=" + numberOfStudent + ", listTeacher=" + listTeacher + '}';
-    }
-    
-    public void output(){
-        System.out.println("");
-        System.out.println("Tên trường: "+ name);
-        System.out.println("Địa chỉ: "+ address);
-        System.out.println("Số điện thoại: "+ telephoneNumber);
-        System.out.println("Số lượng sinh viên: "+ numberOfStudent);
-        System.out.println("Danh sách giáo viên: "+ listTeacher.toString());
+        return "\nTên trường: " + name
+                + "\nĐịa chỉ: " + address
+                + "\nSố điện thoại: " + telephoneNumber
+                + "\nSố lượng sinh viên: " + numberOfStudent
+                + "\nDanh sách giáo viên: " + listTeacher.toString();
     }
 }

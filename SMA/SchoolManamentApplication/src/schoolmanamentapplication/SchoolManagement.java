@@ -13,13 +13,13 @@ import java.util.Vector;
  */
 public class SchoolManagement {
     Vector<School> listSchool= new Vector<School>();
-    void addSchool(School School){
-        listSchool.add(School);
+    void addSchool(School school){
+        listSchool.add(school);
     }
     
     void displaySchool(){
         for (int i = 0; i < listSchool.size(); i++) {
-            listSchool.get(i).output();
+            System.out.println(listSchool.get(i).toString());
         }
     }
     

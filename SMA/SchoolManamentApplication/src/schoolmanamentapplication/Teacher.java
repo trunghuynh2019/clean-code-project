@@ -47,14 +47,7 @@ public class Teacher {
 
     @Override
     public String toString() {
-        return "Teacher{" + "teacherId=" + teacherId + ", name=" + name + ", workingSchool=" + workingSchool + '}';
+        return "\n\tMã giáo viên:" + teacherId + "\n\tTên giáo viên: " + name + "\n\tNơi làm việc: " + workingSchool + "\n";
     }
-    
-    public void output(){
-        System.out.println("");
-        System.out.println("Mã giáo viên: "+ teacherId);
-        System.out.println("Tên giáo viên: "+ name);
-        System.out.println("Nơi làm việc: "+ workingSchool);
-    }
-    
+       
 }
