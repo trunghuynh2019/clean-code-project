@@ -8,7 +8,7 @@ public class School {
 	private int numOfTeachers;
 	private int numOfStudents;
 	private List<Teacher> teacherList;
-
+	
 	public School(String name, String address, int numOfTeachers, int numOfStudents) {
 		super();
 		this.name = name;
