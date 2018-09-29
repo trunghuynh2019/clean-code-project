@@ -1,19 +1,30 @@
 package Model;
 
 public class Teacher {
+    private Integer ID = 0;
     private String name;
     private String address;
+    private String phoneNo;
     
     public Teacher() {
-
-            this.name = "";
-            this.address = "";
+            
+        ID++;
+        name = "";
+        address = "";
+        phoneNo = "";
     }
 
-    public Teacher (String name, String address) {
-
-            this.name = name;
-            this.address = address;
+    public Teacher (String name, String address, String phoneNo) {
+        
+        ID++;
+        this.name = name;
+        this.address = address;
+        this.phoneNo = phoneNo;
+    }
+    
+    public Integer getID(){
+        
+        return ID;
     }
 
     public String getName() {
@@ -34,5 +45,15 @@ public class Teacher {
     public void setAddress(String address){
 
         this.address = address;
+    }
+    
+    public String getPhoneNo(){
+        
+        return phoneNo;
+    }
+    
+    public void setPhoneNo(String phoneNo){
+        
+        this.phoneNo = phoneNo;
     }
 }
