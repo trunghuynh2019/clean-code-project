@@ -1,22 +1,43 @@
 package sms.model;
 
 public class Teacher {
+	private int id;
 	private String name;
-	private String address;
-
-	public Teacher(String name, String address) {
-		super();
-		this.name = name;
-		this.address = address;
-	}
-
-	public Teacher(String name) {
-		super();
-		this.name = name;
-	}
+	private String schoolId;
 
 	public Teacher() {
 		super();
+	}
+
+	public Teacher(int id) {
+		super();
+		this.id = id;
+	}
+
+	public Teacher(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
+	public Teacher(String schoolId) {
+		super();
+		this.schoolId = schoolId;
+	}
+
+	public Teacher(int id, String name, String schoolId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.schoolId = schoolId;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -27,16 +48,16 @@ public class Teacher {
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getSchoolId() {
+		return schoolId;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
 	}
 
 	@Override
 	public String toString() {
-		return "Teacher name: " + this.name + "\nAddress: " + this.address;
+		return "Teacher name: " + this.name + "\nSchool Id: " + this.schoolId;
 	}
 }

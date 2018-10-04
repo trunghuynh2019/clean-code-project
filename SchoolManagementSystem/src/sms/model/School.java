@@ -4,12 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class School {
+	private String id;
 	private String name;
 	private String address;
 	private int numOfTeachers;
 	private int numOfStudents;
-	private List<Teacher> teacherList = new ArrayList<>();
-	
+	private List<Teacher> teachers = new ArrayList<>();
+
+	public School() {
+		super();
+	}
+
+	public School(String id) {
+		super();
+		this.id = id;
+	}
+
+	public School(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
 	public School(String name, String address, int numOfTeachers, int numOfStudents) {
 		super();
 		this.name = name;
@@ -18,24 +34,40 @@ public class School {
 		this.numOfStudents = numOfStudents;
 	}
 
-	public School(String name, String address) {
+	public School(String id, String name, int numOfStudents, String address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.numOfStudents = numOfStudents;
+	}
+
+	public School(String name, String address, int numOfTeachers, int numOfStudents, List<Teacher> teachers) {
 		super();
 		this.name = name;
 		this.address = address;
-		this.numOfTeachers = 0;
-		this.numOfStudents = 0;
+		this.numOfTeachers = numOfTeachers;
+		this.numOfStudents = numOfStudents;
+		this.teachers = teachers;
 	}
 
-	public School(String name) {
+	public School(String id, String name, String address, int numOfTeachers, int numOfStudents,
+			List<Teacher> teachers) {
 		super();
+		this.id = id;
 		this.name = name;
-		this.address = "";
-		this.numOfTeachers = 0;
-		this.numOfStudents = 0;
+		this.address = address;
+		this.numOfTeachers = numOfTeachers;
+		this.numOfStudents = numOfStudents;
+		this.teachers = teachers;
 	}
 
-	public School() {
-		super();
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -70,12 +102,13 @@ public class School {
 		this.numOfStudents = numOfStudents;
 	}
 
-	public List<Teacher> getTeacherList() {
-		return teacherList;
+	public List<Teacher> getTeachers() {
+		return teachers;
 	}
 
-	public void setTeacherList(List<Teacher> teacherList) {
-		this.teacherList = teacherList;
+	public void setTeachers(List<Teacher> teachers) {
+		this.teachers = teachers;
+		this.numOfTeachers = teachers.size();
 	}
 
 	@Override
@@ -84,4 +117,8 @@ public class School {
 				+ this.numOfTeachers + "\nNumber of Students: " + this.numOfStudents;
 	}
 
+	public void addTeacher(Teacher teacher) {
+		teachers.add(teacher);
+		numOfTeachers++;
+	}
 }

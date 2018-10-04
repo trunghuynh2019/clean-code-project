@@ -14,7 +14,7 @@ import sms.view.TeacherView;
 public class Application {
 
 	public static void main(String[] args) {
-		List<School> schoolList = new ArrayList<>();
+		List<School> schools = new ArrayList<>();
 		Function function = new Function();
 		boolean programEnd = false;
 		Scanner scanner = new Scanner(System.in);
@@ -26,16 +26,16 @@ public class Application {
 
 			switch (choice) {
 			case 1: {
-				viewAllSchool(schoolList, scanner);
+				viewAllSchool(schools, scanner);
 				break;
 			}
 			case 2: {
-				addNewSchool(schoolList, scanner, function);
+				addNewSchool(schools, scanner, function);
 				break;
 			}
 			case 3: {
 				// Choose a school and show options to do with its teacher list.
-				manageTeachersList(schoolList, scanner, function);
+				manageTeachersList(schools, scanner, function);
 				break;
 			}
 			case 4:
@@ -67,7 +67,7 @@ public class Application {
 			return;
 		} else {
 			MainView.displayManageTeacherMenu(school);
-			List<Teacher> teacherList = school.getTeacherList();
+			List<Teacher> teachers = school.getTeachers();
 			int _choice = scanner.nextInt();
 			scanner.nextLine();
 			switch (_choice) {
@@ -77,7 +77,7 @@ public class Application {
 			}
 			case 2: {
 				MainView.enterTeacherName();
-				Teacher teacher = function.findTeacherByName(teacherList, scanner.nextLine());
+				Teacher teacher = function.findTeacherByName(teachers, scanner.nextLine());
 				if (teacher == null) {
 					TeacherView.displayTeacherNotFound();
 				} else {
@@ -87,7 +87,7 @@ public class Application {
 			}
 			case 3: {
 				MainView.enterTeacherAddress();
-				Teacher teacher = function.findTeacherByAddress(teacherList, scanner.nextLine());
+				Teacher teacher = function.findTeacherByAddress(teachers, scanner.nextLine());
 				if (teacher == null) {
 					TeacherView.displayTeacherNotFound();
 				} else {

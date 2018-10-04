@@ -1,26 +1,34 @@
 package sms.function;
 
 import java.util.List;
-import java.util.Scanner;
-
 import sms.model.School;
 import sms.model.Teacher;
 
 public class Function implements FunctionInterface{
 
 	@Override
-	public void addSchool(List<School> schoolList, School school) {
-		schoolList.add(school);
+	public void addSchool(List<School> schools, School school) {
+		schools.add(school);
 	}
 
 	@Override
 	public void addTeacherToSchool(School school, Teacher teacher) {
-		school.getTeacherList().add(teacher);
+		school.addTeacher(teacher);
+	}
+	
+	@Override
+	public School findSchoolById(List<School> schools, String id) {
+		for (School school : schools) {
+			if (school.getId().equals(id)) {
+				return school;
+			}
+		}
+		return null;
 	}
 
 	@Override
-	public School findSchoolByName(List<School> schoolList, String name) {
-		for (School school : schoolList) {
+	public School findSchoolByName(List<School> schools, String name) {
+		for (School school : schools) {
 			if (school.getName().equals(name)) {
 				return school;
 			}
@@ -29,8 +37,8 @@ public class Function implements FunctionInterface{
 	}
 
 	@Override
-	public Teacher findTeacherByName(List<Teacher> teacherList, String name) {
-		for (Teacher teacher : teacherList) {
+	public Teacher findTeacherByName(List<Teacher> teachers, String name) {
+		for (Teacher teacher : teachers) {
 			if (teacher.getName().equals(name)) {
 				return teacher;
 			}
@@ -39,14 +47,12 @@ public class Function implements FunctionInterface{
 	}
 
 	@Override
-	public Teacher findTeacherByAddress(List<Teacher> teacherList, String address) {
-		for (Teacher teacher : teacherList) {
+	public Teacher findTeacherByAddress(List<Teacher> teachers, String address) {
+		for (Teacher teacher : teachers) {
 			if (teacher.getName().equals(address)) {
 				return teacher;
 			}
 		}
 		return null;
 	}
-
-
 }

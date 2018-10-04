@@ -20,8 +20,8 @@ public class TeacherView {
 			System.out.println("There is no teacher...");
 		} else {
 			int i = 1;
-			List<Teacher> teacherList = school.getTeacherList();
-			for (Teacher teacher : teacherList) {
+			List<Teacher> teachers = school.getTeachers();
+			for (Teacher teacher : teachers) {
 				System.out.println("Teacher #" + i++ + ":");
 				displayTeacher(teacher);
 				System.out.println("------");
@@ -33,6 +33,6 @@ public class TeacherView {
 		System.out.print("Teacher name: ");
 		teacher.setName(scanner.nextLine());
 		System.out.print("Address: ");
-		teacher.setAddress(scanner.nextLine());
+		teacher.setSchoolId(scanner.nextLine());
 	}
 }

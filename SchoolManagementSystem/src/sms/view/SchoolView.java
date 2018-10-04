@@ -38,13 +38,13 @@ public class SchoolView {
 		System.out.print("Number of Teachers: ");
 		school.setNumOfTeachers(scanner.nextInt());
 		scanner.nextLine();
-		List<Teacher> teacherList = new ArrayList<>();
-		school.setTeacherList(teacherList);
+		List<Teacher> teachers = new ArrayList<>();
+		school.setTeachers(teachers);
 		for (int i = 1; i <= school.getNumOfTeachers(); i++) {
 			System.out.println("Insert information of Teacher #" + i);
 			Teacher teacher = new Teacher();
 			TeacherView.insertTeacherData(teacher, scanner);
-			school.getTeacherList().add(teacher);
+			school.addTeacher(teacher);
 		}
 	}
 }
