@@ -15,17 +15,19 @@ public class School {
 	private String name;
 	private String address;
 	private List<Teacher> teachers = new ArrayList<Teacher>();
+	private int numberOfStudent;
 	
 	public School() {
 		super();
 	}
 	
-	public School(String id, String name, String address, List<Teacher> teachers) {
+	public School(String id, String name, String address, List<Teacher> teachers, int numberOfStudent) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.teachers = teachers;
+		this.numberOfStudent = numberOfStudent;
 	}
 	
 	public String getId() {
@@ -60,6 +62,14 @@ public class School {
 		this.teachers = teachers;
 	}
 	
+	public int getNumberOfStudent() {
+		return numberOfStudent;
+	}
+
+	public void setNumberOfStudent(int numberOfStudent) {
+		this.numberOfStudent = numberOfStudent;
+	}
+
 	public int getNumberOfTeacher() {
 		return teachers.size();
 	}

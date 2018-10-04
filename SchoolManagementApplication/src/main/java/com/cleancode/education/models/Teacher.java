@@ -10,17 +10,17 @@ package com.cleancode.education.models;
 public class Teacher {
 	private String id;
 	private String name;
-	private String schoolCode;
+	private String schoolId;
 	
 	public Teacher() {
 		super();
 	}
 	
-	public Teacher(String id, String name, String schoolCode) {
+	public Teacher(String id, String name, String schoolId) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.schoolCode = schoolCode;
+		this.schoolId = schoolId;
 	}
 	
 	public String getId() {
@@ -39,16 +39,16 @@ public class Teacher {
 		this.name = name;
 	}
 	
-	public String getSchoolCode() {
-		return schoolCode;
+	public String getSchoolId() {
+		return schoolId;
 	}
 	
-	public void setSchoolCode(String schoolCode) {
-		this.schoolCode = schoolCode;
+	public void setSchoolId(String schoolId) {
+		this.schoolId = schoolId;
 	}
 	
 	@Override
 	public String toString() {
-		return "Teacher [CMND=" + id + ", name=" + name + ", schoolCode=" + schoolCode + "]";
+		return "Teacher [Id=" + id + ", name=" + name + ", schoolId=" + schoolId + "]";
 	}
 }
