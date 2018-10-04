@@ -83,5 +83,10 @@ public class School {
 		return "School [id=" + id + ", name=" + name + ", address=" + address
 				+ ", teachers=" + teachers + "]";
 	}
+
+	
+	public boolean equalId(School school) {
+		return this.id.equals(school.getId());
+	}
 	
 }

@@ -13,6 +13,10 @@ public class PrinterSupport {
 		return "*** " + name + " ***";
 	}
 	
+	public String codeFormat(String code) {
+		return "Code: " + code;
+	}
+	
 	public String idFormat(String id) {
 		return "Id: " + id;
 	}
@@ -28,4 +32,5 @@ public class PrinterSupport {
 	public String workingSchool(String schoolID) {
 		return "Working School's ID: " + schoolID;
 	}
+	
 }

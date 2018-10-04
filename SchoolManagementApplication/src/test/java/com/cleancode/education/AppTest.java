@@ -1,5 +1,10 @@
 package com.cleancode.education;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.cleancode.education.functions.SchoolManagement;
+import com.cleancode.education.functions.SchoolManagementImpl;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 import com.cleancode.education.views.PrinterSupport;
@@ -69,5 +74,71 @@ public class AppTest
     	assertEquals("*** Le Cong Huy ***", print.nameWithThreeStarAround("Le Cong Huy"));
     	assertEquals("Id: 123456789", print.idFormat("123456789"));
     	assertEquals("Working School's ID: nbk-vl", print.workingSchool("nbk-vl"));
+    }
+    
+    /*
+	public void addSchool(List<School> schools, School school);
+	public void addSchoolFrom(String fileName, List<School> schools);
+	public void signContractWithTeacher(School school, Teacher teacher);
+	public void signContractWithTeacherFrom(String fileName, List<School> schools);
+	*/
+    
+    public void testAddSchoolWithEmptyList() {
+    	List<School> schools = new ArrayList<>();
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	
+    	sm.addSchool(schools, new School());
+    	
+    	assertEquals(1, schools.size());
+    }
+    
+    public void testAddSchoolWithNoneEmptyList() {
+    	List<School> schools = new ArrayList<>();
+    	schools.add(new School("nbk-vl","NBK","VL",null,50));
+    	
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	sm.addSchool(schools, new School());
+    	
+    	assertEquals(2, schools.size());
+    }
+    
+    public void testAddExistedSchoolShouldNotIncreaseTheNumberOfSchool() {
+    	List<School> schools = new ArrayList<>();
+    	schools.add(new School("nbk-vl","NBK","VL",null,50));
+    	
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	sm.addSchool(schools, new School("nbk-vl","BK","HCM",null,50));
+    	
+    	assertEquals(1, schools.size());
+    }
+    
+    public void testAddExistedSchoolShouldUpdateSchoolInfo() {
+    	List<School> schools = new ArrayList<>();
+    	schools.add(new School("nbk-vl","NBK","VL",null,50));
+    	
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	sm.addSchool(schools, new School("nbk-vl","BK","HCM",null,40));
+    	
+    	assertEquals("BK", schools.get(0).getName());
+    	assertEquals("HCM", schools.get(0).getAddress());
+    	assertEquals(40, schools.get(0).getNumberOfStudent());
+    }
+    
+    public void testSignContractWithTeacherInEmptyList() {
+    	School school = new School();
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	sm.signContractWithTeacher(school, new Teacher());
+    	
+    	assertEquals(1, school.getNumberOfTeacher());
+    }
+    
+    public void testSignContractWithTeacherInNoneEmptyList() {
+    	School school = new School();
+    	school.signContractWith(new Teacher("123654789","Tien","nbk-vl"));
+    	
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	sm.signContractWithTeacher(school, new Teacher("123456789","Huy","nbk-vl"));
+    	
+    	assertEquals(2, school.getNumberOfTeacher());
     }
 }

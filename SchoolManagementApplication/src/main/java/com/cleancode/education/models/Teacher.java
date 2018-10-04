@@ -51,4 +51,9 @@ public class Teacher {
 	public String toString() {
 		return "Teacher [Id=" + id + ", name=" + name + ", schoolId=" + schoolId + "]";
 	}
+
+	public boolean equalId(Teacher teacher) {
+		return this.id.equals(teacher.getId());
+	}
+	
 }

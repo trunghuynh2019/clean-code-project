@@ -7,6 +7,10 @@
  */
 package com.cleancode.education.views;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 
@@ -51,11 +55,54 @@ public class SchoolPrinter {
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
-	/*
-	 * Xong school printer
-	 * Lam tiep teacher printer
-	 * menu printer
-	 * Lam cac function add teacher/school by console, by file
-	 * */
 	
+	public School inputNewSchool() {
+		Scanner scanner = new Scanner(System.in);
+		School school = new School();
+		
+		System.out.print("Enter School Id: ");
+		school.setId(scanner.nextLine());
+		
+		System.out.print("Enter School Name: ");
+		school.setName(scanner.nextLine());
+		
+		System.out.print("Enter School Address: ");
+		school.setAddress(scanner.nextLine());
+		
+		System.out.print("Enter Number Of Students: ");
+		school.setNumberOfStudent(scanner.nextInt());
+		scanner.nextLine();
+		
+		System.out.print("Enter Number of Teachers: ");
+		int numberOfTeacher = scanner.nextInt();
+		scanner.nextLine();
+		List<Teacher> teachers = new ArrayList<>();
+		
+		for (int i = 0; i < numberOfTeacher; i++) {
+			System.out.println("Enter Information of Teacher #" + (i+1));
+			Teacher newTeacher = inputTeacher(school.getId());
+            teachers.add(newTeacher);
+		}
+		
+		
+		scanner.close();
+		
+		return school;
+	}
+	
+	public Teacher inputTeacher(String schoolId) {
+		Scanner scanner = new Scanner(System.in);
+		Teacher teacher = new Teacher();
+		
+		System.out.println("Enter Teacher Id: ");
+		teacher.setId(scanner.nextLine());
+		
+		System.out.print("Enter Teacher Name: ");
+		teacher.setName(scanner.nextLine());
+		teacher.setSchoolId(schoolId);
+		
+		scanner.close();
+		
+		return teacher;
+	}
 }
