@@ -80,11 +80,10 @@ public class School {
 	
 	@Override
 	public String toString() {
-		return "School [id=" + id + ", name=" + name + ", address=" + address
-				+ ", teachers=" + teachers + "]";
+		return "School [id=" + id + ", name=" + name + ", address=" + address + ", teachers=" + teachers
+				+ ", numberOfStudent=" + numberOfStudent + "]";
 	}
 
-	
 	public boolean equalId(School school) {
 		return this.id.equals(school.getId());
 	}

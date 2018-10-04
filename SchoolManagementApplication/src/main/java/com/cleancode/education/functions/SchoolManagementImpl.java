@@ -7,6 +7,11 @@
  */
 package com.cleancode.education.functions;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cleancode.education.models.School;
@@ -21,18 +26,22 @@ public class SchoolManagementImpl implements SchoolManagement{
 		if (schools.isEmpty()) {
 			System.out.println("The school list is empty.");
 		} else {
+			System.out.println("\nThe list of schools are below: ");
 			for (School school : schools) {
+				System.out.println("=================================================");
 				schoolPrinter.print(school);
 			}
 		}
 		
 	}
 
-	public void viewAllTeachers(List<Teacher> teachers) {
-		if(teachers.isEmpty()) {
+	public void viewAllTeachers(School school) {
+		if(school.getNumberOfTeacher() == 0) {
 			System.out.println("The teacher list is empty.");
 		} else {
-			for (Teacher teacher : teachers) {
+			System.out.println("\nThe list of teachers are below: ");
+			for (Teacher teacher : school.getTeachers()) {
+				System.out.println("=================================================");
 				schoolPrinter.print(teacher);
 			}
 		}
@@ -52,7 +61,9 @@ public class SchoolManagementImpl implements SchoolManagement{
 					school.setName(newSchool.getName());
 					school.setAddress(newSchool.getAddress());
 					school.setNumberOfStudent(newSchool.getNumberOfStudent());
-					school.setTeachers(newSchool.getTeachers());
+					for (Teacher teacher: newSchool.getTeachers()) {
+						signContractWithTeacher(school, teacher);
+					}
 					break;
 				}
 			}
@@ -63,7 +74,26 @@ public class SchoolManagementImpl implements SchoolManagement{
 	}
 
 	public void addSchoolFrom(String fileName, List<School> schools) {
-		
+		File file = new File("resources/" + fileName);
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			br.readLine();
+			br.readLine();
+			String currentLine;
+			while((currentLine = br.readLine()) != null) {
+				currentLine = currentLine.substring(2);
+				String[] dataArr = currentLine.split(" \\|\\|\\| ");
+				School newSchool = new School(dataArr[0],dataArr[1],dataArr[3],new ArrayList<Teacher>(),Integer.parseInt(dataArr[2]));
+				addSchool(schools, newSchool);
+			}
+		} catch (IOException e) {e.printStackTrace();}
+		finally {
+				try {
+					if(br!=null) {
+					br.close();}
+				} catch (IOException e) {e.printStackTrace();}
+		}
 	}
 
 	public void signContractWithTeacher(School school, Teacher newTeacher) {
@@ -86,8 +116,39 @@ public class SchoolManagementImpl implements SchoolManagement{
 	}
 
 	public void signContractWithTeacherFrom(String fileName, List<School> schools) {
-		// TODO Auto-generated method stub
-		
+		File file = new File("resources/" + fileName);
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			br.readLine();
+			br.readLine();
+			String currentLine;
+			while((currentLine = br.readLine()) != null) {
+				currentLine = currentLine.substring(2);
+				String[] dataArr = currentLine.split(" \\|\\|\\| ");
+				Teacher teacher = new Teacher(dataArr[0],dataArr[1],dataArr[2]);
+				for (School school : schools) {
+					if (school.getId().equals(dataArr[2]))
+						signContractWithTeacher(school, teacher);
+				}
+				
+			}
+		} catch (IOException e) {e.printStackTrace();}
+		finally {
+				try {
+					if(br!=null) {
+					br.close();}
+				} catch (IOException e) {e.printStackTrace();}
+		}
+	}
+
+	@Override
+	public School findSchoolById(List<School> schools, String id) {
+		for (School s: schools) {
+			if (s.getId().equals(id))
+				return s;
+		}
+		return null;
 	}
 	
 }

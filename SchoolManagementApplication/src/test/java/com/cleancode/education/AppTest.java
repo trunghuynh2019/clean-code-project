@@ -141,4 +141,80 @@ public class AppTest
     	
     	assertEquals(2, school.getNumberOfTeacher());
     }
+    
+    public void testAddSchoolFromFile(){
+    	List<School> schools = new ArrayList<School>();
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	String fileName = "truong.txt";
+    	sm.addSchoolFrom(fileName, schools);
+    	
+    	assertEquals(2, schools.size());
+    }
+    
+    public void testAddSchoolFromFileShouldNotIncreaseTheNumberOfSchoolIfSchoolExisted() {
+    	List<School> schools = new ArrayList<School>();
+    	schools.add(new School("nbk-vl","","",null,50));
+    	
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	String fileName = "truong.txt";
+    	sm.addSchoolFrom(fileName, schools);
+    	
+    	assertEquals(2, schools.size());
+    }
+    
+    public void testAddSchoolFromFileShouldUpdateSchoolInfoIfSchoolExisted() {
+    	List<School> schools = new ArrayList<School>();
+    	schools.add(new School("nbk-vl","","",null,50));
+    	
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	String fileName = "truong.txt";
+    	sm.addSchoolFrom(fileName, schools);
+    	
+    	assertEquals("Truong trung hoc Chuyen Nguyen Binh Khiem", schools.get(0).getName());
+    	assertEquals("Vinh Long", schools.get(0).getAddress());
+    	assertEquals(2000, schools.get(0).getNumberOfStudent());
+    }
+    
+    public void testSignContractWithTeacherFromFile() {
+    	List<School> schools = new ArrayList<School>();
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	String schoolFile = "truong.txt";
+    	String teacherFile = "giaovien.txt";
+    	sm.addSchoolFrom(schoolFile, schools);
+    	sm.signContractWithTeacherFrom(teacherFile, schools);
+    	
+    	assertEquals(1, schools.get(0).getNumberOfTeacher());
+    	assertEquals(1, schools.get(1).getNumberOfTeacher());
+    }
+    
+    public void testAddTeacherFromFileShouldNotIncreaseTheNumberOfTeacherIfTeacherExisted() {
+    	List<School> schools = new ArrayList<School>();
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	String schoolFile = "truong.txt";
+    	sm.addSchoolFrom(schoolFile, schools);
+    	List<Teacher> teachers = new ArrayList<>();
+    	teachers.add(new Teacher("337829999","","nbk-vl"));
+    	schools.get(0).setTeachers(teachers);
+    	
+    	String teacherFile = "giaovien.txt";
+    	sm.signContractWithTeacherFrom(teacherFile, schools);
+    	
+    	assertEquals(1, schools.get(0).getNumberOfTeacher());
+    }
+    
+    public void testAddTeacherFromFileShouldUpdateTeacherInfoIfTeacherExisted() {
+    	List<School> schools = new ArrayList<School>();
+    	SchoolManagement sm = new SchoolManagementImpl();
+    	String schoolFile = "truong.txt";
+    	sm.addSchoolFrom(schoolFile, schools);
+    	List<Teacher> teachers = new ArrayList<>();
+    	teachers.add(new Teacher("337829999","","nbk-vl"));
+    	schools.get(0).setTeachers(teachers);
+    	
+    	String teacherFile = "giaovien.txt";
+    	sm.signContractWithTeacherFrom(teacherFile, schools);
+    	
+    	assertEquals(1, schools.get(0).getNumberOfTeacher());
+    	assertEquals("Tran Van Thanh", schools.get(0).getTeachers().get(0).getName());
+    }
 }

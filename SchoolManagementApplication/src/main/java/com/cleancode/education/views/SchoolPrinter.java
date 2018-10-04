@@ -48,8 +48,8 @@ public class SchoolPrinter {
 		System.out.println("|   1. View All Schools                      |");
 		System.out.println("|   2. Add A New School                      |");
 		System.out.println("|   3. Add Schools From File                 |");
-		System.out.println("|   4. View All Teachers                	 |");
-		System.out.println("|   5. Sign Contract With Teacher       	 |");
+		System.out.println("|   4. View All Teachers                     |");
+		System.out.println("|   5. Sign Contract With Teacher            |");
 		System.out.println("|   6. Sign Contract With Teachers From File |");
 		System.out.println("|   7. Exit                                  |");
 		System.out.println("==============================================");
@@ -83,10 +83,8 @@ public class SchoolPrinter {
 			Teacher newTeacher = inputTeacher(school.getId());
             teachers.add(newTeacher);
 		}
-		
-		
-		scanner.close();
-		
+		school.setTeachers(teachers);
+		System.out.println("School is added.\n");
 		return school;
 	}
 	
@@ -94,15 +92,25 @@ public class SchoolPrinter {
 		Scanner scanner = new Scanner(System.in);
 		Teacher teacher = new Teacher();
 		
-		System.out.println("Enter Teacher Id: ");
+		System.out.print("Enter Teacher Id: ");
 		teacher.setId(scanner.nextLine());
 		
 		System.out.print("Enter Teacher Name: ");
 		teacher.setName(scanner.nextLine());
 		teacher.setSchoolId(schoolId);
 		
-		scanner.close();
-		
 		return teacher;
+	}
+	
+	public String inputFileName(Scanner scanner) {
+		System.out.print("Enter file name: ");
+		String fileName = scanner.nextLine();
+		return fileName;
+	}
+	
+	public String inputSchoolId(Scanner scanner) {
+		System.out.print("\nPlease enter school Id: ");
+		String schoolId = scanner.nextLine();
+		return schoolId;
 	}
 }
