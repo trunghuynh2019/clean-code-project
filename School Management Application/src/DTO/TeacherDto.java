@@ -1,22 +1,48 @@
 package DTO;
 
 public class TeacherDto {
+    private String teacherID;
+    private String schoolID;
     private String name;
     private String address;
     private String phoneNo;
     
     public TeacherDto() {
             
+        teacherID = "";
+        schoolID = "";
         name = "";
         address = "";
         phoneNo = "";
     }
 
-    public TeacherDto (String name, String address, String phoneNo) {
+    public TeacherDto(String teacherID, String schoolID, String name, String address, String phoneNo) {
         
+        this.teacherID = teacherID;
+        this.schoolID = schoolID;
         this.name = name;
         this.address = address;
         this.phoneNo = phoneNo;
+    }
+    
+    public String getTeacherID(){
+        
+        return teacherID;
+    }
+    
+    public void setTeacherID(String teacherID){
+        
+        this.teacherID = teacherID;
+    }
+    
+    public String getSchoolID(){
+        
+        return schoolID;
+    }
+    
+    public void setSchoolID(String schoolID){
+        
+        this.schoolID = schoolID;
     }
 
     public String getName() {

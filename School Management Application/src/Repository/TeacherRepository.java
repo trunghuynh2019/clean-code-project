@@ -19,20 +19,36 @@ public class TeacherRepository implements TeacherInterface {
         
         teachers.add(teacher);
     }    
+    
     @Override
-    public Teacher findByID(Integer ID) {
+    public Teacher findByTeacherID(String teacherID) {
         ListIterator<Teacher> itr = teachers.listIterator();
         Teacher teacher = new Teacher();
         
         while(itr.hasNext()) {
             teacher = itr.next();
-            if(teacher.getID().equals(ID)){
+            if(teacher.getTeacherID().equals(teacherID)){
                 break;
             }
         }
         return teacher;
     }
 
+    @Override
+    public List<Teacher> findBySchoolID(String schoolID) {
+        ListIterator<Teacher> itr = teachers.listIterator();
+        List<Teacher> teacherDtos = new ArrayList<Teacher>();
+        Teacher teacher = new Teacher();
+        
+        while(itr.hasNext()) {
+            teacher = itr.next();
+            if(teacher.getSchoolID().equals(schoolID)){
+                teacherDtos.add(teacher);
+            }
+        }
+        return teacherDtos;
+    }
+    
     @Override
     public List<Teacher> findByName(String name) {
         ListIterator<Teacher> itr = teachers.listIterator();

@@ -3,9 +3,7 @@ package Service;
 import DTO.TeacherDto;
 import Model.Teacher;
 import Repository.TeacherRepository;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class TeacherService {
     private TeacherRepository teachRepo;
@@ -16,16 +14,22 @@ public class TeacherService {
     }
     
     public Teacher signContractWithTeacher(TeacherDto teacherDto){
-        List<Teacher> teachers = teachRepo.findByName(teacherDto.getName());
-        Teacher teacher = new Teacher();
+        Teacher teacher = teachRepo.findByTeacherID(teacherDto.getTeacherID());
         
-        if(teachers != null){
+        if(teacher != null){
             return null;
         }
+        teacher.setTeacherID(teacherDto.getTeacherID());
+        teacher.setSchoolID(teacherDto.getSchoolID());
         teacher.setName(teacherDto.getName());
         teacher.setAddress(teacherDto.getAddress());
         teacher.setPhoneNo(teacherDto.getPhoneNo());
         teachRepo.save(teacher);
         return teacher;
+    }
+    
+    public Teacher updateTeacherInfor(TeacherDto teacherDto){
+        
+        
     }
 }

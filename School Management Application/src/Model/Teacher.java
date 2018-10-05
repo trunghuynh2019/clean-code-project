@@ -1,30 +1,48 @@
 package Model;
 
 public class Teacher {
-    private Integer ID = 0;
+    private String teacherID;
+    private String schoolID;
     private String name;
     private String address;
     private String phoneNo;
     
     public Teacher() {
             
-        ID++;
+        teacherID = "";
+        schoolID = "";
         name = "";
         address = "";
         phoneNo = "";
     }
 
-    public Teacher (String name, String address, String phoneNo) {
+    public Teacher (String teacherID, String schoolID, String name, String address, String phoneNo) {
         
-        ID++;
+        this.teacherID = teacherID;
+        this.schoolID = schoolID;
         this.name = name;
         this.address = address;
         this.phoneNo = phoneNo;
     }
     
-    public Integer getID(){
+    public String getTeacherID(){
         
-        return ID;
+        return teacherID;
+    }
+    
+    public void setTeacherID(String teacherID){
+        
+        this.teacherID = teacherID;
+    }
+    
+    public String getSchoolID(){
+        
+        return schoolID;
+    }
+    
+    public void setSchoolID(String schoolID){
+        
+        this.schoolID = schoolID;
     }
 
     public String getName() {
