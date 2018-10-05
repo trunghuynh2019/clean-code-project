@@ -11,4 +11,5 @@ public interface TeacherInterface {
     public List<Teacher> findByName(String name);
     public List<Teacher> findByAddress(String address);
     public Teacher findByPhoneNo(String phoneNo);
+    public List<Teacher> findAll();
 }

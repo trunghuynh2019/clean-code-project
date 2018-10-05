@@ -92,4 +92,10 @@ public class TeacherRepository implements TeacherInterface {
         }
         return teacher;
     }
+    
+    @Override
+    public List<Teacher> findAll() {
+        
+        return teachers;
+    }
 }

@@ -39,4 +39,9 @@ public class TeacherService {
         teachRepo.save(teacher);
         return teacher;
     }
+    
+    public List<Teacher> showTeacherList(){
+        
+        return teachRepo.findAll();
+    }
 }
