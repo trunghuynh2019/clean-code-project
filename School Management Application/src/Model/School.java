@@ -6,7 +6,7 @@ public class School {
     private String address;
     private Integer countStudent;
     private Integer countTeacher;
-    private TeacherList teacherList;
+    private Teachers teacherList;
 
     public School() {
         ID++;
@@ -14,10 +14,10 @@ public class School {
         address = "";
         countStudent = 0;
         countTeacher = 0;
-        teacherList = new TeacherList();
+        teacherList = new Teachers();
     }
 
-    public School(String name, String address, Integer countStudent, TeacherList teacherList) {
+    public School(String name, String address, Integer countStudent, Teachers teacherList) {
         ID++;
         this.name = name;
         this.address = address;
@@ -66,24 +66,13 @@ public class School {
         return countTeacher;
     }
 
-    public TeacherList getTeacherList(){
+    public Teachers getTeacherList(){
 
         return teacherList;
     }
 
-    public void setTeacherList(TeacherList teacherList){
+    public void setTeacherList(Teachers teacherList){
 
         this.teacherList = teacherList;
-    }
-    
-    public void show(){
-        
-        System.out.println(name + "\n" +
-            "ID: " + ID + "\n" +
-            "Address: " + address + "\n" +
-            "Nuber of Student: " + countStudent + "\n" +
-            "Number of Teacher: " + countTeacher + "\n" +
-            "List of teacher:");
-        teacherList.show();
     }
 }
