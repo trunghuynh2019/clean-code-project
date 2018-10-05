@@ -44,4 +44,14 @@ public class TeacherService {
         
         return teachRepo.findAll();
     }
+    
+    public Integer getNumberOfTeacher(){
+        
+        return teachRepo.getsize();
+    }
+    
+    public List<Teacher> fireTeacher(String teacherID){
+        
+        return teachRepo.deleteByTeacherID(teacherID);
+    }
 }

@@ -98,4 +98,25 @@ public class TeacherRepository implements TeacherInterface {
         
         return teachers;
     }
+    
+    @Override
+    public Integer getsize(){
+        
+        return teachers.size();
+    }
+    
+    @Override
+    public List<Teacher> deleteByTeacherID(String teacherID) {
+        ListIterator<Teacher> itr = teachers.listIterator();
+        Teacher teacher = new Teacher();
+        
+        while(itr.hasNext()) {
+            teacher = itr.next();
+            if(teacher.getTeacherID().equals(teacherID)){
+                teachers.remove(teacher);
+                break;
+            }
+        }
+        return teachers;
+    }
 }
