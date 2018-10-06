@@ -58,8 +58,6 @@ public class Application {
 		MainView.enterTeacherFileName();
 		String teacherFile = scanner.nextLine();
 		FileReading fileReading = new FileReading(schoolFile, teacherFile);
-		System.out.println(fileReading.getSchoolFileName());
-		System.out.println(fileReading.getTeacherFileName());
 		
 		boolean readSuccessfully = fileReading.readSchoolFile(schools) && fileReading.readTeacherFile(schools);
 		if (readSuccessfully) {
@@ -85,8 +83,8 @@ public class Application {
 
 	public static void manageTeachersList(List<School> schools, Scanner scanner, Function function) {
 		SchoolView.displayAllSchool(schools);
-		MainView.enterSchoolName();
-		School school = function.findSchoolByName(schools, scanner.nextLine());
+		MainView.enterSchoolId();
+		School school = function.findSchoolById(schools, scanner.nextLine());
 		if (school == null) {
 			SchoolView.displaySchoolNotFound();
 			return;

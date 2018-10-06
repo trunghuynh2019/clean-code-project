@@ -36,8 +36,8 @@ public class MainView {
 		scanner.nextLine();
 	}
 
-	public static void enterSchoolName() {
-		System.out.print("Enter a school name to manage its teachers list: ");
+	public static void enterSchoolId() {
+		System.out.print("Enter a school id to manage its teachers list: ");
 	}
 
 	public static void enterTeacherName() {
@@ -51,11 +51,13 @@ public class MainView {
 	
 	//
 	public static void enterSchoolFileName() {
-		System.out.print("Enter the name of school file: ");
+		System.out.println("First, put the files into folder src/main/resources/file");
+		System.out.println("Second, enter the name of file. Ex: truong.txt, giaovien.txt");
+		System.out.print("Name of school file: ");
 	}
 	
 	public static void enterTeacherFileName() {
-		System.out.print("Enter the name of teacher file: ");
+		System.out.print("Name of teacher file: ");
 	}
 	
 	public static void fileNotFound() {

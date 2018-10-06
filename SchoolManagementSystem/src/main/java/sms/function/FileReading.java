@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import sms.model.School;
 import sms.model.Teacher;
 
@@ -37,20 +40,18 @@ public class FileReading {
 	public boolean readSchoolFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		try {
-			File file = new File("resources/file/" + schoolFileName);
-			FileReader reader = new FileReader(file);
-			bufferedReader = new BufferedReader(new FileReader(file));
+			bufferedReader = new BufferedReader(
+					new InputStreamReader(this.getClass().getResourceAsStream("/file/" + schoolFileName)));
 			String line;
 			bufferedReader.readLine();
 			bufferedReader.readLine();
 
 			while ((line = bufferedReader.readLine()) != null) {
-				String[] schoolData = line.substring(2).split(" ||| ");
+				String[] schoolData = line.substring(2).split(Pattern.quote(" ||| "));
 				School school = new School(schoolData[0], schoolData[1], Integer.parseInt(schoolData[2]),
 						schoolData[3]);
 				schools.add(school);
 			}
-			reader.close();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -61,15 +62,14 @@ public class FileReading {
 	public boolean readTeacherFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		try {
-			File file = new File("resources/file/" + teacherFileName);
-			FileReader reader = new FileReader(file);
-			bufferedReader = new BufferedReader(new FileReader(file));
+			bufferedReader = new BufferedReader(
+					new InputStreamReader(this.getClass().getResourceAsStream("/file/" + teacherFileName)));
 			String line;
 			bufferedReader.readLine();
 			bufferedReader.readLine();
 
 			while ((line = bufferedReader.readLine()) != null) {
-				String[] teacherData = line.substring(2).split(" ||| ");
+				String[] teacherData = line.substring(2).split(Pattern.quote(" ||| "));
 				Teacher teacher = new Teacher(Integer.parseInt(teacherData[0]), teacherData[1], teacherData[2]);
 				Function function = new Function();
 				School school = function.findSchoolById(schools, teacher.getSchoolId());
@@ -79,8 +79,6 @@ public class FileReading {
 					school.addTeacher(teacher);
 				}
 			}
-
-			reader.close();
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
