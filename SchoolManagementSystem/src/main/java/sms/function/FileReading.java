@@ -39,9 +39,14 @@ public class FileReading {
 
 	public boolean readSchoolFile(List<School> schools) {
 		BufferedReader bufferedReader;
+		InputStreamReader inputStreamReader;
 		try {
-			bufferedReader = new BufferedReader(
-					new InputStreamReader(this.getClass().getResourceAsStream("/file/" + schoolFileName)));
+			try {
+				inputStreamReader = new InputStreamReader(this.getClass().getResourceAsStream("/file/" + schoolFileName));
+			} catch (NullPointerException e) {
+				return false;
+			}
+			bufferedReader = new BufferedReader(inputStreamReader);
 			String line;
 			bufferedReader.readLine();
 			bufferedReader.readLine();
@@ -61,9 +66,14 @@ public class FileReading {
 
 	public boolean readTeacherFile(List<School> schools) {
 		BufferedReader bufferedReader;
+		InputStreamReader inputStreamReader;
 		try {
-			bufferedReader = new BufferedReader(
-					new InputStreamReader(this.getClass().getResourceAsStream("/file/" + teacherFileName)));
+			try {
+				inputStreamReader = new InputStreamReader(this.getClass().getResourceAsStream("/file/" + teacherFileName));
+			} catch (NullPointerException e) {
+				return false;
+			}
+			bufferedReader = new BufferedReader(inputStreamReader);
 			String line;
 			bufferedReader.readLine();
 			bufferedReader.readLine();

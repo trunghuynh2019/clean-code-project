@@ -30,9 +30,11 @@ public class TeacherView {
 	}
 
 	public static void insertTeacherData(Teacher teacher, Scanner scanner) {
+		System.out.print("Teacher id: ");
+		teacher.setId(scanner.nextInt());
+		scanner.nextLine();
 		System.out.print("Teacher name: ");
 		teacher.setName(scanner.nextLine());
-		/*System.out.print("Address: ");*/
 		System.out.print("SchoolId: ");
 		teacher.setSchoolId(scanner.nextLine());
 	}

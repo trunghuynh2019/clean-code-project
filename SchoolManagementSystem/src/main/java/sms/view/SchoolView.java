@@ -27,6 +27,8 @@ public class SchoolView {
 	}
 
 	public static void insertSchoolData(School school, Scanner scanner) {
+		System.out.print("School id: ");
+		school.setId(scanner.nextLine());
 		System.out.print("School name: ");
 		school.setName(scanner.nextLine());
 		System.out.print("Address: ");

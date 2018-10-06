@@ -19,7 +19,7 @@ public class FunctionTest extends TestCase {
 	}
 	
 	public static Test suite() {
-		return new TestSuite(FunctionTest.class);
+		return new TestSuite(FunctionTest.class, FileReadingTest.class);
 	}
 	
 	public void testAddSchool() {

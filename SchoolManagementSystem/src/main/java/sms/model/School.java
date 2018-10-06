@@ -113,8 +113,8 @@ public class School {
 
 	@Override
 	public String toString() {
-		return "School id: " + this.id + "\nSchool name: " + this.name + "\nAddress: " + this.address + "\nNumber of Teachers: "
-				+ this.numOfTeachers + "\nNumber of Students: " + this.numOfStudents;
+		return "School id: " + this.id + "\nSchool name: " + this.name + "\nAddress: " + this.address
+				+ "\nNumber of Teachers: " + this.numOfTeachers + "\nNumber of Students: " + this.numOfStudents + "\n";
 	}
 
 	public void addTeacher(Teacher teacher) {
