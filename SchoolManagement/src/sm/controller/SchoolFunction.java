@@ -68,9 +68,10 @@ public class SchoolFunction {
 	@SuppressWarnings("deprecation")
 	public void WritingFileToSchools(List<School> schools)
 	{
+		String path = System.getProperty("user.dir");
 		try {
 			// open School.txt
-			FileReader fr = new FileReader("C:\\Users\\yentran83\\ec\\task1\\src\\file\\truong.txt");
+			FileReader fr = new FileReader(path+"\\src\\file\\truong.txt");
 			//write data 
 			BufferedReader br = new BufferedReader(fr);
 			String newLine, line; 

@@ -64,9 +64,11 @@ public class TeacherFunction {
 	@SuppressWarnings("deprecation")
 	public void WritingFileToTeachers(List<Teacher> teachers)
 	{
+		String path = System.getProperty("user.dir");
+		System.out.println(path);
 		try {
 			// open School.txt
-			FileReader fr = new FileReader("C:\\Users\\yentran83\\ec\\task1\\src\\file\\giaovien.txt");
+			FileReader fr = new FileReader(path+"\\src\\file\\giaovien.txt");
 			//write data 
 			BufferedReader br = new BufferedReader(fr);
 			String newLine, line;
