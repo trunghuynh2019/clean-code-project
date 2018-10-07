@@ -38,10 +38,10 @@ public class SchoolFunction {
 	 * @param schools
 	 */
 
-	public void insertSchools(Scanner input)
+	public void insertSchools()
 	{
 		School school = new School();
-		
+		Scanner input = new Scanner(System.in);
 		System.out.println("Please ! Input the number of Schools : ");
 		int numOfSchools = input.nextInt();
 		input.nextLine();

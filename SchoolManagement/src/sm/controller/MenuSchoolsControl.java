@@ -29,7 +29,7 @@ public class MenuSchoolsControl {
 				input.nextLine();
 				break;
 			case 2:
-				schoolFunction.insertSchools(input);
+				schoolFunction.insertSchools();
 				System.out.println("Press enter to continue ");
 				input.nextLine();
 				break;

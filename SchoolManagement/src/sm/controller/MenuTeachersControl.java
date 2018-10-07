@@ -26,6 +26,7 @@ public class MenuTeachersControl {
 			case 1:
 				System.out.println("Display Teachers belongs to a specific School Id ");
 				schoolId = input.nextLine();
+				input .nextLine();
 				teacherFunction.searchTeachersBySchoolId(schoolId);
 				System.out.println("Press enter to continue ");
 				input.nextLine();
@@ -33,6 +34,7 @@ public class MenuTeachersControl {
 			case 2:
 				System.out.println("Please ! Input School Id");
 				schoolId = input.nextLine();
+				input .nextLine();
 				teacherFunction.signContractWithTeacher(input, schoolId, teachers);
 				System.out.println("Press enter to continue ");
 				input.nextLine();
@@ -40,6 +42,7 @@ public class MenuTeachersControl {
 			case 3:
 				System.out.println("Please ! enter Teacher Id :");
 				String id = input.nextLine();
+				input .nextLine();
 				teacherFunction.searchTeachersByTeacherId(id);
 				System.out.println("Press enter to continue ");
 				input.nextLine();
@@ -47,6 +50,7 @@ public class MenuTeachersControl {
 			case 4:
 				System.out.println("Please ! enter Teacher Name :");
 				name = input.nextLine();
+				input .nextLine();
 				teacherFunction.searchTeachersByTeacherName(name);
 				System.out.println("Press enter to continue ");
 				input.nextLine();
@@ -54,6 +58,7 @@ public class MenuTeachersControl {
 			case 5:
 				System.out.println("Please ! enter Teacher Address :");
 				String address = input.nextLine();
+				input .nextLine();
 				teacherFunction.searchTeachersByTeacherAddress(address);
 				System.out.println("Press enter to continue ");
 				input.nextLine();
@@ -61,6 +66,7 @@ public class MenuTeachersControl {
 			case 6:
 				System.out.println("Please ! enter Teacher Phone :");
 				String phone = input.nextLine();
+				input .nextLine();
 				teacherFunction.searchTeachersByTeacherPhone(phone);
 				System.out.println("Press enter to continue ");
 				input.nextLine();
