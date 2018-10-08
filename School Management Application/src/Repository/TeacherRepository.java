@@ -16,29 +16,36 @@ public class TeacherRepository implements TeacherInterface {
     
     @Override
     public void save(Teacher teacher) {
+        Teacher teach_check = findByTeacherID(teacher.getTeacherID());
         
-        teachers.add(teacher);
+        if(teach_check == null){
+            teachers.add(teacher);
+        }
+        else {
+            teachers.remove(teach_check);
+            teachers.add(teacher);
+        }
     }    
     
     @Override
-    public Teacher findByTeacherID(String teacherID) {
+    public Teacher findByTeacherID(Integer teacherID) {
         ListIterator<Teacher> itr = teachers.listIterator();
-        Teacher teacher = new Teacher();
+        Teacher teacher;
         
         while(itr.hasNext()) {
             teacher = itr.next();
             if(teacher.getTeacherID().equals(teacherID)){
-                break;
+                return teacher;
             }
         }
-        return teacher;
+        return null;
     }
 
     @Override
     public List<Teacher> findBySchoolID(String schoolID) {
         ListIterator<Teacher> itr = teachers.listIterator();
         List<Teacher> teacherDtos = new ArrayList<Teacher>();
-        Teacher teacher = new Teacher();
+        Teacher teacher;
         
         while(itr.hasNext()) {
             teacher = itr.next();
@@ -53,7 +60,7 @@ public class TeacherRepository implements TeacherInterface {
     public List<Teacher> findByName(String name) {
         ListIterator<Teacher> itr = teachers.listIterator();
         List<Teacher> teacherDtos = new ArrayList<Teacher>();
-        Teacher teacher = new Teacher();
+        Teacher teacher;
         
         while(itr.hasNext()) {
             teacher = itr.next();
@@ -63,12 +70,26 @@ public class TeacherRepository implements TeacherInterface {
         }
         return teacherDtos;
     }
-
+    
+    @Override
+    public Teacher findByIdentityCard(String identityCard){
+        ListIterator<Teacher> itr = teachers.listIterator();
+        Teacher teacher;
+        
+        while(itr.hasNext()) {
+            teacher = itr.next();
+            if(teacher.isHaveIdentityCard(identityCard)){
+                return teacher;
+            }
+        }
+        return null;
+    }
+    
     @Override
     public List<Teacher> findByAddress(String address) {
         ListIterator<Teacher> itr = teachers.listIterator();
         List<Teacher> teacherDtos = new ArrayList<Teacher>();
-        Teacher teacher = new Teacher();
+        Teacher teacher;
         
         while(itr.hasNext()) {
             teacher = itr.next();
@@ -82,15 +103,15 @@ public class TeacherRepository implements TeacherInterface {
     @Override
     public Teacher findByPhoneNo(String phoneNo) {
         ListIterator<Teacher> itr = teachers.listIterator();
-        Teacher teacher = new Teacher();
+        Teacher teacher;
         
         while(itr.hasNext()) {
             teacher = itr.next();
-            if(teacher.getPhoneNo().equals(phoneNo)){
-                break;
+            if(teacher.isHavePhoneNo(phoneNo)){
+                return teacher;
             }
         }
-        return teacher;
+        return null;
     }
     
     @Override
@@ -106,17 +127,17 @@ public class TeacherRepository implements TeacherInterface {
     }
     
     @Override
-    public List<Teacher> deleteByTeacherID(String teacherID) {
+    public Teacher deleteByTeacherID(Integer teacherID) {
         ListIterator<Teacher> itr = teachers.listIterator();
-        Teacher teacher = new Teacher();
+        Teacher teacher;
         
         while(itr.hasNext()) {
             teacher = itr.next();
             if(teacher.getTeacherID().equals(teacherID)){
                 teachers.remove(teacher);
-                break;
+                return teacher;
             }
         }
-        return teachers;
+        return null;
     }
 }

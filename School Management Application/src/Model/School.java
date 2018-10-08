@@ -1,7 +1,7 @@
 package Model;
 
 public class School {  
-    private Integer ID = 0;
+    private Integer ID;
     private String name;
     private String address;
     private Integer countStudent;
