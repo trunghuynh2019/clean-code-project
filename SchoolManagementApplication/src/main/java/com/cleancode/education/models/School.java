@@ -88,4 +88,16 @@ public class School {
 		return this.id.equals(school.getId());
 	}
 	
+	public String getTeacherId() {
+		if (teachers.isEmpty()) {
+			return "";
+		}else {
+			String teachersId = teachers.get(0).getId();
+			for (int i = 1; i < teachers.size(); i++) {
+				teachersId += "," + teachers.get(i).getId() ;
+			}
+			return teachersId;
+		}
+		
+	}
 }
