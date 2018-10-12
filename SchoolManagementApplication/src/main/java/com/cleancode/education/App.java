@@ -61,7 +61,13 @@ public class App
     			String teacherFile = printer.inputFileName(scanner);
     			schoolManagement.signContractWithTeacherFrom(teacherFile, schools);
     			break;
-    		case 7: // Exit
+    		case 7: // Export in text
+    			
+    			break;
+    		case 8: // Export in excel
+    			
+    			break;
+    		case 9: // Exit
     			flag = false;
     			break;
     		}
