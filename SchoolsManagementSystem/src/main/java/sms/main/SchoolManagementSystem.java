@@ -12,11 +12,12 @@ public class SchoolManagementSystem {
 
 	public static void main(String[] args) {
 		List<School> schools= new ArrayList<School>();
-		Management management = new Management();
+		ManagementInterface management = new Management();
 		Scanner scanner = new Scanner(System.in);
 		boolean stopProgram=true;
 		int choice;
-		
+		String fileNameSchool = "dataSchool.xls";
+		String fileNameTeacher = "dataTeacher.xls";
 		do {
 			MainView.showMainMenu();
 			choice = MainView.getMainOption(scanner);
@@ -26,13 +27,23 @@ public class SchoolManagementSystem {
 				case 1: viewAllSchool(schools); break;
 				case 2: addNewSchool(schools, scanner, management); break;
 				case 3: addNewSchoolListFromFile(schools, scanner, management); break;
-				case 4: manageTeachersList(schools, scanner, management); break;
-				case 5: stopProgram=false; break;
+				case 4: manageTeachersList(schools, scanner, management, fileNameTeacher); break;
+				case 5: exportAllSchool(schools, management, fileNameSchool); break;
+				case 6: stopProgram=false; break;
 			}
 		} while(stopProgram);
 
 	}
 
+	// export data of school
+	public static void exportAllSchool(List<School> schools,ManagementInterface management, String fileName) {
+		management.exportDataOfSchools(schools, fileName);
+	}
+	
+	// export data of teacher
+	public static void exportAllTeacher(List<Teacher> teachers,ManagementInterface management, String fileName) {
+		management.exportDataOfTeachers(teachers, fileName);
+	}
 	
 	// Show information of all school in list
 	public static void viewAllSchool(List<School> schools) {
@@ -40,7 +51,7 @@ public class SchoolManagementSystem {
 	}
 
 	// add new school into list school
-	public static void addNewSchool(List<School> schools, Scanner scanner, Management management) {
+	public static void addNewSchool(List<School> schools, Scanner scanner, ManagementInterface management) {
 		School school = new School();
 		SchoolView.enterInformationOfSchool(school,scanner);
 		management.addSchool(schools, school);
@@ -48,14 +59,14 @@ public class SchoolManagementSystem {
 
 	
 	// add the school list from file name
-	public static void addNewSchoolListFromFile(List<School> schools, Scanner scanner, Management management) {
+	public static void addNewSchoolListFromFile(List<School> schools, Scanner scanner, ManagementInterface management) {
 		SchoolView.enterFileNameOfSchool();
 		management.loadDatabaseOfSchool(scanner.nextLine(), schools);
 		MainView.confirmLoadingFile();
 	}
 	
 	// manage Teacher list
-	public static void manageTeachersList(List<School> schools, Scanner scanner, Management management) {
+	public static void manageTeachersList(List<School> schools, Scanner scanner, ManagementInterface management, String fileName) {
 		boolean backToMainMenu = true;
 		
 		viewAllSchool(schools);
@@ -106,7 +117,8 @@ public class SchoolManagementSystem {
 						}
 						break;
 					}
-					case 6: backToMainMenu=false;
+					case 6: exportAllTeacher(school.getTeachers(), management, fileName); break;
+					case 7: backToMainMenu=false;
 				}
 			}while(backToMainMenu);
 		}
