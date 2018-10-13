@@ -20,9 +20,7 @@ import junit.framework.TestSuite;
 public class AppTest extends TestCase {
 	
 	private static Management management = new Management();
-	private static MainView mainview = new MainView();
-	private static SchoolView schoolview = new SchoolView();
-	
+
     /**
      * Create the test case
      *
@@ -52,6 +50,17 @@ public class AppTest extends TestCase {
     /*
      * Test Management Class
      */
+    // test export data of school
+    public void testExportDataSchool() {
+    	List<School> schools = new ArrayList<School>();
+    	String fileName = "dataSchool.xls";
+    	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
+    	schools.add(new School("BKU", "Bach Khoa", 10, "Ho Chi Minh city", 0, null));
+    	
+    	management.exportDataOfSchools(schools, fileName);
+
+    }
+    
     // test load database of school list
     public void testLoadDatabaseOfSchool(){
     	List<School> schools = new ArrayList<School>();
