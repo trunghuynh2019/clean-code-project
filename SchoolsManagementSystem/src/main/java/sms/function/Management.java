@@ -2,14 +2,135 @@ package sms.function;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+
 import sms.model.School;
 import sms.model.Teacher;
 public class Management implements ManagementInterface{
+	
+	private static HSSFCellStyle createStyleForTitle(HSSFWorkbook workbook) {
+		HSSFFont font = workbook.createFont();
+		font.setBold(true);
+		HSSFCellStyle style = workbook.createCellStyle();
+		style.setFont(font);
+		return style;
+	}
+	
+	public void exportDataOfSchools(List<School> schools, String fileName) {
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("School Sheet");
+		
+		String[] titleSchoolField = {"ID","Name","Address","Number Of Teacher","Number Of Students"};		
+		int rowNum = 0;
+		Cell cell = null;
+		Row row = null;
+		
+		HSSFCellStyle style = createStyleForTitle(workbook);
+		
+		row = sheet.createRow(rowNum);
+		
+		for(int i=0;i<titleSchoolField.length;i++) {
+			cell = row.createCell(i, CellType.STRING);
+			cell.setCellValue(titleSchoolField[i]);
+			cell.setCellStyle(style);
+		}
+		
+		for(School school: schools) {
+			rowNum++;
+			row = sheet.createRow(rowNum);
+			
+			cell = row.createCell(0, CellType.STRING);
+			cell.setCellValue(school.getId());
+			
+			cell = row.createCell(1, CellType.STRING);
+			cell.setCellValue(school.getName());
+			
+			cell = row.createCell(2, CellType.STRING);
+			cell.setCellValue(school.getAddress());
+			
+			cell = row.createCell(3, CellType.NUMERIC);
+			cell.setCellValue(school.getNumberOfTeachers());
+			
+			cell = row.createCell(4, CellType.NUMERIC);
+			cell.setCellValue(school.getNumberOfStudents());
+		}
+		
+		File file = new File(fileName);
+		FileOutputStream fileOut = null;
+		
+		try {
+			fileOut = new FileOutputStream(file);
+			workbook.write(fileOut);
+			System.out.println("Success!");
+		}catch(IOException e) { System.out.println(e.getMessage());}
+		finally {
+			try {
+				fileOut.close();
+			}catch(IOException e) {System.out.println(e.getMessage());}
+		}
+	}
+
+	public void exportDataOfTeachers(List<Teacher> teachers, String fileName) {
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("School Sheet");
+		
+		String[] titleSchoolField = {"Name","Address","Phone"};		
+		int rowNum = 0;
+		Cell cell = null;
+		Row row = null;
+		
+		HSSFCellStyle style = createStyleForTitle(workbook);
+		
+		row = sheet.createRow(rowNum);
+		
+		for(int i=0;i<titleSchoolField.length;i++) {
+			cell = row.createCell(i, CellType.STRING);
+			cell.setCellValue(titleSchoolField[i]);
+			cell.setCellStyle(style);
+		}
+		
+		for(Teacher teacher: teachers) {
+			rowNum++;
+			row = sheet.createRow(rowNum);
+			
+			cell = row.createCell(0, CellType.STRING);
+			cell.setCellValue(teacher.getName());
+			
+			cell = row.createCell(1, CellType.STRING);
+			cell.setCellValue(teacher.getAddress());
+			
+			cell = row.createCell(2, CellType.STRING);
+			cell.setCellValue(String.valueOf(teacher.getPhone()));
+
+		}
+		
+		File file = new File(fileName);
+		FileOutputStream fileOut = null;
+		
+		try {
+			fileOut = new FileOutputStream(file);
+			workbook.write(fileOut);
+			System.out.println("Success!");
+		}catch(IOException e) { System.out.println(e.getMessage());}
+		finally {
+			try {
+				fileOut.close();
+			}catch(IOException e) {System.out.println(e.getMessage());}
+		}
+		
+	}
 	
 	public void loadDatabaseOfSchool(String fileName, List<School> schools) {
 		File f = new File(fileName);
@@ -92,6 +213,8 @@ public class Management implements ManagementInterface{
 				return teacher;
 		return null;
 	}
+
+
 	
 }
 
