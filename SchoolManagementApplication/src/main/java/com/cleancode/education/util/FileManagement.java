@@ -7,36 +7,17 @@
  */
 package com.cleancode.education.util;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 
-public class FileManagement {
-	
-	public List<School> getSchoolsFrom(String fileName){
-		
-		return null;
-	}
-	
-	public List<Teacher> getTeachersFrom(String fileName){
-		
-		return null;
-	}
-	
-	public void exportTeachersToExcel(String fileName) {
-		
-	}
-	
-	public void exportTeachersToText(String fileName) {
-		
-	}
-
-	public void exportSchoolsToExcel(String fileName) {
-	
-	}
-
-	public void exportSchoolsToText(String fileName) {
-	
-	}
+public interface FileManagement {
+	public List<School> getSchoolsFrom(String fileName);
+	public List<Teacher> getTeachersFrom(String fileName);
+	public void exportTeachersToExcel(List<School> schools, String fileName) throws IOException;
+	public void exportTeachersToText(List<School> schools, String fileName);
+	public void exportSchoolsToExcel(List<School> schools, String fileName) throws IOException;
+	public void exportSchoolsToText(List<School> schools, String fileName);
 }

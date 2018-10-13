@@ -46,25 +46,26 @@ public class TeacherControllerImpl implements TeacherController{
 		}
 	}
 
-	@Override
-	public void signContractWithTeacher(Teacher newTeacher) {
-		if (teachers.isEmpty()) {
-			school.signContractWith(newTeacher);
-		} else {
-			boolean existedTeacher = false;
-			for (Teacher teacher : school.getTeachers()) {
-				if (teacher.equalId(newTeacher)) {
-					existedTeacher = true;
-					teacher.setName(newTeacher.getName());
-					teacher.setSchoolId(newTeacher.getSchoolId());
-					break;
-				}
-			}
-			if (!existedTeacher) {
-				school.signContractWith(newTeacher);
-			}
-		}
-	}
+//	@Override
+//	public void signContractWithTeacher(Teacher newTeacher) {
+//		
+//		if (teachers.isEmpty()) {
+//			school.signContractWith(newTeacher);
+//		} else {
+//			boolean existedTeacher = false;
+//			for (Teacher teacher : school.getTeachers()) {
+//				if (teacher.equalId(newTeacher)) {
+//					existedTeacher = true;
+//					teacher.setName(newTeacher.getName());
+//					teacher.setSchoolId(newTeacher.getSchoolId());
+//					break;
+//				}
+//			}
+//			if (!existedTeacher) {
+//				school.signContractWith(newTeacher);
+//			}
+//		}
+//	}
 
 	
 	
