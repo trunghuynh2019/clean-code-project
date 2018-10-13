@@ -28,7 +28,8 @@ public class Management implements ManagementInterface{
 		return style;
 	}
 	
-	public void exportDataOfSchools(List<School> schools, String fileName) {
+	public boolean exportDataOfSchools(List<School> schools, String fileName) {
+		boolean check = false;
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("School Sheet");
 		
@@ -73,16 +74,18 @@ public class Management implements ManagementInterface{
 		try {
 			fileOut = new FileOutputStream(file);
 			workbook.write(fileOut);
-			System.out.println("Success!");
+			check = true;
 		}catch(IOException e) { System.out.println(e.getMessage());}
 		finally {
 			try {
 				fileOut.close();
 			}catch(IOException e) {System.out.println(e.getMessage());}
 		}
+		return check;
 	}
 
-	public void exportDataOfTeachers(List<Teacher> teachers, String fileName) {
+	public boolean exportDataOfTeachers(List<Teacher> teachers, String fileName) {
+		boolean check = false;
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("School Sheet");
 		
@@ -122,14 +125,14 @@ public class Management implements ManagementInterface{
 		try {
 			fileOut = new FileOutputStream(file);
 			workbook.write(fileOut);
-			System.out.println("Success!");
+			check = true;
 		}catch(IOException e) { System.out.println(e.getMessage());}
 		finally {
 			try {
 				fileOut.close();
 			}catch(IOException e) {System.out.println(e.getMessage());}
 		}
-		
+		return check;
 	}
 	
 	public void loadDatabaseOfSchool(String fileName, List<School> schools) {
