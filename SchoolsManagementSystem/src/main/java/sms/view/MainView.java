@@ -10,7 +10,8 @@ public class MainView {
 		System.out.println("|   2. Add A New School                      |");
 		System.out.println("|   3. Add School List From File             |");
 		System.out.println("|   4. Manage Teacher Of School              |");
-		System.out.println("|   5. Exit                                  |");
+		System.out.println("|   5. Export All School Into Excel File     |");
+		System.out.println("|   6. Exit                                  |");
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
@@ -22,7 +23,8 @@ public class MainView {
 		System.out.println("|   3. Sign Contract With Teacher List From File    ");
 		System.out.println("|   4. Search Teacher By Name           ");
 		System.out.println("|   5. Search Teacher By Address        ");
-		System.out.println("|   6. Back To Main Menu                ");
+		System.out.println("|   6. Export All Teacher Into Excel File ");
+		System.out.println("|   7. Back To Main Menu                ");
 		System.out.println("========================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
