@@ -52,6 +52,7 @@ public class Application {
 				break;
 			}
 			case 6: {
+				writeDataToExcelFile(schools, scanner);
 				break;
 			}
 			case 7:
@@ -144,6 +145,19 @@ public class Application {
 
 		boolean writeSuccessfully = fileWriting.writeSchoolToTextFile(schools)
 				&& fileWriting.writeTeacherToTextFile(schools);
+		if (writeSuccessfully) {
+			MainView.writeFileSuccessfully();
+		} else {
+			MainView.writeFileFailed();
+		}
+		MainView.loopAgain(scanner);
+	}
+	
+	public static void writeDataToExcelFile(List<School> schools, Scanner scanner) {
+		FileWritingITF fileWriting = new FileWriting("truong.xlsx", "giaovien.xlsx");
+
+		boolean writeSuccessfully = fileWriting.writeSchoolToExcelFile(schools)
+				&& fileWriting.writeTeacherToExcelFile(schools);
 		if (writeSuccessfully) {
 			MainView.writeFileSuccessfully();
 		} else {
