@@ -1,8 +1,6 @@
 package sms.function;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -10,6 +8,7 @@ import java.util.regex.Pattern;
 
 import sms.model.School;
 import sms.model.Teacher;
+import sms.functionInterface.FunctionInterface;
 
 public class FileReading {
 	private String schoolFileName;
@@ -81,7 +80,7 @@ public class FileReading {
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] teacherData = line.substring(2).split(Pattern.quote(" ||| "));
 				Teacher teacher = new Teacher(Integer.parseInt(teacherData[0]), teacherData[1], teacherData[2]);
-				Function function = new Function();
+				FunctionInterface function = new Function();
 				School school = function.findSchoolById(schools, teacher.getSchoolId());
 				if (school == null) {
 

@@ -27,7 +27,7 @@ public class FunctionTest extends TestCase {
 		School school = new School();
 		List<School> expected = asList(school);
 
-		function.addSchool(schools, school);
+		schools.add(school);
 		assertTrue(schools.equals(expected));
 	}
 
@@ -36,7 +36,7 @@ public class FunctionTest extends TestCase {
 		Teacher teacher = new Teacher();
 		List<Teacher> expected = asList(teacher);
 
-		function.addTeacherToSchool(school, teacher);
+		school.addTeacher(teacher);
 		assertTrue(school.getTeachers().equals(expected));
 	}
 	

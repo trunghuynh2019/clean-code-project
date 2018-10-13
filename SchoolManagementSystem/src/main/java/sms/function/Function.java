@@ -7,14 +7,6 @@ import sms.model.School;
 import sms.model.Teacher;
 
 public class Function implements FunctionInterface {
-
-	public void addSchool(List<School> schools, School school) {
-		schools.add(school);
-	}
-
-	public void addTeacherToSchool(School school, Teacher teacher) {
-		school.addTeacher(teacher);
-	}
 	
 	public School findSchoolById(List<School> schools, String id) {
 		for (School school : schools) {

@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import sms.function.FileReading;
 import sms.function.Function;
+import sms.functionInterface.FunctionInterface;
 import sms.model.School;
 import sms.model.Teacher;
 import sms.view.MainView;
@@ -16,7 +17,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		List<School> schools = new ArrayList<School>();
-		Function function = new Function();
+		FunctionInterface function = new Function();
 		boolean programEnd = false;
 		Scanner scanner = new Scanner(System.in);
 
@@ -74,14 +75,14 @@ public class Application {
 		MainView.loopAgain(scanner);
 	}
 
-	public static void addNewSchool(List<School> schools, Scanner scanner, Function function) {
+	public static void addNewSchool(List<School> schools, Scanner scanner, FunctionInterface function) {
 		School school = new School();
 		SchoolView.insertSchoolData(school, scanner);
-		function.addSchool(schools, school);
+		schools.add(school);
 		MainView.loopAgain(scanner);
 	}
 
-	public static void manageTeachersList(List<School> schools, Scanner scanner, Function function) {
+	public static void manageTeachersList(List<School> schools, Scanner scanner, FunctionInterface function) {
 		SchoolView.displayAllSchool(schools);
 		MainView.enterSchoolId();
 		School school = function.findSchoolById(schools, scanner.nextLine());
