@@ -8,11 +8,12 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import sms.function.Function;
+import sms.functionInterface.FunctionITF;
 import sms.model.School;
 import sms.model.Teacher;
 
 public class FunctionTest extends TestCase {
-	private static Function function = new Function();
+	private static FunctionITF function = new Function();
 	
 	public FunctionTest(String testName) {
 		super(testName);

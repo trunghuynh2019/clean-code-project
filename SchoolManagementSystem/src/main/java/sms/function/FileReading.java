@@ -8,9 +8,10 @@ import java.util.regex.Pattern;
 
 import sms.model.School;
 import sms.model.Teacher;
-import sms.functionInterface.FunctionInterface;
+import sms.functionInterface.FileReadingITF;
+import sms.functionInterface.FunctionITF;
 
-public class FileReading {
+public class FileReading implements FileReadingITF {
 	private String schoolFileName;
 	private String teacherFileName;
 
@@ -80,7 +81,7 @@ public class FileReading {
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] teacherData = line.substring(2).split(Pattern.quote(" ||| "));
 				Teacher teacher = new Teacher(Integer.parseInt(teacherData[0]), teacherData[1], teacherData[2]);
-				FunctionInterface function = new Function();
+				FunctionITF function = new Function();
 				School school = function.findSchoolById(schools, teacher.getSchoolId());
 				if (school == null) {
 

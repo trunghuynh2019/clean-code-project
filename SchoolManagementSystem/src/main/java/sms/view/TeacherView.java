@@ -35,7 +35,5 @@ public class TeacherView {
 		scanner.nextLine();
 		System.out.print("Teacher name: ");
 		teacher.setName(scanner.nextLine());
-		System.out.print("SchoolId: ");
-		teacher.setSchoolId(scanner.nextLine());
 	}
 }

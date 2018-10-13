@@ -8,13 +8,14 @@ public class MainView {
 	public static void displayMainMenu() {
 		System.out.println("====================================");
 		System.out.println("----  SCHOOL MANAGEMENT SYSTEM  ----");
-		//
-		System.out.println("\t0. Enter data by file text input");
-		//
+		
 		System.out.println("\t1. Display all schools");
 		System.out.println("\t2. Add a new school");
 		System.out.println("\t3. Choose a school to manage teachers");
-		System.out.println("\t4. Exit");
+		System.out.println("\t4. Enter data by file text input");
+		System.out.println("\t5. Export data to text file");
+		System.out.println("\t6. Export data to excel file");
+		System.out.println("\t7. Exit");
 		System.out.println("------------------------------------");
 		System.out.print("Please enter your choice: ");
 	}
@@ -65,7 +66,14 @@ public class MainView {
 	}
 	
 	public static void readFileSuccessfully() {
-		System.out.println("Successful reading!...");
+		System.out.println("Reading successfully!...");
 	}
-	//
+	
+	public static void writeFileSuccessfully() {
+		System.out.println("Writing successfully!...");
+	}
+	
+	public static void writeFileFailed() {
+		System.out.println("Writing failed!...");
+	}
 }

@@ -44,6 +44,7 @@ public class SchoolView {
 			System.out.println("Insert information of Teacher #" + i);
 			Teacher teacher = new Teacher();
 			TeacherView.insertTeacherData(teacher, scanner);
+			teacher.setSchoolId(school.getId());
 			school.addTeacher(teacher);
 		}
 	}

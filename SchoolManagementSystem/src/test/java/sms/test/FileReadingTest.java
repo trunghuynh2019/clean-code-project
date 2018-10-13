@@ -9,12 +9,13 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import sms.function.FileReading;
+import sms.functionInterface.FileReadingITF;
 import sms.model.School;
 
 public class FileReadingTest extends TestCase {
 	private static final String SCHOOL_FILE_NAME = "truong.txt";
 	private static final String TEACHER_FILE_NAME = "giaovien.txt";
-	private static FileReading fileReading;
+	private static FileReadingITF fileReading;
 	private static List<School> schools = new ArrayList<School>();
 	
 	public FileReadingTest(String testName) {

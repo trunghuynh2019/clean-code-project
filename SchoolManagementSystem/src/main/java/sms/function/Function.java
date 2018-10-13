@@ -1,13 +1,14 @@
 package sms.function;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import sms.functionInterface.FunctionInterface;
+import sms.functionInterface.FunctionITF;
 import sms.model.School;
 import sms.model.Teacher;
 
-public class Function implements FunctionInterface {
-	
+public class Function implements FunctionITF {
+
 	public School findSchoolById(List<School> schools, String id) {
 		for (School school : schools) {
 			if (school.getId().equals(id)) {
@@ -42,5 +43,37 @@ public class Function implements FunctionInterface {
 			}
 		}
 		return null;
+	}
+
+	public List<String> getStringFromSchoolList(List<School> schools) {
+		List<String> schoolsData = new ArrayList<>();
+		if (schools.size() == 0)
+			return null;
+		else {
+			for (School school : schools) {
+				String schoolData = "- " + school.getId() + " ||| " + school.getName() + " ||| "
+						+ school.getNumOfStudents() + " ||| " + school.getAddress();
+				schoolsData.add(schoolData);
+			}
+			return schoolsData;
+		}
+	}
+
+	public List<String> getStringFromTeacherList(List<School> schools) {
+		List<String> teachersData = new ArrayList<>();
+		if (schools.size() == 0)
+			return null;
+		else {
+
+			for (School school : schools) {
+				List<Teacher> teachers = school.getTeachers();
+				for (Teacher teacher : teachers) {
+					String teacherData = "- " + teacher.getId() + " ||| " + teacher.getName() + " ||| "
+							+ teacher.getSchoolId();
+					teachersData.add(teacherData);
+				}
+			}
+			return teachersData;
+		}
 	}
 }
