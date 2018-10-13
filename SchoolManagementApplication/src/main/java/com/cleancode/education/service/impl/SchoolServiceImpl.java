@@ -17,8 +17,8 @@ public class SchoolServiceImpl implements SchoolService {
 	
 	private SchoolRepository schoolRepository;
 	
-	public SchoolServiceImpl() {
-		
+	public SchoolServiceImpl(SchoolRepository schoolRepository) {
+		this.schoolRepository = schoolRepository;
 	}
 	
 	

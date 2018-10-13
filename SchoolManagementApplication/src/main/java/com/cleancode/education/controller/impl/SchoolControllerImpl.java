@@ -7,20 +7,24 @@
  */
 package com.cleancode.education.controller.impl;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.cleancode.education.controller.SchoolController;
 import com.cleancode.education.models.School;
+import com.cleancode.education.models.Teacher;
 import com.cleancode.education.service.SchoolService;
-import com.cleancode.education.service.impl.SchoolServiceImpl;
+import com.cleancode.education.util.FileManagement;
+import com.cleancode.education.util.FileManagementImpl;
 import com.cleancode.education.views.SchoolPrinter;
 
 public class SchoolControllerImpl implements SchoolController{
 	private SchoolService schoolService;
+	private FileManagement fileManagement = new FileManagementImpl();
 	private SchoolPrinter schoolPrinter = new SchoolPrinter();
 	
-	public SchoolControllerImpl(SchoolServiceImpl schoolServiceImpl) {
-		this.schoolService = schoolServiceImpl;
+	public SchoolControllerImpl(SchoolService schoolService) {
+		this.schoolService = schoolService;
 	}
 	
 	@Override
@@ -39,6 +43,7 @@ public class SchoolControllerImpl implements SchoolController{
 
 	@Override
 	public void addSchool(School newSchool) {
+		
 		List<School> schools = schoolService.getAllSchool();
 		/*
 		 * Kiểm tra nếu list rỗng -> add trực tiếp vào list
@@ -50,12 +55,7 @@ public class SchoolControllerImpl implements SchoolController{
 			for (School school : schools) {
 				if (school.equalId(newSchool)) {
 					existedSchool = true;
-					school.setName(newSchool.getName());
-					school.setAddress(newSchool.getAddress());
-					school.setNumberOfStudent(newSchool.getNumberOfStudent());
-//					for (Teacher teacher: newSchool.getTeachers()) {
-//						signContractWithTeacher(school, teacher);
-//					}
+					schoolService.update(newSchool);
 					break;
 				}
 			}
@@ -64,4 +64,68 @@ public class SchoolControllerImpl implements SchoolController{
 			}
 		}
 	}
+	
+	@Override
+	public void signContractWithTeacher(Teacher newTeacher) {
+		School school = schoolService.getSchoolById(newTeacher.getSchoolId());
+		if(school == null)
+			return;
+		if (school.getNumberOfTeacher() == 0) {
+			school.signContractWith(newTeacher);
+		} else {
+			boolean existedTeacher = false;
+			for (Teacher teacher : school.getTeachers()) {
+				if (teacher.equalId(newTeacher)) {
+					existedTeacher = true;
+					teacher.setName(newTeacher.getName());
+					teacher.setSchoolId(newTeacher.getSchoolId());
+					break;
+				}
+			}
+			if (!existedTeacher) {
+				school.signContractWith(newTeacher);
+			}
+		}
+	}
+
+	@Override
+	public void addSchoolsFrom(String fileName) {
+		List<School> schools = fileManagement.getSchoolsFrom(fileName);
+		for (School school : schools) {
+			addSchool(school);
+		}		
+	}
+
+	@Override
+	public void signContractWithTeacherFrom(String fileName) {
+		List<Teacher> teachers = fileManagement.getTeachersFrom(fileName);
+		for(Teacher teacher : teachers) {
+			signContractWithTeacher(teacher);
+		}
+	}
+
+	@Override
+	public void exportSchoolsToText(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		fileManagement.exportSchoolsToText(schools, fileName);
+	}
+
+	@Override
+	public void exportSchoolsToExcel(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		fileManagement.exportSchoolsToExcel(schools, fileName);
+	}
+
+	@Override
+	public void exportTeacherToText(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		fileManagement.exportTeachersToText(schools, fileName);
+	}
+
+	@Override
+	public void exportTeacherToExcel(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		fileManagement.exportTeachersToExcel(schools, fileName);		
+	}
+
 }

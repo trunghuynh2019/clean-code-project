@@ -18,6 +18,10 @@ public class TeacherServiceImpl implements TeacherService{
 	
 	private TeacherRepository teacherRepository;
 	
+	public TeacherServiceImpl(TeacherRepository teacherRepository) {
+		this.teacherRepository = teacherRepository;
+	}
+	
 	@Override
 	public Teacher getTeacherById(String id) {
 		

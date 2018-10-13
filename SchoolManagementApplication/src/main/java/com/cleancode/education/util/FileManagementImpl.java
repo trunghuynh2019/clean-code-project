@@ -90,7 +90,7 @@ public class FileManagementImpl implements FileManagement{
 	}
 	
 	@Override
-	public void exportTeachersToExcel(List<School> schools, String fileName) throws IOException{
+	public boolean exportTeachersToExcel(List<School> schools, String fileName){
 		String[] columns = {"CMND", "Name", "Working School's ID"};
 		// Create a Workbook
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
@@ -143,16 +143,25 @@ public class FileManagementImpl implements FileManagement{
         }
 
         // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream("exportedschool.xlsx");
-        workbook.write(fileOut);
-        fileOut.close();
+        FileOutputStream fileOut;
+		try {
+			fileOut = new FileOutputStream(new File("resources/" + fileName));
+			workbook.write(fileOut);
+			fileOut.close();
+			// Closing the workbook
+	        workbook.close();
+	        return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+        
 
-        // Closing the workbook
-        workbook.close();
+        
 	}
 	
 	@Override
-	public void exportTeachersToText(List<School> schools, String fileName) {
+	public boolean exportTeachersToText(List<School> schools, String fileName) {
 		File file = new File("resources/" + fileName);
 		PrintWriter pw = null;
 		try {
@@ -165,9 +174,11 @@ public class FileManagementImpl implements FileManagement{
 				}
 				
 			}
+			return true;
 		} 
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return false;
 		} finally {
 			if (pw != null) {
 				pw.close();
@@ -176,7 +187,7 @@ public class FileManagementImpl implements FileManagement{
 	}
 
 	@Override
-	public void exportSchoolsToExcel(List<School> schools, String fileName) throws IOException {
+	public boolean exportSchoolsToExcel(List<School> schools, String fileName) {
 		String[] columns = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
 		// Create a Workbook
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
@@ -220,16 +231,16 @@ public class FileManagementImpl implements FileManagement{
 
             row.createCell(3)
                     .setCellValue(school.getAddress());
-            Cell c = row.createCell(4);
-            String temp = "";
-            for (Teacher t : school.getTeachers()) {
-            	
-            	temp = c.getStringCellValue() + ",";
-            	temp += t.getId();
-            	c.setCellValue(temp);
-            }
+           row.createCell(4).setCellValue(school.getTeacherId());
+//            school.getTeacherId();
+//            String temp = "";
+//            for (Teacher t : school.getTeachers()) {
+//            	
+//            	temp = c.getStringCellValue() + ",";
+//            	temp += t.getId();
+//            	c.setCellValue(temp);
+//            }
             
-//            row.createCell(4).setCellValue(school.getTeacherId());
         }
 
 		// Resize all columns to fit the content size
@@ -237,17 +248,26 @@ public class FileManagementImpl implements FileManagement{
             sheet.autoSizeColumn(i);
         }
 
-        // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream("exportedschool.xlsx");
-        workbook.write(fileOut);
-        fileOut.close();
+       
+        try {
+        	 // Write the output to a file
+            FileOutputStream fileOut = new FileOutputStream(new File("resources/" + fileName));
+            workbook.write(fileOut);
+			fileOut.close();
+			 // Closing the workbook
+	        workbook.close();
+	        
+	        return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 
-        // Closing the workbook
-        workbook.close();
+       
 	}
 
 	@Override
-	public void exportSchoolsToText(List<School> schools, String fileName) {
+	public boolean exportSchoolsToText(List<School> schools, String fileName) {
 		File file = new File("resources/" + fileName);
 		PrintWriter pw = null;
 		try {
@@ -257,9 +277,11 @@ public class FileManagementImpl implements FileManagement{
 			for(School s : schools) {
 				pw.println("- " + s.getId() + " ||| " + s.getName() + " ||| " + s.getNumberOfStudent() + " ||| " + s.getAddress());
 			}
+			return true;
 		} 
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return false;
 		} finally {
 			if (pw != null) {
 				pw.close();

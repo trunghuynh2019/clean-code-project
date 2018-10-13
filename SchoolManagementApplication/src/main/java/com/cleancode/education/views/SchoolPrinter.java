@@ -51,7 +51,9 @@ public class SchoolPrinter {
 		System.out.println("|   4. View All Teachers                     |");
 		System.out.println("|   5. Sign Contract With Teacher            |");
 		System.out.println("|   6. Sign Contract With Teachers From File |");
-		System.out.println("|   7. Exit                                  |");
+		System.out.println("|   7. Export School/Teacher To Text File    |");
+		System.out.println("|   8. Export School/Teacher To Excel File   |");
+		System.out.println("|   9. Exit                                  |");
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}

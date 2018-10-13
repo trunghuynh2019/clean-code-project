@@ -7,17 +7,14 @@
  */
 package com.cleancode.education.repository.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cleancode.education.models.School;
 import com.cleancode.education.repository.SchoolRepository;
 
 public class SchoolRepositoryImpl implements SchoolRepository {
-	private List<School> schools;
-	
-	public SchoolRepositoryImpl(List<School> schools) {
-		this.schools = schools;
-	}
+	private List<School> schools = new ArrayList<>();
 	
 	public List<School> getSchools() {
 		return schools;

@@ -3,10 +3,16 @@ package com.cleancode.education;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cleancode.education.functions.SchoolManagement;
-import com.cleancode.education.functions.SchoolManagementImpl;
+import com.cleancode.education.controller.SchoolController;
+import com.cleancode.education.controller.impl.SchoolControllerImpl;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
+import com.cleancode.education.repository.SchoolRepository;
+import com.cleancode.education.repository.impl.SchoolRepositoryImpl;
+import com.cleancode.education.service.SchoolService;
+import com.cleancode.education.service.impl.SchoolServiceImpl;
+import com.cleancode.education.util.FileManagement;
+import com.cleancode.education.util.FileManagementImpl;
 import com.cleancode.education.views.PrinterSupport;
 
 import junit.framework.Test;
@@ -76,145 +82,186 @@ public class AppTest
     	assertEquals("Working School's ID: nbk-vl", print.workingSchool("nbk-vl"));
     }
     
-    /*
-	public void addSchool(List<School> schools, School school);
-	public void addSchoolFrom(String fileName, List<School> schools);
-	public void signContractWithTeacher(School school, Teacher teacher);
-	public void signContractWithTeacherFrom(String fileName, List<School> schools);
-	*/
     
     public void testAddSchoolWithEmptyList() {
-    	List<School> schools = new ArrayList<>();
-    	SchoolManagement sm = new SchoolManagementImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	schoolController.addSchool(new School());
     	
-    	sm.addSchool(schools, new School());
-    	
-    	assertEquals(1, schools.size());
+    	assertEquals(1, schoolService.getAllSchool().size());
     }
     
     public void testAddSchoolWithNoneEmptyList() {
-    	List<School> schools = new ArrayList<>();
-    	schools.add(new School("nbk-vl","NBK","VL",null,50));
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	schoolController.addSchool(new School("nbk-vl","NBK","VL",null,50));
     	
-    	SchoolManagement sm = new SchoolManagementImpl();
-    	sm.addSchool(schools, new School());
+    	schoolController.addSchool(new School());
     	
-    	assertEquals(2, schools.size());
+    	assertEquals(2, schoolService.getAllSchool().size());
     }
     
     public void testAddExistedSchoolShouldNotIncreaseTheNumberOfSchool() {
-    	List<School> schools = new ArrayList<>();
-    	schools.add(new School("nbk-vl","NBK","VL",null,50));
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	schoolController.addSchool(new School("nbk-vl","NBK","VL",null,50));
+    	schoolController.addSchool(new School("nbk-vl","BK","HCM",null,50));
     	
-    	SchoolManagement sm = new SchoolManagementImpl();
-    	sm.addSchool(schools, new School("nbk-vl","BK","HCM",null,50));
-    	
-    	assertEquals(1, schools.size());
+    	assertEquals(1, schoolService.getAllSchool().size());
     }
     
     public void testAddExistedSchoolShouldUpdateSchoolInfo() {
-    	List<School> schools = new ArrayList<>();
-    	schools.add(new School("nbk-vl","NBK","VL",null,50));
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	schoolController.addSchool(new School("nbk-vl","NBK","VL",null,50));
     	
-    	SchoolManagement sm = new SchoolManagementImpl();
-    	sm.addSchool(schools, new School("nbk-vl","BK","HCM",null,40));
     	
-    	assertEquals("BK", schools.get(0).getName());
-    	assertEquals("HCM", schools.get(0).getAddress());
-    	assertEquals(40, schools.get(0).getNumberOfStudent());
+    	schoolController.addSchool(new School("nbk-vl","BK","HCM",null,40));
+    	
+    	assertEquals("BK", schoolService.getSchoolById("nbk-vl").getName());
+    	assertEquals("HCM", schoolService.getSchoolById("nbk-vl").getAddress());
+    	assertEquals(40, schoolService.getSchoolById("nbk-vl").getNumberOfStudent());
     }
     
-    public void testSignContractWithTeacherInEmptyList() {
-    	School school = new School();
-    	SchoolManagement sm = new SchoolManagementImpl();
-    	sm.signContractWithTeacher(school, new Teacher());
+    public void testSignContractWithTeacher() {
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	schoolController.addSchool(new School("nbk-vl","NBK","VL",new ArrayList<Teacher>(),50));
+    	schoolController.signContractWithTeacher(new Teacher("285656600","Huy","nbk-vl"));
     	
-    	assertEquals(1, school.getNumberOfTeacher());
+    	assertEquals(1, schoolService.getSchoolById("nbk-vl").getNumberOfTeacher());
     }
     
-    public void testSignContractWithTeacherInNoneEmptyList() {
-    	School school = new School();
-    	school.signContractWith(new Teacher("123654789","Tien","nbk-vl"));
+    public void testSignContractWithTeacherHaveSchoolIdNotExistedInSystem() {
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
-    	SchoolManagement sm = new SchoolManagementImpl();
-    	sm.signContractWithTeacher(school, new Teacher("123456789","Huy","nbk-vl"));
+    	schoolController.addSchool(new School("nbk-vl","NBK","VL",new ArrayList<Teacher>(),50));
+    	schoolController.signContractWithTeacher(new Teacher("285656600","Huy","nbk-vl"));
+    	schoolController.signContractWithTeacher(new Teacher("285656644","Tien","nbk-qn"));
     	
-    	assertEquals(2, school.getNumberOfTeacher());
+    	assertEquals(1, schoolService.getSchoolById("nbk-vl").getNumberOfTeacher());
     }
     
     public void testAddSchoolFromFile(){
-    	List<School> schools = new ArrayList<School>();
-    	SchoolManagement sm = new SchoolManagementImpl();
-    	String fileName = "truong.txt";
-    	sm.addSchoolFrom(fileName, schools);
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
-    	assertEquals(2, schools.size());
+    	
+    	String fileName = "truong.txt";
+    	schoolController.addSchoolsFrom(fileName);
+    	
+    	assertEquals(2, schoolService.getAllSchool().size());
     }
     
     public void testAddSchoolFromFileShouldNotIncreaseTheNumberOfSchoolIfSchoolExisted() {
-    	List<School> schools = new ArrayList<School>();
-    	schools.add(new School("nbk-vl","","",null,50));
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
-    	SchoolManagement sm = new SchoolManagementImpl();
+    	schoolController.addSchool(new School("nbk-vl","","",null,50));
+    	
     	String fileName = "truong.txt";
-    	sm.addSchoolFrom(fileName, schools);
+    	schoolController.addSchoolsFrom(fileName);
     	
-    	assertEquals(2, schools.size());
+    	assertEquals(2, schoolService.getAllSchool().size());
     }
     
     public void testAddSchoolFromFileShouldUpdateSchoolInfoIfSchoolExisted() {
-    	List<School> schools = new ArrayList<School>();
-    	schools.add(new School("nbk-vl","","",null,50));
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	schoolController.addSchool(new School("nbk-vl","","",null,50));
     	
-    	SchoolManagement sm = new SchoolManagementImpl();
     	String fileName = "truong.txt";
-    	sm.addSchoolFrom(fileName, schools);
+    	schoolController.addSchoolsFrom(fileName);
     	
-    	assertEquals("Truong trung hoc Chuyen Nguyen Binh Khiem", schools.get(0).getName());
-    	assertEquals("Vinh Long", schools.get(0).getAddress());
-    	assertEquals(2000, schools.get(0).getNumberOfStudent());
+    	assertEquals("Truong trung hoc Chuyen Nguyen Binh Khiem", schoolService.getSchoolById("nbk-vl").getName());
+    	assertEquals("Vinh Long", schoolService.getSchoolById("nbk-vl").getAddress());
+    	assertEquals(2000, schoolService.getSchoolById("nbk-vl").getNumberOfStudent());
     }
     
     public void testSignContractWithTeacherFromFile() {
-    	List<School> schools = new ArrayList<School>();
-    	SchoolManagement sm = new SchoolManagementImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	
     	String schoolFile = "truong.txt";
     	String teacherFile = "giaovien.txt";
-    	sm.addSchoolFrom(schoolFile, schools);
-    	sm.signContractWithTeacherFrom(teacherFile, schools);
     	
-    	assertEquals(1, schools.get(0).getNumberOfTeacher());
-    	assertEquals(1, schools.get(1).getNumberOfTeacher());
+    	schoolController.addSchoolsFrom(schoolFile);
+    	schoolController.signContractWithTeacherFrom(teacherFile);
+    	
+    	assertEquals(1, schoolService.getSchoolById("nbk-vl").getNumberOfTeacher());
+    	assertEquals(1, schoolService.getSchoolById("nbk-qn").getNumberOfTeacher());
     }
     
     public void testAddTeacherFromFileShouldNotIncreaseTheNumberOfTeacherIfTeacherExisted() {
-    	List<School> schools = new ArrayList<School>();
-    	SchoolManagement sm = new SchoolManagementImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	
     	String schoolFile = "truong.txt";
-    	sm.addSchoolFrom(schoolFile, schools);
+    	schoolController.addSchoolsFrom(schoolFile);
+    	
     	List<Teacher> teachers = new ArrayList<>();
     	teachers.add(new Teacher("337829999","","nbk-vl"));
-    	schools.get(0).setTeachers(teachers);
+    	schoolService.getSchoolById("nbk-vl").setTeachers(teachers);
     	
     	String teacherFile = "giaovien.txt";
-    	sm.signContractWithTeacherFrom(teacherFile, schools);
+    	schoolController.signContractWithTeacherFrom(teacherFile);
     	
-    	assertEquals(1, schools.get(0).getNumberOfTeacher());
+    	assertEquals(1, schoolService.getSchoolById("nbk-vl").getNumberOfTeacher());
     }
     
     public void testAddTeacherFromFileShouldUpdateTeacherInfoIfTeacherExisted() {
-    	List<School> schools = new ArrayList<School>();
-    	SchoolManagement sm = new SchoolManagementImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
+    	SchoolController schoolController = new SchoolControllerImpl(schoolService);
+    	
     	String schoolFile = "truong.txt";
-    	sm.addSchoolFrom(schoolFile, schools);
+    	schoolController.addSchoolsFrom(schoolFile);
     	List<Teacher> teachers = new ArrayList<>();
     	teachers.add(new Teacher("337829999","","nbk-vl"));
-    	schools.get(0).setTeachers(teachers);
+    	schoolService.getSchoolById("nbk-vl").setTeachers(teachers);
     	
     	String teacherFile = "giaovien.txt";
-    	sm.signContractWithTeacherFrom(teacherFile, schools);
+    	schoolController.signContractWithTeacherFrom(teacherFile);
     	
-    	assertEquals(1, schools.get(0).getNumberOfTeacher());
-    	assertEquals("Tran Van Thanh", schools.get(0).getTeachers().get(0).getName());
+    	assertEquals(1, schoolService.getSchoolById("nbk-vl").getNumberOfTeacher());
+    	assertEquals("Tran Van Thanh", schoolService.getSchoolById("nbk-vl").getTeachers().get(0).getName());
     }
+    /*
+     * void exportSchoolsToText(String fileName);
+	void exportSchoolsToExcel(String fileName);
+	void exportTeacherToText(String fileName);
+	void exportTeacherToExcel(String fileName);
+	*/
+    public void testExportSchoolToTextFile() {
+    	FileManagement fileManagement = new FileManagementImpl();
+    	assertTrue(fileManagement.exportSchoolsToText(new ArrayList<School>(), "exportedschool.txt"));
+    }
+    
+    public void testExportSchoolToExcelFile() {
+    	FileManagement fileManagement = new FileManagementImpl();
+    	assertTrue(fileManagement.exportSchoolsToExcel(new ArrayList<School>(), "exportedschool.xlsx"));
+    }
+    
+    public void testExportTeacherToTextFile() {
+    	FileManagement fileManagement = new FileManagementImpl();
+    	assertTrue(fileManagement.exportTeachersToText(new ArrayList<School>(), "exportedteacher.txt"));
+    }
+    
+    public void testExportTeacherToExcelFile() {
+    	FileManagement fileManagement = new FileManagementImpl();
+    	assertTrue(fileManagement.exportTeachersToExcel(new ArrayList<School>(), "exportedteacher.xlsx"));
+    }
+    
 }
