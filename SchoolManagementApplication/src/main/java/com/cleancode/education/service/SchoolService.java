@@ -7,16 +7,14 @@
  */
 package com.cleancode.education.service;
 
-import java.io.IOException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import java.util.List;
 
 import com.cleancode.education.models.School;
 
 public interface SchoolService {
-	public void viewAllSchools();
-	public void addSchool(School school);
-	public void addSchoolFrom(String fileName);
-	public void exportSchoolsToText(String fileName);
-	public void exportSchoolsToExcel() throws IOException, InvalidFormatException;
+	School getSchoolById(String id);
+	List<School> getAllSchool();
+	void add(School school);
+	void update(School school);
+	void remove(School school);
 }

@@ -5,7 +5,7 @@
  * @date Oct 13, 2018
  * @version 1.0
  */
-package com.cleancode.education.service;
+package com.cleancode.education.controller.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,24 +26,24 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.cleancode.education.controller.SchoolController;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
-import com.cleancode.education.repository.SchoolRepository;
-import com.cleancode.education.repository.SchoolRepositoryImpl;
+import com.cleancode.education.service.SchoolService;
+import com.cleancode.education.service.impl.SchoolServiceImpl;
 import com.cleancode.education.views.SchoolPrinter;
 
-public class SchoolServiceImpl implements SchoolService {
-	
-	private SchoolRepository schoolRepository;
+public class SchoolControllerImpl implements SchoolController{
+	private SchoolService schoolService;
 	private SchoolPrinter schoolPrinter = new SchoolPrinter();
 	
-	public SchoolServiceImpl(SchoolRepositoryImpl schoolRepositoryImpl) {
-		this.schoolRepository = schoolRepositoryImpl;
+	public SchoolControllerImpl(SchoolServiceImpl schoolServiceImpl) {
+		this.schoolService = schoolServiceImpl;
 	}
 	
 	@Override
 	public void viewAllSchools() {
-		List<School> schools = schoolRepository.findAll();
+		List<School> schools = schoolService.getAllSchool();
 		if (schools.isEmpty()) {
 			System.out.println("The school list is empty.");
 		} else {
@@ -57,7 +57,7 @@ public class SchoolServiceImpl implements SchoolService {
 
 	@Override
 	public void addSchool(School newSchool) {
-		List<School> schools = schoolRepository.findAll();
+		List<School> schools = schoolService.getAllSchool();
 		/*
 		 * Kiểm tra nếu list rỗng -> add trực tiếp vào list
 		 * Nếu không -> kiểm tra từng mã trường một để quyết định update thông tin hay add mới*/
@@ -109,7 +109,7 @@ public class SchoolServiceImpl implements SchoolService {
 
 	@Override
 	public void exportSchoolsToText(String fileName) {
-		List<School> schools = schoolRepository.findAll();
+		List<School> schools = schoolService.getAllSchool();
 		File file = new File("resources/" + fileName);
 		PrintWriter pw = null;
 		try {
@@ -132,7 +132,7 @@ public class SchoolServiceImpl implements SchoolService {
 
 	@Override
 	public void exportSchoolsToExcel() throws IOException, InvalidFormatException {
-		List<School> schools = schoolRepository.findAll();
+		List<School> schools = schoolService.getAllSchool();
 		String[] columns = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
 		// Create a Workbook
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
@@ -202,5 +202,33 @@ public class SchoolServiceImpl implements SchoolService {
         workbook.close();
 	}
 
-
+	@Override
+	public void signContractWithTeacherFrom(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		File file = new File("resources/" + fileName);
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			br.readLine();
+			br.readLine();
+			String currentLine;
+			while((currentLine = br.readLine()) != null) {
+				currentLine = currentLine.substring(2);
+				String[] dataArr = currentLine.split(" \\|\\|\\| ");
+				Teacher teacher = new Teacher(dataArr[0],dataArr[1],dataArr[2]);
+				for (School school : schools) {
+					if (school.getId().equals(dataArr[2]))
+						;
+				}
+				
+			}
+		} catch (IOException e) {e.printStackTrace();}
+		finally {
+				try {
+					if(br!=null) {
+					br.close();}
+				} catch (IOException e) {e.printStackTrace();}
+		}
+		
+	}
 }
