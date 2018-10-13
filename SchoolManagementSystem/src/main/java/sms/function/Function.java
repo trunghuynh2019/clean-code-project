@@ -46,7 +46,7 @@ public class Function implements FunctionITF {
 	}
 
 	public List<String> getStringFromSchoolList(List<School> schools) {
-		List<String> schoolsData = new ArrayList<>();
+		List<String> schoolsData = new ArrayList<String>();
 		if (schools.size() == 0)
 			return null;
 		else {
@@ -60,7 +60,7 @@ public class Function implements FunctionITF {
 	}
 
 	public List<String> getStringFromTeacherList(List<School> schools) {
-		List<String> teachersData = new ArrayList<>();
+		List<String> teachersData = new ArrayList<String>();
 		if (schools.size() == 0)
 			return null;
 		else {

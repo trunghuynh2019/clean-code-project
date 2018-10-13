@@ -152,7 +152,7 @@ public class Application {
 		}
 		MainView.loopAgain(scanner);
 	}
-	
+
 	public static void writeDataToExcelFile(List<School> schools, Scanner scanner) {
 		FileWritingITF fileWriting = new FileWriting("truong.xlsx", "giaovien.xlsx");
 

@@ -23,7 +23,7 @@ public class FileReadingTest extends TestCase {
 	}
 	
 	public static Test suite() {
-		return new TestSuite(FunctionTest.class, FileReadingTest.class);
+		return new TestSuite(FileReadingTest.class);
 	}
 	
 	public void testReadSchoolFileSuccessfully() {
