@@ -57,8 +57,19 @@ public class AppTest extends TestCase {
     	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
     	schools.add(new School("BKU", "Bach Khoa", 10, "Ho Chi Minh city", 0, null));
     	
-    	management.exportDataOfSchools(schools, fileName);
-
+    	boolean check = management.exportDataOfSchools(schools, fileName);
+    	assertEquals(true, check);
+    }
+    
+ // test export data of school
+    public void testExportDataTeacher() {
+    	List<Teacher> teachers = new ArrayList<Teacher>();
+    	String fileName = "dataTeacher.xls";
+    	teachers.add(new Teacher(123123123,"Teacher A","Ho Chi Minh"));
+    	teachers.add(new Teacher(123564125,"Teacher B","Ho Chi Minh"));
+    	
+    	boolean check = management.exportDataOfTeachers(teachers, fileName);
+    	assertEquals(true, check);
     }
     
     // test load database of school list
