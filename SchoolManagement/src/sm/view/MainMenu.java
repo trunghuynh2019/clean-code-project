@@ -45,6 +45,12 @@ public class MainMenu {
 				teacherFunction.WritingFileToTeachers(teachers);
 				break;
 			case 5 :
+				schoolFunction.SchoolsWriteIntoExcel();
+				break;
+			case 6 :
+				teacherFunction.TeachersWriteIntoExcel();
+				break;
+			case 7 :
 				cont= false;
 				break;
 				

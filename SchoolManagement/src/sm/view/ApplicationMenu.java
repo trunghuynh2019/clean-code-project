@@ -19,7 +19,9 @@ public class ApplicationMenu {
 		System.out.println("\t2. Menu for Teachers");
 		System.out.println("\t3. Writing from School File (truong.txt) to Schools Array");
 		System.out.println("\t4. Writing from Teacher File (giaovien.txt) to Teachers Array");
-		System.out.println("\t5. Exit");
+		System.out.println("\t5. Writing from Schools Array  to Excel File");
+		System.out.println("\t6. Writing from Teachers Array  to Excel File");
+		System.out.println("\t7. Exit");
 		System.out.println("===================================");
 		System.out.print("Please input your choice ( number of menu ) : ");
 	}

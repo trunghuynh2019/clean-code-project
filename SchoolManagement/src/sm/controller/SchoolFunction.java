@@ -1,18 +1,24 @@
 package sm.controller;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.URI;
-import java.net.URL;
+
 import java.util.List;
 import java.util.Scanner;
+
+import org.apache.poi.ss.formula.functions.Column;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import sm.entity.School;
 import sm.entity.Teacher;
@@ -20,6 +26,9 @@ public class SchoolFunction {
 	
 	List<School> schools;
 	List<Teacher> teachers;
+
+	private static String[] columns = {"Id", "Name", "Address","Phone","Number of Teacher"};
+	private static String path = System.getProperty("user.dir");
 	
 	public SchoolFunction() {
 		super();
@@ -84,12 +93,105 @@ public class SchoolFunction {
 			}
 			br.close();
 			fr.close();
+			//SchoolsWriteIntoExcel();
 		}
 		catch(IOException ignored)
 		{
 			
 		}
 		
+	}
+	
+	public void SchoolsWriteIntoExcel()
+	{
+		
+		
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        /* CreationHelper helps us create instances of various things like DataFormat, 
+           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+        //CreationHelper createHelper = workbook.getCreationHelper();
+
+        // Create a Sheet
+        Sheet sheet = workbook.createSheet("School");
+
+        // Create a Font for styling header cells
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 14);
+        headerFont.setColor(IndexedColors.RED.getIndex());
+
+        // Create a CellStyle with the font
+        CellStyle headerCellStyle = workbook.createCellStyle();
+        headerCellStyle.setFont(headerFont);
+
+        // Create a Row
+        Row headerRow = sheet.createRow(0);
+
+        // Create cells
+        	Cell cell;
+        	
+            cell = headerRow.createCell(0, CellType.STRING);
+            cell.setCellValue("ID");
+            cell.setCellStyle(headerCellStyle);
+            
+            cell = headerRow.createCell(1, CellType.STRING);
+            cell.setCellValue("Name");
+            cell.setCellStyle(headerCellStyle);
+            
+            cell = headerRow.createCell(2, CellType.STRING);
+            cell.setCellValue("Address");
+            cell.setCellStyle(headerCellStyle);
+            
+            cell = headerRow.createCell(3, CellType.STRING);
+            cell.setCellValue("Phone");
+            cell.setCellStyle(headerCellStyle);
+        
+            cell = headerRow.createCell(4, CellType.NUMERIC);
+            cell.setCellValue("Number of Teacher");
+            cell.setCellStyle(headerCellStyle);
+
+        int rowNum = 0;
+        for(School school: schools) {
+            Row row = sheet.createRow(rowNum++);
+
+            row.createCell(0)
+                    .setCellValue(school.getId());
+
+            row.createCell(1)
+                    .setCellValue(school.getName());
+
+            //Cell dateOfBirthCell = row.createCell(2);
+            //dateOfBirthCell.setCellValue(employee.getDateOfBirth());
+            //dateOfBirthCell.setCellStyle(dateCellStyle);
+
+            row.createCell(2)
+                    .setCellValue(school.getAddress());
+            row.createCell(3)
+            		.setCellValue(school.getPhone());
+            row.createCell(4)
+            		.setCellValue(school.getNumOfTeachers());
+            
+        }
+
+		// Resize all columns to fit the content size
+        for(int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        try
+        {
+        // Write the output to a file
+        FileOutputStream fileOut = new FileOutputStream(path+"\\src\\file\\schools.xlsx");
+        workbook.write(fileOut);
+        fileOut.close();
+     // Closing the workbook
+        workbook.close();
+        System.out.println("Write file success !");
+        }
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }      
+       
 	}
 	
 	/**
