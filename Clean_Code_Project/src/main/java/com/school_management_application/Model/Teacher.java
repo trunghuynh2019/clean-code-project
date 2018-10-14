@@ -33,7 +33,7 @@ public class Teacher {
         this.phoneNo = phoneNo;
         this.address = address;
     }
-    
+
     public Integer getTeacherID(){
         
         return teacherID;
