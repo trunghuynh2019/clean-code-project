@@ -7,7 +7,6 @@
  */
 package com.cleancode.education.controller.impl;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.cleancode.education.controller.SchoolController;

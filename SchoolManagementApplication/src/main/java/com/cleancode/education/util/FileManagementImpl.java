@@ -28,7 +28,35 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 
+
+
 public class FileManagementImpl implements FileManagement{
+	
+	public enum SchoolCells {
+		SCHOOL_ID(0), NAME(1), NUMBER_OF_TEACHER(2), ADDRESS(3), TEACHER_CMND(4);
+		
+		private final int value;
+	    private SchoolCells(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
+	
+	public enum TeacherCells {
+		CMND(0), NAME(1), SCHOOL_ID(2);
+		
+		private final int value;
+	    private TeacherCells(int value) {
+	        this.value = value;
+	    }
+
+	    public int getValue() {
+	        return value;
+	    }
+	}
 	
 	@Override
 	public List<School> getSchoolsFrom(String fileName){
@@ -92,63 +120,50 @@ public class FileManagementImpl implements FileManagement{
 	@Override
 	public boolean exportTeachersToExcel(List<School> schools, String fileName){
 		String[] columns = {"CMND", "Name", "Working School's ID"};
-		// Create a Workbook
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-        /* CreationHelper helps us create instances of various things like DataFormat, 
-           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
-
-        // Create a Sheet
         Sheet sheet = workbook.createSheet("Teacher");
 
-        // Create a Font for styling header cells
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
 
-        // Create a CellStyle with the font
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
 
-        // Create a Row
         Row headerRow = sheet.createRow(0);
 
-        // Create cells
         for(int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(columns[i]);
             cell.setCellStyle(headerCellStyle);
         }
 
-        // Create Other rows and cells with employees data
         int rowNum = 1;
         for(School school: schools) {
         	for (Teacher teacher : school.getTeachers()) {
         		Row row = sheet.createRow(rowNum++);
 
-                row.createCell(0)
+                row.createCell(TeacherCells.CMND.getValue())
                         .setCellValue(teacher.getId());
 
-                row.createCell(1)
+                row.createCell(TeacherCells.NAME.getValue())
                         .setCellValue(teacher.getName());
 
-                row.createCell(2).setCellValue(teacher.getSchoolId());
+                row.createCell(TeacherCells.SCHOOL_ID.getValue()).setCellValue(teacher.getSchoolId());
         	}
             
             
         }
 
-		// Resize all columns to fit the content size
         for(int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
-        // Write the output to a file
         FileOutputStream fileOut;
 		try {
 			fileOut = new FileOutputStream(new File("resources/" + fileName));
 			workbook.write(fileOut);
 			fileOut.close();
-			// Closing the workbook
 	        workbook.close();
 	        return true;
 		} catch (IOException e) {
@@ -188,73 +203,54 @@ public class FileManagementImpl implements FileManagement{
 
 	@Override
 	public boolean exportSchoolsToExcel(List<School> schools, String fileName) {
+		
 		String[] columns = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
-		// Create a Workbook
-        Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-        /* CreationHelper helps us create instances of various things like DataFormat, 
-           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
+		Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-        // Create a Sheet
         Sheet sheet = workbook.createSheet("School");
 
-        // Create a Font for styling header cells
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
 
-        // Create a CellStyle with the font
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
 
-        // Create a Row
         Row headerRow = sheet.createRow(0);
 
-        // Create cells
         for(int i = 0; i < columns.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(columns[i]);
             cell.setCellStyle(headerCellStyle);
         }
 
-        // Create Other rows and cells with employees data
         int rowNum = 1;
         for(School school: schools) {
             Row row = sheet.createRow(rowNum++);
 
-            row.createCell(0)
+            row.createCell(SchoolCells.SCHOOL_ID.getValue())
                     .setCellValue(school.getId());
 
-            row.createCell(1)
+            row.createCell(SchoolCells.NAME.getValue())
                     .setCellValue(school.getName());
 
-            row.createCell(2).setCellValue(school.getNumberOfTeacher());
+            row.createCell(SchoolCells.NUMBER_OF_TEACHER.getValue()).setCellValue(school.getNumberOfTeacher());
 
-            row.createCell(3)
+            row.createCell(SchoolCells.ADDRESS.getValue())
                     .setCellValue(school.getAddress());
-           row.createCell(4).setCellValue(school.getTeacherId());
-//            school.getTeacherId();
-//            String temp = "";
-//            for (Teacher t : school.getTeachers()) {
-//            	
-//            	temp = c.getStringCellValue() + ",";
-//            	temp += t.getId();
-//            	c.setCellValue(temp);
-//            }
+           row.createCell(SchoolCells.TEACHER_CMND.getValue()).setCellValue(school.getTeacherId());
             
         }
 
-		// Resize all columns to fit the content size
         for(int i = 0; i < columns.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
        
         try {
-        	 // Write the output to a file
             FileOutputStream fileOut = new FileOutputStream(new File("resources/" + fileName));
             workbook.write(fileOut);
 			fileOut.close();
-			 // Closing the workbook
 	        workbook.close();
 	        
 	        return true;
