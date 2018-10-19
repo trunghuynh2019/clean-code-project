@@ -73,7 +73,7 @@ public class School {
 	}
 	
 	public int getNumOfTeachers() {
-		return numOfTeachers;
+		return teachers.size();
 	}
 
 	public void setNumOfTeachers(int numberOfTeacher) {
@@ -88,4 +88,24 @@ public class School {
 		this.teachers = teachers;
 	}
 
+	public void signContractWithTeacher(Teacher teacher) {
+		teachers.add(teacher);
+	}
+	
+	public boolean equalId(School school) {
+		return this.id.equals(school.getId());
+	}
+	
+	public String getTeacherId() {
+		if (teachers.isEmpty()) {
+			return "";
+		}else {
+			String teachersId = teachers.get(0).getId();
+			for (int i = 1; i < teachers.size(); i++) {
+				teachersId += "," + teachers.get(i).getId() ;
+			}
+			return teachersId;
+		}
+		
+	}
 }
