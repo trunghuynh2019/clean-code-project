@@ -65,6 +65,10 @@ public class Teacher {
 	        getName().equals(((Teacher) obj).getName());
 	}
 	
+	public boolean equalId(Teacher teacher) {
+		return this.id.equals(teacher.getId());
+	}
+	
 	public Teacher(String id, String name, String address, String phone, String schoolId) {
 		this.id = id;
         this.name = name;
