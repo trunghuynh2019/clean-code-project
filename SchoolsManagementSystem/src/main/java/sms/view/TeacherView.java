@@ -15,7 +15,9 @@ public class TeacherView {
 	}
 	
 	public static void showAllTeachers(School school) {
-		if (school.getNumberOfTeachers() == 0)	showMessageEmptyTeacherList();
+		if (school.getNumberOfTeachers() == 0) {
+			showMessageEmptyTeacherList();
+		}
 		else {
 			int i = 1;
 			List<Teacher> teachers = school.getTeachers();

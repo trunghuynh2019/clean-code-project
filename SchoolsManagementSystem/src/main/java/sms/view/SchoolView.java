@@ -15,10 +15,14 @@ public class SchoolView {
 	}
 
 	public static void showAllSchool(List<School> schools) {
-		if (schools.isEmpty()) System.out.println("The school list is empty!");
-		else
-			for (School school : schools) 
+		if (schools.isEmpty()) {
+			System.out.println("The school list is empty!");
+		}
+		else {
+			for (School school : schools) {
 				showInformationOfSchool(school);
+			}
+		}
 	}
 
 	public static void enterInformationOfSchool(School school, Scanner scanner) {
