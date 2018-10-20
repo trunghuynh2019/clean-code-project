@@ -31,11 +31,6 @@ public class TeacherRepository implements TeacherInterface {
     	this.teachers = teachers;
     }
     
-    public List<Teacher> getTeachers(){
-    	
-    	return teachers;
-    }
-    
     public Teacher findByTeacherID(Integer teacherID) {
         ListIterator<Teacher> itr = teachers.listIterator();
         Teacher teacher;

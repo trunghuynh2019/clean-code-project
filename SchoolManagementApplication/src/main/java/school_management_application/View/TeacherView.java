@@ -10,7 +10,7 @@ public class TeacherView {
 		ListIterator<String> itr = teacher.getIdentityCard().listIterator();
 		
 		System.out.printf(String.format("%-50s\n", teacher.getName()));
-		System.out.printf(String.format("Teacher ID: %s\n", teacher.getName()));
+		System.out.printf(String.format("Teacher ID: %d\n", teacher.getTeacherID()));
 		System.out.printf(String.format("School ID: %s\n", teacher.getSchoolID()));
 		System.out.printf(String.format("Indentity Card: "));
         while(itr.hasNext()){

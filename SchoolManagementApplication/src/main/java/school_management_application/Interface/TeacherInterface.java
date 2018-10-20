@@ -7,7 +7,6 @@ public interface TeacherInterface {
 	
 	public void save(Teacher teacher);
 	public void setTeachers(List<Teacher> teachers);
-	public List<Teacher> getTeachers();
     public Teacher findByTeacherID(Integer teacherID);
     public List<Teacher> findBySchoolID(String schoolID);
     public List<Teacher> findByName(String name);

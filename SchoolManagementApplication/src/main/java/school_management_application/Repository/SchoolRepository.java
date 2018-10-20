@@ -8,7 +8,7 @@ import school_management_application.Interface.SchoolInterface;
 import school_management_application.Model.School;
 
 public class SchoolRepository implements SchoolInterface {
-	private List<School> schools;
+	private List<School> schools;	
 	
 	public SchoolRepository() {
 		
@@ -79,8 +79,16 @@ public class SchoolRepository implements SchoolInterface {
 	}
 
 	public School deleteByID(String ID) {
-		// TODO Auto-generated method stub
-		return null;
+		ListIterator<School> itr = schools.listIterator();
+        School school;
+        
+        while(itr.hasNext()) {
+            school = itr.next();
+            if(school.getID().equals(ID)){
+                schools.remove(school);
+                return school;
+            }
+        }
+        return null;
 	}
-
 }
