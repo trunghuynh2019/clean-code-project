@@ -84,21 +84,30 @@ public class SchoolManagementSystem {
 				switch (choice) {
 					case 1: TeacherView.showAllTeachers(school); break;
 					case 2: {
-						if(school.getTeachers()==null) school.setTeachers(new ArrayList<Teacher>());
+						List<Teacher> teachers = school.getTeachers();
+						if(teachers==null) {
+							school.setTeachers(new ArrayList<Teacher>());
+						}
 						Teacher teacher = new Teacher();
 						TeacherView.enterInformationOfTeacher(teacher, scanner);
 						management.signContractWithTeacher(school, teacher);
 						break;
 					}
 					case 3: {
-						if(school.getTeachers()==null) school.setTeachers(new ArrayList<Teacher>());
+						List<Teacher> teachers = school.getTeachers();
+						if(teachers==null) {
+							school.setTeachers(new ArrayList<Teacher>());
+						}
 						TeacherView.enterFileNameOfTeacher();
 						management.loadDatabaseOfTeacher(scanner.nextLine(), school);
 						MainView.confirmLoadingFile();
 						break;
 					}
 					case 4: {
-						if(school.getTeachers()==null) TeacherView.showMessageEmptyTeacherList();
+						List<Teacher> teachers = school.getTeachers();
+						if(teachers==null) {
+							TeacherView.showMessageEmptyTeacherList();
+						}
 						else {
 							TeacherView.enterTeacherName();
 							Teacher teacher = management.searchTeacherByName(school.getTeachers(), scanner.nextLine());
@@ -108,7 +117,10 @@ public class SchoolManagementSystem {
 						break;
 					}
 					case 5: {
-						if(school.getTeachers()==null) TeacherView.showMessageEmptyTeacherList();
+						List<Teacher> teachers = school.getTeachers();
+						if(teachers==null) {
+							TeacherView.showMessageEmptyTeacherList();
+						}
 						else {
 							TeacherView.enterTeacherAddress();
 							Teacher teacher = management.searchTeacherByAddress(school.getTeachers(), scanner.nextLine());
@@ -118,7 +130,7 @@ public class SchoolManagementSystem {
 						break;
 					}
 					case 6: exportAllTeacher(school.getTeachers(), management, fileName); break;
-					case 7: backToMainMenu=false;
+					case 7: backToMainMenu=false; break;
 				}
 			}while(backToMainMenu);
 		}
