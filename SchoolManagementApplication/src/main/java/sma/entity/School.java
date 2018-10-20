@@ -1,5 +1,6 @@
 package sma.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import sma.entity.Teacher;
@@ -11,7 +12,7 @@ public class School {
 	String address;
 	String phone;
 	int numOfTeachers;
-	List<Teacher> teachers;
+	List<Teacher> teachers = new ArrayList<Teacher>();
 
 	public School() {
 		super();
@@ -73,7 +74,7 @@ public class School {
 	}
 	
 	public int getNumOfTeachers() {
-		return teachers.size();
+		return numOfTeachers;
 	}
 
 	public void setNumOfTeachers(int numberOfTeacher) {
@@ -86,10 +87,12 @@ public class School {
 
 	public void setTeachers(List<Teacher> teachers) {
 		this.teachers = teachers;
+		this.numOfTeachers = teachers.size();
 	}
 
-	public void signContractWithTeacher(Teacher teacher) {
-		teachers.add(teacher);
+	public void signContractWith(Teacher teacher) {
+		this.teachers.add(teacher);
+		this.numOfTeachers = teachers.size();
 	}
 	
 	public boolean equalId(School school) {

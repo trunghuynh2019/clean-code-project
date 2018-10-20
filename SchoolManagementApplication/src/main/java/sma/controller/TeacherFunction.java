@@ -69,7 +69,6 @@ public class TeacherFunction {
 		}
 		school.setTeachers(teachers); 
 		school.setNumOfTeachers(teachers.size());
-		
 	}
 		
 	public void WritingFileToTeachers(List<Teacher> teachers)
