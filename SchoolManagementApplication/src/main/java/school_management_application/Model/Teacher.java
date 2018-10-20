@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Teacher {
-	private Integer teacherID = 0;
+	private Integer teacherID;
     private String schoolID;
     private String name;
     private List<String> identityCard;
@@ -14,18 +14,18 @@ public class Teacher {
     
     public Teacher() {
 
-        teacherID++;
-        schoolID = "";
-        name = "";
+        teacherID = null;
+        schoolID = null;
+        name = null;
         
         identityCard = new ArrayList<String>();
         phoneNo = new ArrayList<String>();
-        address = "";
+        address = null;
     }
 
-    public Teacher (String schoolID, String name, List<String> identityCard, List<String> phoneNo, String address) {
+    public Teacher (Integer teacherID, String schoolID, String name, List<String> identityCard, List<String> phoneNo, String address) {
         
-        teacherID++;
+        this.teacherID = teacherID;
         this.schoolID = schoolID;
         this.name = name;
         this.identityCard = identityCard;
@@ -36,6 +36,11 @@ public class Teacher {
     public Integer getTeacherID(){
         
         return teacherID;
+    }
+    
+    public void setTeacherID(Integer teacherID) {
+    	
+    	this.teacherID = teacherID;
     }
     
     public String getSchoolID(){

@@ -8,6 +8,7 @@ import school_management_application.Model.Teacher;
 
 public class TeacherRepository implements TeacherInterface {
 	private List<Teacher> teachers;
+	private Integer teacherID = 1;
     
     public TeacherRepository (){
         
@@ -15,7 +16,14 @@ public class TeacherRepository implements TeacherInterface {
     }
     
     public void save(Teacher teacher) {
-        Teacher teach_check = findByTeacherID(teacher.getTeacherID());
+        Teacher teach_check = null;
+        
+        if(teacher.getTeacherID() == null) {
+        	teacher.setTeacherID(teacherID);
+        }
+        else {
+        	teach_check = findByTeacherID(teacher.getTeacherID());
+        }
         
         if(teach_check == null){
             teachers.add(teacher);
@@ -24,6 +32,7 @@ public class TeacherRepository implements TeacherInterface {
             teachers.remove(teach_check);
             teachers.add(teacher);
         }
+        teacherID++;        
     }
     
     public void setTeachers(List<Teacher> teachers) {
