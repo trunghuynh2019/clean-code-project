@@ -1,17 +1,33 @@
 package school_management_application.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import school_management_application.DTO.TeacherDto;
 import school_management_application.Model.Teacher;
 import school_management_application.Repository.TeacherRepository;
 
 public class TeacherService {
 	private TeacherRepository teachRepo;
+	private HSSFCellStyle createStyleForTitle(HSSFWorkbook workbook) {
+        HSSFFont font = workbook.createFont();
+        font.setBold(true);
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setFont(font);
+        return style;
+    }
     
     public TeacherService(){
         
@@ -151,8 +167,98 @@ public class TeacherService {
     	
     	return teachRepo.findByAddress(address);
     }
+    
 	public List<Teacher> showAllTeacher(){
 	    
 	    return teachRepo.findAll();
 	}
+	
+	public boolean exportTeachersToExcel(String fileName) throws IOException {
+        int rownum = 0;
+        Cell cell;
+        Row row;
+        FileOutputStream outFile;
+        String idenCard = null;
+        String phNo = null;
+        
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Teachers");
+        List<Teacher> teachers = showAllTeacher();
+        HSSFCellStyle style = createStyleForTitle(workbook);
+        File file = new File("src/main/resources/output/" + fileName);
+        
+        row = sheet.createRow(rownum);
+        // Teacher ID
+        cell = row.createCell(0, CellType.STRING);
+        cell.setCellValue("Teacher ID");
+        cell.setCellStyle(style);
+        // School ID
+        cell = row.createCell(1, CellType.STRING);
+        cell.setCellValue("School ID");
+        cell.setCellStyle(style);
+        // Teacher Name
+        cell = row.createCell(2, CellType.STRING);
+        cell.setCellValue("Teacher Name");
+        cell.setCellStyle(style);
+        // Identity Card
+        cell = row.createCell(3, CellType.STRING);
+        cell.setCellValue("Identity Card");
+        cell.setCellStyle(style);
+        // Phone Number
+        cell = row.createCell(4, CellType.STRING);
+        cell.setCellValue("Phone Number");
+        cell.setCellStyle(style);
+        // Address
+        cell = row.createCell(4, CellType.STRING);
+        cell.setCellValue("Address");
+        cell.setCellStyle(style);
+        // Data
+        for (Teacher teacher : teachers) {
+	        rownum++;
+            row = sheet.createRow(rownum);
+            // Teacher ID (A)
+            cell = row.createCell(0, CellType.NUMERIC);
+            cell.setCellValue(teacher.getTeacherID());
+            // School ID (B)
+            cell = row.createCell(1, CellType.STRING);
+            cell.setCellValue(teacher.getSchoolID());
+            // Teacher Name (C)
+            cell = row.createCell(2, CellType.STRING);
+            cell.setCellValue(teacher.getName());
+            // Identity Card (D)
+            ListIterator<String> itr_idenCard = teacher.getIdentityCard().listIterator();
+            while(itr_idenCard.hasNext()) {
+            	idenCard = idenCard + itr_idenCard.next() + ", ";
+            }
+            idenCard = idenCard.substring(0, idenCard.length()-2);
+            cell = row.createCell(3, CellType.STRING);
+            cell.setCellValue(idenCard);
+            // Phone Number (E)
+            ListIterator<String> itr_phNo = teacher.getPhoneNo().listIterator();
+            while(itr_phNo.hasNext()) {
+            	phNo = phNo + itr_phNo.next() + ", ";
+            }
+            phNo = phNo.substring(0, idenCard.length()-2);
+            cell = row.createCell(4, CellType.STRING);
+            cell.setCellValue(phNo);
+            // Address (F)
+            cell = row.createCell(5, CellType.STRING);
+            cell.setCellValue(teacher.getAddress());
+        }
+        for(int i = 0; i < 5; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        file.getParentFile().mkdirs();
+        try {
+	        outFile = new FileOutputStream(file);
+	        workbook.write(outFile);
+	        outFile.close();
+	        workbook.close();
+	        return true;
+        }
+        catch (Exception ex) {
+        	ex.printStackTrace();
+        	return false;
+        }
+    }
 }

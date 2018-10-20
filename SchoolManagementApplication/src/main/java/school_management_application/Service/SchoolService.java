@@ -1,15 +1,33 @@
 package school_management_application.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import school_management_application.DTO.SchoolDto;
 import school_management_application.Model.School;
 import school_management_application.Repository.SchoolRepository;
 
 public class SchoolService {
 	private SchoolRepository schoolRepo;
+	private HSSFCellStyle createStyleForTitle(HSSFWorkbook workbook) {
+        HSSFFont font = workbook.createFont();
+        font.setBold(true);
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setFont(font);
+        return style;
+    }
 	
 	public SchoolService() {
 		
@@ -123,4 +141,78 @@ public class SchoolService {
 		
 		return schoolRepo.findAll();
 	}
+	
+	public boolean exportSchoolsToExcel(List<Integer> countTeacher, String fileName) throws IOException {
+        int rownum = 0;
+        Cell cell;
+        Row row;
+        School school;
+        FileOutputStream outFile;
+        
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Schools");
+        List<School> schools = showAllSchool();
+        HSSFCellStyle style = createStyleForTitle(workbook);
+        ListIterator<School> itr_sch = schools.listIterator();
+        ListIterator<Integer> itr_count = countTeacher.listIterator();
+        File file = new File("src/main/resources/output/" + fileName);
+        
+        row = sheet.createRow(rownum);
+        // ID
+        cell = row.createCell(0, CellType.STRING);
+        cell.setCellValue("ID");
+        cell.setCellStyle(style);
+        // School Name
+        cell = row.createCell(1, CellType.STRING);
+        cell.setCellValue("School Name");
+        cell.setCellStyle(style);
+        // Address
+        cell = row.createCell(2, CellType.STRING);
+        cell.setCellValue("Address");
+        cell.setCellStyle(style);
+        // Number Of Student
+        cell = row.createCell(3, CellType.STRING);
+        cell.setCellValue("Number Of Student");
+        cell.setCellStyle(style);
+        // Number Of Teacher
+        cell = row.createCell(4, CellType.STRING);
+        cell.setCellValue("Number Of Teacher");
+        cell.setCellStyle(style);
+        // Data
+        while (itr_sch.hasNext() && itr_count.hasNext()) {
+	        school = itr_sch.next();
+	        rownum++;
+            row = sheet.createRow(rownum);
+            // ID (A)
+            cell = row.createCell(0, CellType.STRING);
+            cell.setCellValue(school.getID());
+            // School Name (B)
+            cell = row.createCell(1, CellType.STRING);
+            cell.setCellValue(school.getName());
+            // Address (C)
+            cell = row.createCell(2, CellType.STRING);
+            cell.setCellValue(school.getAddress());
+            // Number Of Student (D)
+            cell = row.createCell(3, CellType.NUMERIC);
+            cell.setCellValue(school.getCountStudent());
+            // Number Of Teacher
+            cell = row.createCell(4, CellType.NUMERIC);
+            cell.setCellValue(itr_count.next());
+        }
+        for(int i = 0; i < 4; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        file.getParentFile().mkdirs();
+        try {
+	        outFile = new FileOutputStream(file);
+	        workbook.write(outFile);
+	        outFile.close();
+	        workbook.close();
+	        return true;
+        }
+        catch (Exception ex) {
+        	ex.printStackTrace();
+        	return false;
+        }
+    }
 }
