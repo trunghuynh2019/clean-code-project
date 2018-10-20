@@ -18,7 +18,7 @@ public class TeacherService {
         teachRepo = new TeacherRepository();
     }
     
-    public List<TeacherDto> getDataByFileTXT(String fileName){
+    public List<TeacherDto> importTeachersDataByFileTXT(String fileName){
     	BufferedReader br = null;
     	String contentLine;
     	String[] data;
