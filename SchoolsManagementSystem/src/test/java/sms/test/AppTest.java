@@ -1,15 +1,11 @@
 package sms.test;
 
-import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import sms.function.Management;
 import sms.model.School;
 import sms.model.Teacher;
-import sms.view.MainView;
-import sms.view.SchoolView;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -51,7 +47,7 @@ public class AppTest extends TestCase {
      * Test Management Class
      */
     // test export data of school
-    public void testExportDataSchool() {
+    public void testExportDataOfAllSchoolInSchoolSystem() {
     	List<School> schools = new ArrayList<School>();
     	String fileName = "dataSchool.xls";
     	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
@@ -62,7 +58,7 @@ public class AppTest extends TestCase {
     }
     
  // test export data of school
-    public void testExportDataTeacher() {
+    public void testExportDataTeacherOfEachSchool() {
     	List<Teacher> teachers = new ArrayList<Teacher>();
     	String fileName = "dataTeacher.xls";
     	teachers.add(new Teacher(123123123,"Teacher A","Ho Chi Minh"));
@@ -73,7 +69,7 @@ public class AppTest extends TestCase {
     }
     
     // test load database of school list
-    public void testLoadDatabaseOfSchool(){
+    public void testLoadDataOfSchoolFromFile(){
     	List<School> schools = new ArrayList<School>();
     	String fileName = "truong.txt";
     	management.loadDatabaseOfSchool(fileName, schools);
@@ -83,7 +79,7 @@ public class AppTest extends TestCase {
     }
     
     // test load database of school list
-    public void testLoadDatabaseOfTeacher(){
+    public void testLoadDataOfTeacherFromFile(){
     	School school = new School();
     	school.setTeachers(new ArrayList<Teacher>());
     	String fileName = "giaovien.txt";
@@ -94,7 +90,7 @@ public class AppTest extends TestCase {
     }
     
     // test add new school
-    public void testAddSchool() {
+    public void testAddSchoolIntoSchoolSystem() {
     	List<School> schools = new ArrayList<School>();
     	School school = new School();
     	management.addSchool(schools, school);
@@ -103,7 +99,7 @@ public class AppTest extends TestCase {
     }
     
     // test Sign a Contract With Teacher
-    public void testSignContractWithTeacher() {
+    public void testSignContractWithTeacherOfEachSchool() {
     	School school = new School();
     	school.setTeachers(new ArrayList<Teacher>());
     	Teacher teacher = new Teacher();
