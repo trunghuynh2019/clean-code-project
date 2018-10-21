@@ -4,16 +4,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import sms.model.School;
 import sms.model.Teacher;
+import sms.repo.Repository;
+import sms.repoInterface.RepositoryITF;
 import sms.functionInterface.FileReadingITF;
-import sms.functionInterface.FunctionITF;
 
 public class FileReading implements FileReadingITF {
 	private String schoolFileName;
 	private String teacherFileName;
+	private RepositoryITF repo = new Repository();
 
 	public String getSchoolFileName() {
 		return schoolFileName;
@@ -81,12 +84,9 @@ public class FileReading implements FileReadingITF {
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] teacherData = line.substring(2).split(Pattern.quote(" ||| "));
 				Teacher teacher = new Teacher(Integer.parseInt(teacherData[0]), teacherData[1], teacherData[2]);
-				FunctionITF function = new Function();
-				School school = function.findSchoolById(schools, teacher.getSchoolId());
-				if (school == null) {
-
-				} else {
-					school.addTeacher(teacher);
+				Optional<School> school = repo.findSchoolById(schools, teacher.getSchoolId());
+				if (school.isPresent()) {
+					school.get().addTeacher(teacher);
 				}
 			}
 			return true;

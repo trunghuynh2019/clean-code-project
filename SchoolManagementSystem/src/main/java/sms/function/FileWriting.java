@@ -5,11 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
+import java.util.Optional;
 
 import sms.functionInterface.FileWritingITF;
-import sms.functionInterface.FunctionITF;
 import sms.model.School;
 import sms.model.Teacher;
+import sms.repo.Repository;
+import sms.repoInterface.RepositoryITF;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -18,7 +20,7 @@ public class FileWriting implements FileWritingITF {
 	private String schoolFileName;
 	private String teacherFileName;
 	private BufferedWriter writer;
-	private FunctionITF function = new Function();
+	private RepositoryITF repo = new Repository();
 
 	public FileWriting(String schoolFileName, String teacherFileName) {
 		super();
@@ -50,10 +52,11 @@ public class FileWriting implements FileWritingITF {
 			writer.newLine();
 			writer.newLine();
 
-			List<String> schoolsData = function.getStringFromSchoolList(schools);
-			if (schoolsData == null)
+			Optional<List<String>> schoolsData = repo.getStringFromSchoolList(schools);
+			if (!schoolsData.isPresent()) {
 				return true;
-			for (String string : schoolsData) {
+			}
+			for (String string : schoolsData.get()) {
 				writer.write(string);
 				writer.newLine();
 			}
@@ -73,10 +76,11 @@ public class FileWriting implements FileWritingITF {
 			writer.newLine();
 			writer.newLine();
 
-			List<String> teachersData = function.getStringFromTeacherList(schools);
-			if (teachersData == null)
+			Optional<List<String>> teachersData = repo.getStringFromTeacherList(schools);
+			if (!teachersData.isPresent()) {
 				return true;
-			for (String string : teachersData) {
+			}
+			for (String string : teachersData.get()) {
 				writer.write(string + "\n");
 				writer.newLine();
 			}

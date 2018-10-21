@@ -7,20 +7,20 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import sms.function.Function;
-import sms.functionInterface.FunctionITF;
 import sms.model.School;
 import sms.model.Teacher;
+import sms.repo.Repository;
+import sms.repoInterface.RepositoryITF;
 
-public class FunctionTest extends TestCase {
-	private static FunctionITF function = new Function();
+public class RepositoryTest extends TestCase {
+	private static RepositoryITF repo = new Repository();
 	
-	public FunctionTest(String testName) {
+	public RepositoryTest(String testName) {
 		super(testName);
 	}
 	
 	public static Test suite() {
-		return new TestSuite(FunctionTest.class);
+		return new TestSuite(RepositoryTest.class);
 	}
 	
 	public void testAddSchool() {
@@ -47,7 +47,7 @@ public class FunctionTest extends TestCase {
 		School school3 = new School("003", "name3");
 		List<School> schools = asList(school1, school2, school3);
 
-		School actual = function.findSchoolById(schools, "002");
+		School actual = repo.findSchoolById(schools, "002").get();
 		School expected = school2;
 		assertTrue(actual.equals(expected));
 	}
@@ -57,7 +57,7 @@ public class FunctionTest extends TestCase {
 		School school2 = new School("002", "name2");
 		List<School> schools = asList(school1, school2);
 
-		School actual = function.findSchoolByName(schools, "name2");
+		School actual = repo.findSchoolByName(schools, "name2").get();
 		School expected = school2;
 		assertTrue(actual.equals(expected));
 	}
@@ -71,7 +71,7 @@ public class FunctionTest extends TestCase {
 		school.addTeacher(teacher2);
 		school.addTeacher(teacher3);
 		
-		Teacher actual = function.findTeacherById(school.getTeachers(), 4);
+		Teacher actual = repo.findTeacherById(school.getTeachers(), 4).get();
 		Teacher expect = teacher3;
 		assertTrue(actual.equals(expect));
 	}
@@ -85,7 +85,7 @@ public class FunctionTest extends TestCase {
 		school.addTeacher(teacher2);
 		school.addTeacher(teacher3);
 		
-		Teacher actual = function.findTeacherByName(school.getTeachers(), "name2");
+		Teacher actual = repo.findTeacherByName(school.getTeachers(), "name2").get();
 		Teacher expect = teacher2;
 		assertTrue(actual.equals(expect));
 	}

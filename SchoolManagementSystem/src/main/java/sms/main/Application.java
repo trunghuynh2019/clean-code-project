@@ -2,16 +2,17 @@ package sms.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import sms.function.FileReading;
 import sms.function.FileWriting;
-import sms.function.Function;
 import sms.functionInterface.FileReadingITF;
 import sms.functionInterface.FileWritingITF;
-import sms.functionInterface.FunctionITF;
 import sms.model.School;
 import sms.model.Teacher;
+import sms.repo.Repository;
+import sms.repoInterface.RepositoryITF;
 import sms.view.MainView;
 import sms.view.SchoolView;
 import sms.view.TeacherView;
@@ -20,7 +21,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		List<School> schools = new ArrayList<School>();
-		FunctionITF function = new Function();
+		RepositoryITF repo = new Repository();
 		boolean programEnd = false;
 		Scanner scanner = new Scanner(System.in);
 
@@ -35,12 +36,12 @@ public class Application {
 				break;
 			}
 			case 2: {
-				addNewSchool(schools, scanner, function);
+				addNewSchool(schools, scanner, repo);
 				break;
 			}
 			case 3: {
 				// Choose a school and show options to do with its teacher list.
-				manageTeachersList(schools, scanner, function);
+				manageTeachersList(schools, scanner, repo);
 				break;
 			}
 			case 4: {
@@ -68,22 +69,23 @@ public class Application {
 		MainView.loopAgain(scanner);
 	}
 
-	public static void addNewSchool(List<School> schools, Scanner scanner, FunctionITF function) {
+	public static void addNewSchool(List<School> schools, Scanner scanner, RepositoryITF repo) {
 		School school = new School();
 		SchoolView.insertSchoolData(school, scanner);
 		schools.add(school);
 		MainView.loopAgain(scanner);
 	}
 
-	public static void manageTeachersList(List<School> schools, Scanner scanner, FunctionITF function) {
+	public static void manageTeachersList(List<School> schools, Scanner scanner, RepositoryITF repo) {
 		SchoolView.displayAllSchool(schools);
 		MainView.enterSchoolId();
-		School school = function.findSchoolById(schools, scanner.nextLine());
-		if (school == null) {
+		Optional<School> opSchool = repo.findSchoolById(schools, scanner.nextLine());
+		if (!opSchool.isPresent()) {
 			SchoolView.displaySchoolNotFound();
 			return;
 		} else {
 			do {
+				School school = opSchool.get();
 				MainView.displayManageTeacherMenu(school);
 				List<Teacher> teachers = school.getTeachers();
 				int _choice = scanner.nextInt();
@@ -95,22 +97,22 @@ public class Application {
 				}
 				case 2: {
 					MainView.enterTeacherName();
-					Teacher teacher = function.findTeacherByName(teachers, scanner.nextLine());
-					if (teacher == null) {
+					Optional<Teacher> opTeacher = repo.findTeacherByName(teachers, scanner.nextLine());
+					if (!opTeacher.isPresent()) {
 						TeacherView.displayTeacherNotFound();
 					} else {
-						TeacherView.displayTeacher(teacher);
+						TeacherView.displayTeacher(opTeacher.get());
 					}
 					break;
 				}
 				case 3: {
 					MainView.enterTeacherId();
-					Teacher teacher = function.findTeacherById(teachers, scanner.nextInt());
+					Optional<Teacher> opTeacher = repo.findTeacherById(teachers, scanner.nextInt());
 					scanner.nextLine();
-					if (teacher == null) {
+					if (!opTeacher.isPresent()) {
 						TeacherView.displayTeacherNotFound();
 					} else {
-						TeacherView.displayTeacher(teacher);
+						TeacherView.displayTeacher(opTeacher.get());
 					}
 					break;
 				}
