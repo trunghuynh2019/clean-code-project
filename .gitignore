@@ -1,4 +1,7 @@
-target/
-.project
-.classpath
-.settings/
+SchoolManagementSystem/target/
+
+SchoolManagementSystem/.project
+
+SchoolManagementSystem/.classpath
+
+SchoolManagementSystem/.settings/
