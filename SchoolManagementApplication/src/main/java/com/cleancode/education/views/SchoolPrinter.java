@@ -53,13 +53,14 @@ public class SchoolPrinter {
 		System.out.println("|   6. Sign Contract With Teachers From File |");
 		System.out.println("|   7. Export School/Teacher To Text File    |");
 		System.out.println("|   8. Export School/Teacher To Excel File   |");
-		System.out.println("|   9. Exit                                  |");
+		System.out.println("|   9. Export School/Teacher To Pdf File     |");
+		System.out.println("|   10. Export School/Teacher To Html File   |");
+		System.out.println("|   11. Exit                                 |");
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
 	
-	public School inputNewSchool() {
-		Scanner scanner = new Scanner(System.in);
+	public School inputNewSchool(Scanner scanner) {
 		School school = new School();
 		
 		System.out.print("Enter School Id: ");
@@ -82,7 +83,7 @@ public class SchoolPrinter {
 		
 		for (int i = 0; i < numberOfTeacher; i++) {
 			System.out.println("Enter Information of Teacher #" + (i+1));
-			Teacher newTeacher = inputTeacher(school.getId());
+			Teacher newTeacher = inputTeacher(scanner, school.getId());
             teachers.add(newTeacher);
 		}
 		school.setTeachers(teachers);
@@ -90,8 +91,7 @@ public class SchoolPrinter {
 		return school;
 	}
 	
-	public Teacher inputTeacher(String schoolId) {
-		Scanner scanner = new Scanner(System.in);
+	public Teacher inputTeacher(Scanner scanner, String schoolId) {
 		Teacher teacher = new Teacher();
 		
 		System.out.print("Enter Teacher Id: ");
@@ -115,4 +115,5 @@ public class SchoolPrinter {
 		String schoolId = scanner.nextLine();
 		return schoolId;
 	}
+	
 }

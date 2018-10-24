@@ -7,6 +7,9 @@
  */
 package com.cleancode.education.util;
 
+import static j2html.TagCreator.h1;
+import static j2html.TagCreator.p;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,47 +19,31 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
-
+import com.cleancode.education.views.PrinterSupport;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 
 public class FileManagementImpl implements FileManagement{
 	
-	public enum SchoolCells {
-		SCHOOL_ID(0), NAME(1), NUMBER_OF_TEACHER(2), ADDRESS(3), TEACHER_CMND(4);
-		
-		private final int value;
-	    private SchoolCells(int value) {
-	        this.value = value;
-	    }
-
-	    public int getValue() {
-	        return value;
-	    }
-	}
-	
-	public enum TeacherCells {
-		CMND(0), NAME(1), SCHOOL_ID(2);
-		
-		private final int value;
-	    private TeacherCells(int value) {
-	        this.value = value;
-	    }
-
-	    public int getValue() {
-	        return value;
-	    }
-	}
+	private PrinterSupport printerSupport = new PrinterSupport();
+	private ExcelUtil excelUtil = new ExcelUtil();
 	
 	@Override
 	public List<School> getSchoolsFrom(String fileName){
@@ -118,44 +105,20 @@ public class FileManagementImpl implements FileManagement{
 	}
 	
 	@Override
-	public boolean exportTeachersToExcel(List<School> schools, String fileName){
-		String[] columns = {"CMND", "Name", "Working School's ID"};
+	public void exportTeachersToExcel(List<School> schools, String fileName){
+		String[] headerColumns = {"CMND", "Name", "Working School's ID"};
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-        Sheet sheet = workbook.createSheet("Teacher");
+        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", headerColumns);
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(0);
-
-        for(int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
-
-        int rowNum = 1;
+        int currentRow = 1;
         for(School school: schools) {
         	for (Teacher teacher : school.getTeachers()) {
-        		Row row = sheet.createRow(rowNum++);
-
-                row.createCell(TeacherCells.CMND.getValue())
-                        .setCellValue(teacher.getId());
-
-                row.createCell(TeacherCells.NAME.getValue())
-                        .setCellValue(teacher.getName());
-
-                row.createCell(TeacherCells.SCHOOL_ID.getValue()).setCellValue(teacher.getSchoolId());
+        		excelUtil.createRowForSheetBy(sheet, currentRow++, teacher);
         	}
-            
-            
         }
 
-        for(int i = 0; i < columns.length; i++) {
+        for(int i = 0; i < headerColumns.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
@@ -165,10 +128,8 @@ public class FileManagementImpl implements FileManagement{
 			workbook.write(fileOut);
 			fileOut.close();
 	        workbook.close();
-	        return true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
 		}
         
 
@@ -176,112 +137,159 @@ public class FileManagementImpl implements FileManagement{
 	}
 	
 	@Override
-	public boolean exportTeachersToText(List<School> schools, String fileName) {
-		File file = new File("resources/" + fileName);
+	public void exportTeachersToText(List<School> schools, String fileName) {
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(file);
-			pw.println("Danh sach giao vien");
-			pw.println();
-			for(School s : schools) {
-				for (Teacher t : s.getTeachers()) {
-					pw.println("- " + t.getId() + " ||| " + t.getName() + " ||| " + t.getSchoolId());
+			pw = new PrintWriter("resources/" + fileName);
+			pw.print(printerSupport.teacherTextFileHeader());
+			for(School school : schools) {
+				for (Teacher teacher : school.getTeachers()) {
+					pw.println(printerSupport.formatTextRow(teacher));
 				}
-				
 			}
-			return true;
 		} 
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return false;
 		} finally {
 			if (pw != null) {
 				pw.close();
 			}
 		}
 	}
-
+	
+	
+	
 	@Override
-	public boolean exportSchoolsToExcel(List<School> schools, String fileName) {
+	public void exportSchoolsToExcel(List<School> schools, String fileName) {
 		
-		String[] columns = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
+		String[] headerColumns = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
 
-		Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+		Workbook workbook = new XSSFWorkbook();
 
-        Sheet sheet = workbook.createSheet("School");
+        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "School", headerColumns);
 
-        Font headerFont = workbook.createFont();
-        headerFont.setBold(true);
-
-        CellStyle headerCellStyle = workbook.createCellStyle();
-        headerCellStyle.setFont(headerFont);
-
-        Row headerRow = sheet.createRow(0);
-
-        for(int i = 0; i < columns.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
-            cell.setCellStyle(headerCellStyle);
+        int currentRow = 1;
+        for(School school : schools) {
+        	excelUtil.createRowForSheetBy(sheet, currentRow++, school);
         }
 
-        int rowNum = 1;
-        for(School school: schools) {
-            Row row = sheet.createRow(rowNum++);
-
-            row.createCell(SchoolCells.SCHOOL_ID.getValue())
-                    .setCellValue(school.getId());
-
-            row.createCell(SchoolCells.NAME.getValue())
-                    .setCellValue(school.getName());
-
-            row.createCell(SchoolCells.NUMBER_OF_TEACHER.getValue()).setCellValue(school.getNumberOfTeacher());
-
-            row.createCell(SchoolCells.ADDRESS.getValue())
-                    .setCellValue(school.getAddress());
-           row.createCell(SchoolCells.TEACHER_CMND.getValue()).setCellValue(school.getTeacherId());
-            
-        }
-
-        for(int i = 0; i < columns.length; i++) {
+        for(int i = 0; i < headerColumns.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
-       
         try {
-            FileOutputStream fileOut = new FileOutputStream(new File("resources/" + fileName));
+            FileOutputStream fileOut = new FileOutputStream("resources/" + fileName);
             workbook.write(fileOut);
-			fileOut.close();
+            fileOut.close();
 	        workbook.close();
-	        
-	        return true;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
 		}
-
-       
 	}
+	
+	
 
+	private void addTableHeader(PdfPTable table) {
+	    Stream.of("column header 1", "column header 2", "column header 3")
+	      .forEach(columnTitle -> {
+	        PdfPCell header = new PdfPCell();
+	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	        header.setBorderWidth(2);
+	        header.setPhrase(new Phrase(columnTitle));
+	        table.addCell(header);
+	    });
+	}
+	
 	@Override
-	public boolean exportSchoolsToText(List<School> schools, String fileName) {
+	public void exportSchoolsToText(List<School> schools, String fileName) {
 		File file = new File("resources/" + fileName);
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(file);
-			pw.println("Danh sach truong");
-			pw.println();
-			for(School s : schools) {
-				pw.println("- " + s.getId() + " ||| " + s.getName() + " ||| " + s.getNumberOfStudent() + " ||| " + s.getAddress());
+			pw.print(printerSupport.schoolTextFileHeader());
+			for(School school : schools) {
+				pw.println(printerSupport.formatTextRow(school));
 			}
-			return true;
 		} 
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
-			return false;
 		} finally {
 			if (pw != null) {
 				pw.close();
 			}
 		}
 	}
+	private void addRows(PdfPTable table) {
+	    table.addCell("row 1, col 1");
+	    table.addCell("row 1, col 2");
+	    table.addCell("row 1, col 3");
+	}
+
+	@Override
+	public void exportSchoolsToPdf(List<School> schools, String fileName) {
+		Document pdfDoc = new Document(PageSize.A4);
+		try {
+			PdfWriter.getInstance(pdfDoc, new FileOutputStream("resources/"+ fileName))
+					.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
+			pdfDoc.open();
+			PdfPTable table = new PdfPTable(3);
+			addTableHeader(table);
+			addRows(table);
+			addRows(table);
+			 
+			pdfDoc.add(table);
+			pdfDoc.add(new Paragraph("\n"));
+			Paragraph para = new Paragraph("Hello world" + "\n");
+			para.setAlignment(Element.ALIGN_JUSTIFIED);
+			pdfDoc.add(para);
+			
+		} catch (FileNotFoundException | DocumentException e1) {
+			e1.printStackTrace();
+		}finally {
+			pdfDoc.close();
+		}
+		
+	}
+
+	@Override
+	public void exportTeachersToPdf(List<School> schools, String fileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void exportTeachersToHtml(List<School> schools, String fileName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void exportSchoolsToHtml(List<School> schools, String fileName) {
+//		StringBuilder htmlBuilder = new StringBuilder();
+//		htmlBuilder.append("<html>");
+//		htmlBuilder.append("<head><title>Hello World</title></head>");
+//		htmlBuilder.append("<body><p>Look at my body!</p></body>");
+//		htmlBuilder.append("</html>");
+//		String html = htmlBuilder.toString();
+		
+//		File file = new File("resources/" + fileName);
+//		File file = new File("resources/" + fileName);
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter("resources/" + fileName);
+			pw.println(h1("Danh sach truong").render());
+			pw.println();
+			for(School s : schools) {
+				pw.println(p("- " + s.getId() + " ||| " + s.getName() + " ||| " + s.getNumberOfStudent() + " ||| " + s.getAddress()).render());
+			}
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+	
 }

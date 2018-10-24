@@ -13,10 +13,18 @@ import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 
 public interface FileManagement {
+	
 	public List<School> getSchoolsFrom(String fileName);
 	public List<Teacher> getTeachersFrom(String fileName);
-	public boolean exportTeachersToExcel(List<School> schools, String fileName);
-	public boolean exportTeachersToText(List<School> schools, String fileName);
-	public boolean exportSchoolsToExcel(List<School> schools, String fileName);
-	public boolean exportSchoolsToText(List<School> schools, String fileName);
+	
+	public void exportSchoolsToText(List<School> schools, String fileName);
+	public void exportSchoolsToExcel(List<School> schools, String fileName);
+	public void exportSchoolsToPdf(List<School> schools, String fileName);
+	public void exportSchoolsToHtml(List<School> schools, String fileName);
+	
+	public void exportTeachersToText(List<School> schools, String fileName);
+	public void exportTeachersToExcel(List<School> schools, String fileName);
+	public void exportTeachersToPdf(List<School> schools, String fileName);
+	public void exportTeachersToHtml(List<School> schools, String fileName);
+	
 }

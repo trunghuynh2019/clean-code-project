@@ -3,6 +3,10 @@ package com.cleancode.education;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import com.cleancode.education.controller.SchoolController;
 import com.cleancode.education.controller.impl.SchoolControllerImpl;
 import com.cleancode.education.models.School;
@@ -11,8 +15,7 @@ import com.cleancode.education.repository.SchoolRepository;
 import com.cleancode.education.repository.impl.SchoolRepositoryImpl;
 import com.cleancode.education.service.SchoolService;
 import com.cleancode.education.service.impl.SchoolServiceImpl;
-import com.cleancode.education.util.FileManagement;
-import com.cleancode.education.util.FileManagementImpl;
+import com.cleancode.education.util.ExcelUtil;
 import com.cleancode.education.views.PrinterSupport;
 
 import junit.framework.Test;
@@ -238,30 +241,100 @@ public class AppTest
     	assertEquals(1, schoolService.getSchoolById("nbk-vl").getNumberOfTeacher());
     	assertEquals("Tran Van Thanh", schoolService.getSchoolById("nbk-vl").getTeachers().get(0).getName());
     }
-    /*
-     * void exportSchoolsToText(String fileName);
-	void exportSchoolsToExcel(String fileName);
-	void exportTeacherToText(String fileName);
-	void exportTeacherToExcel(String fileName);
-	*/
-    public void testExportSchoolToTextFile() {
-    	FileManagement fileManagement = new FileManagementImpl();
-    	assertTrue(fileManagement.exportSchoolsToText(new ArrayList<School>(), "exportedschool.txt"));
+    
+    public void testFormatTextRow() {
+    	PrinterSupport printerSupport = new PrinterSupport();
+    	Teacher teacher = new Teacher("337829999", "Tran Van Thanh", "nbk-vl");
+    	List<Teacher> teachers = new ArrayList<>();
+    	teachers.add(teacher);
+    	School school = new School("nbk-vl", "Truong trung hoc Chuyen Nguyen Binh Khiem", "Vinh Long", teachers, 2000);
+    	
+    	assertEquals("- 337829999 ||| Tran Van Thanh ||| nbk-vl", printerSupport.formatTextRow(teacher));
+    	assertEquals("- nbk-vl ||| Truong trung hoc Chuyen Nguyen Binh Khiem ||| 2000 ||| Vinh Long", printerSupport.formatTextRow(school));
     }
     
-    public void testExportSchoolToExcelFile() {
-    	FileManagement fileManagement = new FileManagementImpl();
-    	assertTrue(fileManagement.exportSchoolsToExcel(new ArrayList<School>(), "exportedschool.xlsx"));
+    public void testSchoolDataWillBeExportedToTextFileMustSameAsExpectedSchoolFile() {
+    	
+    	PrinterSupport printerSupport = new PrinterSupport();
+    	School school = new School("nbk-vl", "Truong trung hoc Chuyen Nguyen Binh Khiem", "Vinh Long", new ArrayList<Teacher>(), 2000);
+    	School school2 = new School("nbk-qn","Truong trung hoc Chuyen Nguyen Binh Khiem","Quang Ngai", new ArrayList<Teacher>(), 2500);
+    	List<School> schools = new ArrayList<>();
+    	schools.add(school);
+    	schools.add(school2);
+    	
+    	String expectedSchoolFile = "Danh sach truong\n\n"
+    			+ "- nbk-vl ||| Truong trung hoc Chuyen Nguyen Binh Khiem ||| 2000 ||| Vinh Long"
+    			+ "- nbk-qn ||| Truong trung hoc Chuyen Nguyen Binh Khiem ||| 2500 ||| Quang Ngai";
+      	
+    	StringBuilder textBuilder = new StringBuilder();
+    	textBuilder.append(printerSupport.schoolTextFileHeader());
+    	for (School s : schools) {
+    		textBuilder.append(printerSupport.formatTextRow(s));
+    	}
+    	String dataExported = textBuilder.toString();
+    	
+    	assertEquals(expectedSchoolFile, dataExported);
     }
     
-    public void testExportTeacherToTextFile() {
-    	FileManagement fileManagement = new FileManagementImpl();
-    	assertTrue(fileManagement.exportTeachersToText(new ArrayList<School>(), "exportedteacher.txt"));
+    public void testTeacherDataWillBeExportedToTextFileMustSameAsExpectedTeacherFile() {
+    	
+    	PrinterSupport printerSupport = new PrinterSupport();
+    	Teacher teacher = new Teacher("337829999", "Tran Van Thanh", "nbk-vl");
+    	Teacher teacher2 = new Teacher("285656695", "Nguyen Van Han", "nbk-qn");
+    	List<Teacher> teachers = new ArrayList<>();
+    	teachers.add(teacher);
+    	teachers.add(teacher2);
+    	
+    	String expectedTeacherFile = "Danh sach giao vien\n\n"
+    			+ "- 337829999 ||| Tran Van Thanh ||| nbk-vl"
+    			+ "- 285656695 ||| Nguyen Van Han ||| nbk-qn";
+    	
+    	StringBuilder textBuilder = new StringBuilder();
+    	textBuilder.append(printerSupport.teacherTextFileHeader());
+    	for (Teacher t : teachers) {
+    		textBuilder.append(printerSupport.formatTextRow(t));
+    	}
+    
+    	String dataExported = textBuilder.toString();
+    	
+    	assertEquals(expectedTeacherFile, dataExported);
     }
     
-    public void testExportTeacherToExcelFile() {
-    	FileManagement fileManagement = new FileManagementImpl();
-    	assertTrue(fileManagement.exportTeachersToExcel(new ArrayList<School>(), "exportedteacher.xlsx"));
+    public void testCreateSheetWithHeaderFunction() {
+    	ExcelUtil excelUtil = new ExcelUtil();
+    	String[] headerColumns = {"CMND", "Name", "Working School's ID"};
+        Workbook workbook = new XSSFWorkbook(); 
+        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", headerColumns);
+      
+        assertEquals("CMND", sheet.getRow(0).getCell(0).getStringCellValue());
+        assertEquals("Name", sheet.getRow(0).getCell(1).getStringCellValue());
+        assertEquals("Working School's ID", sheet.getRow(0).getCell(2).getStringCellValue());
     }
     
+    public void testCreateRowByTeacher() {
+    	
+    	ExcelUtil excelUtil = new ExcelUtil();
+    	String[] headerColumns = {"CMND", "Name", "Working School's ID"};
+        Workbook workbook = new XSSFWorkbook(); 
+        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", headerColumns);
+        
+        Teacher teacher1 = new Teacher("285656456", "Le Van A", "nbk-vl");
+        Teacher teacher2 = new Teacher("285656567", "Le Van B", "nbk-qn");
+        List<Teacher> teachers = new ArrayList<>();
+        teachers.add(teacher1);
+        teachers.add(teacher2);
+        
+        int currentRow = 1;
+        for (Teacher teacher : teachers) {
+            excelUtil.createRowForSheetBy(sheet, currentRow++, teacher);
+        }
+        
+        assertEquals("285656456", sheet.getRow(1).getCell(0).getStringCellValue());
+        assertEquals("Le Van A", sheet.getRow(1).getCell(1).getStringCellValue());
+        assertEquals("nbk-vl", sheet.getRow(1).getCell(2).getStringCellValue());
+        assertEquals("285656567", sheet.getRow(2).getCell(0).getStringCellValue());
+        assertEquals("Le Van B", sheet.getRow(2).getCell(1).getStringCellValue());
+        assertEquals("nbk-qn", sheet.getRow(2).getCell(2).getStringCellValue());
+        
+    }
 }

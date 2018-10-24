@@ -49,7 +49,7 @@ public class App
     			schoolController.viewAllSchools();
     			break;
     		case 2: // Add A New School
-    			School school = printer.inputNewSchool();
+    			School school = printer.inputNewSchool(scanner);
     			schoolController.addSchool(school);
     			break;
     		case 3: // Add Schools From File
@@ -70,24 +70,30 @@ public class App
     		case 5: // Sign Contract With Teacher
     			schoolController.viewAllSchools();
     			String inputSchoolId = printer.inputSchoolId(scanner);
-    			Teacher teacher = printer.inputTeacher(inputSchoolId);
+    			Teacher teacher = printer.inputTeacher(scanner, inputSchoolId);
     			schoolController.signContractWithTeacher(teacher);
     			break;
     		case 6: // Sign Contract With Teachers From File
     			String teacherFile = printer.inputFileName(scanner);
     			schoolController.signContractWithTeacherFrom(teacherFile);
     			break;
-    		case 7: // Export schools/teachers in text
+    		case 7: // Export schools/teachers to text
     			schoolController.exportSchoolsToText(EXPORTED_SCHOOL_FILE_NAME + ".txt");
     			schoolController.exportTeacherToText(EXPORTED_TEACHER_FILE_NAME + ".txt");
     			System.out.println("Data exported to " + EXPORTED_SCHOOL_FILE_NAME + ".txt and " + EXPORTED_TEACHER_FILE_NAME + ".txt" );
     			break;
-    		case 8: // Export in excel
+    		case 8: // Export to excel
     			schoolController.exportSchoolsToExcel(EXPORTED_SCHOOL_FILE_NAME + ".xlsx");
 				schoolController.exportTeacherToExcel(EXPORTED_TEACHER_FILE_NAME + ".xlsx");
 				System.out.println("Data exported to " + EXPORTED_SCHOOL_FILE_NAME + ".xlsx and " + EXPORTED_TEACHER_FILE_NAME + ".xlsx" );
     			break;
-    		case 9: // Exit
+    		case 9: // Export to pdf
+    			schoolController.exportSchoolToPDF(EXPORTED_SCHOOL_FILE_NAME + ".pdf"); 
+    			break;
+    		case 10: // Export to html
+    			schoolController.exportSchoolToHtml(EXPORTED_SCHOOL_FILE_NAME+".html");
+    			break;
+    		case 11: // Exit
     			flag = false;
     			break;
     		}

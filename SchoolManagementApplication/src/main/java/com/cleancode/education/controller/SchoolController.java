@@ -20,4 +20,6 @@ public interface SchoolController {
 	void exportSchoolsToExcel(String fileName);
 	void exportTeacherToText(String fileName);
 	void exportTeacherToExcel(String fileName);
+	void exportSchoolToPDF(String fileName);
+	void exportSchoolToHtml(String fileName);
 }
