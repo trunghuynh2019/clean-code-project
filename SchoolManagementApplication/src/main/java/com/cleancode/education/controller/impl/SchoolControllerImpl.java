@@ -139,4 +139,16 @@ public class SchoolControllerImpl implements SchoolController{
 		fileManagement.exportSchoolsToHtml(schools, fileName);
 	}
 
+	@Override
+	public void exportTeacherToPDF(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		fileManagement.exportTeachersToPdf(schools, fileName);
+	}
+
+	@Override
+	public void exportTeacherToHtml(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		fileManagement.exportTeachersToHtml(schools, fileName);
+	}
+
 }

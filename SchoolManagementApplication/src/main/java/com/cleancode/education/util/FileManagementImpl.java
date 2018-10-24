@@ -7,9 +7,6 @@
  */
 package com.cleancode.education.util;
 
-import static j2html.TagCreator.h1;
-import static j2html.TagCreator.p;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +16,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,14 +24,11 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 import com.cleancode.education.views.PrinterSupport;
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -44,6 +37,11 @@ public class FileManagementImpl implements FileManagement{
 	
 	private PrinterSupport printerSupport = new PrinterSupport();
 	private ExcelUtil excelUtil = new ExcelUtil();
+	private PdfUtil pdfUtil = new PdfUtil();
+	private HtmlUtil htmlUtil = new HtmlUtil();
+	
+	String[] teacherColumnHeader = {"CMND", "Name", "Working School's ID"};
+	String[] schoolColumnHeader = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
 	
 	@Override
 	public List<School> getSchoolsFrom(String fileName){
@@ -106,10 +104,10 @@ public class FileManagementImpl implements FileManagement{
 	
 	@Override
 	public void exportTeachersToExcel(List<School> schools, String fileName){
-		String[] headerColumns = {"CMND", "Name", "Working School's ID"};
+		
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", headerColumns);
+        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", teacherColumnHeader);
 
         int currentRow = 1;
         for(School school: schools) {
@@ -118,7 +116,7 @@ public class FileManagementImpl implements FileManagement{
         	}
         }
 
-        for(int i = 0; i < headerColumns.length; i++) {
+        for(int i = 0; i < teacherColumnHeader.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
@@ -157,23 +155,19 @@ public class FileManagementImpl implements FileManagement{
 		}
 	}
 	
-	
-	
 	@Override
 	public void exportSchoolsToExcel(List<School> schools, String fileName) {
 		
-		String[] headerColumns = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
-
 		Workbook workbook = new XSSFWorkbook();
 
-        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "School", headerColumns);
+        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "School", schoolColumnHeader);
 
         int currentRow = 1;
         for(School school : schools) {
         	excelUtil.createRowForSheetBy(sheet, currentRow++, school);
         }
 
-        for(int i = 0; i < headerColumns.length; i++) {
+        for(int i = 0; i < schoolColumnHeader.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
@@ -185,19 +179,6 @@ public class FileManagementImpl implements FileManagement{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	
-
-	private void addTableHeader(PdfPTable table) {
-	    Stream.of("column header 1", "column header 2", "column header 3")
-	      .forEach(columnTitle -> {
-	        PdfPCell header = new PdfPCell();
-	        header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-	        header.setBorderWidth(2);
-	        header.setPhrase(new Phrase(columnTitle));
-	        table.addCell(header);
-	    });
 	}
 	
 	@Override
@@ -219,29 +200,32 @@ public class FileManagementImpl implements FileManagement{
 			}
 		}
 	}
-	private void addRows(PdfPTable table) {
-	    table.addCell("row 1, col 1");
-	    table.addCell("row 1, col 2");
-	    table.addCell("row 1, col 3");
-	}
+	
+	
 
 	@Override
 	public void exportSchoolsToPdf(List<School> schools, String fileName) {
 		Document pdfDoc = new Document(PageSize.A4);
 		try {
+			
 			PdfWriter.getInstance(pdfDoc, new FileOutputStream("resources/"+ fileName))
-					.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
+				.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
 			pdfDoc.open();
-			PdfPTable table = new PdfPTable(3);
-			addTableHeader(table);
-			addRows(table);
-			addRows(table);
-			 
-			pdfDoc.add(table);
-			pdfDoc.add(new Paragraph("\n"));
-			Paragraph para = new Paragraph("Hello world" + "\n");
+	
+			Paragraph para = new Paragraph("Danh sach truong\n\n");
 			para.setAlignment(Element.ALIGN_JUSTIFIED);
 			pdfDoc.add(para);
+			
+			
+			PdfPTable table = new PdfPTable(schoolColumnHeader.length);
+			table.setWidthPercentage(90);
+			pdfUtil.addTableHeader(table, schoolColumnHeader);
+			for (School school : schools) {
+				pdfUtil.addRows(table, school);
+			}
+			 
+			pdfDoc.add(table);
+			
 			
 		} catch (FileNotFoundException | DocumentException e1) {
 			e1.printStackTrace();
@@ -253,35 +237,60 @@ public class FileManagementImpl implements FileManagement{
 
 	@Override
 	public void exportTeachersToPdf(List<School> schools, String fileName) {
-		// TODO Auto-generated method stub
-		
+		Document pdfDoc = new Document(PageSize.A4);
+		try {
+			
+			PdfWriter.getInstance(pdfDoc, new FileOutputStream("resources/"+ fileName))
+				.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
+			pdfDoc.open();
+	
+			Paragraph para = new Paragraph("Danh sach giao vien\n\n");
+			para.setAlignment(Element.ALIGN_JUSTIFIED);
+			pdfDoc.add(para);
+			
+			
+			PdfPTable table = new PdfPTable(teacherColumnHeader.length);
+			table.setWidthPercentage(90);
+			pdfUtil.addTableHeader(table, teacherColumnHeader);
+			for (School school : schools) {
+				for (Teacher teacher : school.getTeachers()) {
+					pdfUtil.addRows(table, teacher);
+				}
+			}
+			 
+			pdfDoc.add(table);
+			
+			
+		} catch (FileNotFoundException | DocumentException e1) {
+			e1.printStackTrace();
+		}finally {
+			pdfDoc.close();
+		}
 	}
 
 	@Override
 	public void exportTeachersToHtml(List<School> schools, String fileName) {
-		// TODO Auto-generated method stub
-		
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter("resources/" + fileName);
+			pw.println(htmlUtil.teacherDataToHtml(schools));
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
 	}
 
 	@Override
 	public void exportSchoolsToHtml(List<School> schools, String fileName) {
-//		StringBuilder htmlBuilder = new StringBuilder();
-//		htmlBuilder.append("<html>");
-//		htmlBuilder.append("<head><title>Hello World</title></head>");
-//		htmlBuilder.append("<body><p>Look at my body!</p></body>");
-//		htmlBuilder.append("</html>");
-//		String html = htmlBuilder.toString();
-		
-//		File file = new File("resources/" + fileName);
-//		File file = new File("resources/" + fileName);
+
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter("resources/" + fileName);
-			pw.println(h1("Danh sach truong").render());
-			pw.println();
-			for(School s : schools) {
-				pw.println(p("- " + s.getId() + " ||| " + s.getName() + " ||| " + s.getNumberOfStudent() + " ||| " + s.getAddress()).render());
-			}
+			pw.println(htmlUtil.schoolDataToHtml(schools));
 		} 
 		catch (FileNotFoundException e) {
 			e.printStackTrace();

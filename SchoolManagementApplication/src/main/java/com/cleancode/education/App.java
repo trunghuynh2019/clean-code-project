@@ -89,9 +89,11 @@ public class App
     			break;
     		case 9: // Export to pdf
     			schoolController.exportSchoolToPDF(EXPORTED_SCHOOL_FILE_NAME + ".pdf"); 
+    			schoolController.exportTeacherToPDF(EXPORTED_SCHOOL_FILE_NAME + ".pdf");
     			break;
     		case 10: // Export to html
-    			schoolController.exportSchoolToHtml(EXPORTED_SCHOOL_FILE_NAME+".html");
+    			schoolController.exportSchoolToHtml(EXPORTED_SCHOOL_FILE_NAME + ".html");
+    			schoolController.exportTeacherToHtml(EXPORTED_TEACHER_FILE_NAME + ".html");
     			break;
     		case 11: // Exit
     			flag = false;

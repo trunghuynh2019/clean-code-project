@@ -12,14 +12,21 @@ import com.cleancode.education.models.Teacher;
 
 public interface SchoolController {
 	void viewAllSchools();
+	
 	void addSchool(School school);
 	void addSchoolsFrom(String fileName);
+	
 	void signContractWithTeacher(Teacher teacher);
 	void signContractWithTeacherFrom(String fileName);
+	
 	void exportSchoolsToText(String fileName);
 	void exportSchoolsToExcel(String fileName);
-	void exportTeacherToText(String fileName);
-	void exportTeacherToExcel(String fileName);
 	void exportSchoolToPDF(String fileName);
 	void exportSchoolToHtml(String fileName);
+	
+	void exportTeacherToText(String fileName);
+	void exportTeacherToExcel(String fileName);
+	void exportTeacherToPDF(String fileName);
+	void exportTeacherToHtml(String fileName);
+	
 }
