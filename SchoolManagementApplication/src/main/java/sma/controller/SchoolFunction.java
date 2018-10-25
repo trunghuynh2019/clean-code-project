@@ -1,12 +1,26 @@
 package sma.controller;
 
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import java.util.List;
 import java.util.Scanner;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -18,6 +32,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import sma.entity.School;
 import sma.entity.Teacher;
+
 public class SchoolFunction {
 	
 	List<School> schools;
@@ -190,6 +205,102 @@ public class SchoolFunction {
             e.printStackTrace();
         }      
        
+	}
+	
+	public void SchoolsWriteIntoPDF() 
+	{  
+		 // Tạo đối tượng tài liệu
+			Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+
+			try {
+
+				// Tạo đối tượng PdfWriter
+				PdfWriter.getInstance(document, new FileOutputStream(path+"\\src\\main\\java\\file\\schools.pdf"));
+
+				// Mở file để thực hiện ghi
+				document.open();
+
+				// Thêm nội dung sử dụng add function
+				document.add(new Paragraph("List Of School"));
+				
+				//Create table
+				PdfPTable t = new PdfPTable(5);
+				t.setSpacingBefore(25);
+				t.setSpacingAfter(25);
+
+				PdfPCell c1 = new PdfPCell(new Phrase("ID"));
+				t.addCell(c1);
+				PdfPCell c2 = new PdfPCell(new Phrase("Name"));
+				t.addCell(c2);
+				PdfPCell c3 = new PdfPCell(new Phrase("Address"));
+				t.addCell(c3);
+				PdfPCell c4 = new PdfPCell(new Phrase("Phone"));
+				t.addCell(c4);
+				PdfPCell c5 = new PdfPCell(new Phrase("Number Of Teacher"));
+				t.addCell(c5);
+
+				for (School school: schools) {  
+					t.addCell(school.getId());
+					t.addCell(school.getName());
+					t.addCell(school.getAddress());
+					t.addCell(school.getPhone());
+					t.addCell(String.valueOf(school.getNumOfTeachers()));
+					
+		        }  
+
+				document.add(t);
+				
+				Anchor anchorTarget = new Anchor("First page of the document.");
+				anchorTarget.setName("BackToTop");
+				document.add(anchorTarget);
+
+				// Đóng File
+				document.close();
+				System.out.println("Write file succes!");
+			} catch (FileNotFoundException e) {
+				System.err.println("Error: " + e.getMessage()); 
+			}
+			catch(DocumentException ex)
+			{
+				System.err.println("Error: " + ex.getMessage());
+			}
+	}
+	
+	public void SchoolsWriteIntoHTML() throws NullPointerException 
+	{  
+		String id, name, numberOfTeachers, address, phone;
+
+			try {
+
+				// Creating HTML file
+				File file = new File(path+"\\src\\main\\java\\file\\schools.html");
+				PrintWriter printWriter = new PrintWriter(file);
+				
+				printWriter.write("<html><body>");
+				printWriter.write("<head><style>	table{font-family: arial, sans-serif;border-collapse: collapse; width: 100%;} td, th { border: 1px solid #dddddd; text-align: left; padding: 8px;} tr:nth-child(even){ background-color: #dddddd;}" + "</style>");
+				printWriter.write("<title>Clean Code Project</title><h1>List Of Teacher</h1>");
+				printWriter.write("<table>" + "<tr>" + "<th>ID</th>" + " <th>Name</th>" + "<th>Address</th>" + " <th>Phone</th> " +	" <th>Number Of Teachers</th>" +	" </tr>");				
+				
+				for ( School school : schools) { 
+					
+					id = school.getId();
+					name = school.getName();
+					address = school.getAddress();
+					phone = school.getPhone();
+					numberOfTeachers = String.valueOf(school.getNumOfTeachers());
+					printWriter.write("<tr>" + "<td>" + id + "</td> <td>" + name + "</td> <td>" + address + "</td> <td>" + phone +"</td><td>" + numberOfTeachers + "</td></tr>");
+							
+		        }  
+
+				printWriter.write("</table></html></body>");
+	            printWriter.close();
+				System.out.println("Write file success!");
+			
+			} 
+			catch (FileNotFoundException e) 
+			{
+				System.err.println("Error: " + e.getMessage()); 
+			}
 	}
 	
 	/**

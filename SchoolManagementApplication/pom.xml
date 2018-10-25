@@ -5,15 +5,15 @@
   <groupId>cleancode</groupId>
   <artifactId>SchoolManagementApplication</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-
-  <name>SchoolManagementApplication</name>
   <url>http://maven.apache.org</url>
-
+  <packaging>jar</packaging>
+  <name>SchoolManagementApplication</name>
+  
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <itext.version>RELEASE</itext.version>
   </properties>
-
+  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -28,5 +28,36 @@
 	    <artifactId>poi-ooxml</artifactId>
 	    <version>3.17</version>
 	</dependency>
+	<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.9</version>
+		</dependency>
+	
   </dependencies>
+  
+  <!-- All add-ons and iText 7 core-->
+<repositories>
+	<repository>
+    	<id>itext</id>
+    	<name>iText Repository - releases</name>
+    	<url>https://repo.itextsupport.com/releases</url>
+ 	</repository>
+  
+  	<repository>
+  		<releases>
+    		<enabled>true</enabled>   
+  		</releases>
+  		<snapshots>
+    		<enabled>false</enabled>
+ 		</snapshots>
+  		<id>pdf2data-releases</id>
+  		<name>iText pdf2Data Repository - releases</name>
+  		<url>https://repo.itextsupport.com/pdf2data</url>
+	</repository>
+</repositories>
+
+<!-- pdf2Data-->
+
+  
 </project>

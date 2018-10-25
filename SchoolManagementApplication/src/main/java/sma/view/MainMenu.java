@@ -55,6 +55,18 @@ public class MainMenu {
 				teacherFunction.TeachersWriteIntoExcel();
 				break;
 			case 7 :
+				schoolFunction.SchoolsWriteIntoPDF();
+				break;
+			case 8 :
+				teacherFunction.TeachersWriteIntoPDF();
+				break;
+			case 9 :
+				schoolFunction.SchoolsWriteIntoHTML();
+				break;
+			case 10 :
+				teacherFunction.TeachersWriteIntoHTML();
+				break;
+			case 11 :
 				cont= false;
 				break;
 		}	

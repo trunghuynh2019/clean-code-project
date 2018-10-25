@@ -21,7 +21,11 @@ public class ApplicationMenu {
 		System.out.println("\t4. Writing from Teacher File (giaovien.txt) to Teachers Array");
 		System.out.println("\t5. Writing from Schools Array  to Excel File");
 		System.out.println("\t6. Writing from Teachers Array  to Excel File");
-		System.out.println("\t7. Exit");
+		System.out.println("\t7. Writing from Schools Array  to PDF File");
+		System.out.println("\t8. Writing from Teachers Array  to PDF File");
+		System.out.println("\t9. Writing from Schools Array  to HTML File");
+		System.out.println("\t10. Writing from Teachers Array  to HTML File");
+		System.out.println("\t11. Exit");
 		System.out.println("===================================");
 		System.out.print("Please input your choice ( number of menu ) : ");
 	}
