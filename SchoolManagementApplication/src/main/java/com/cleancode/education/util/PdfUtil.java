@@ -17,6 +17,14 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 
 public class PdfUtil {
+	
+	public PdfPTable createTable(String[] columnHeader) {
+		PdfPTable table = new PdfPTable(columnHeader.length);
+		table.setWidthPercentage(90);
+		addTableHeader(table, columnHeader);
+		return table;
+	}
+	
 	public void addTableHeader(PdfPTable table, String[] columnHeader) {
 	    Stream.of(columnHeader)
 	      .forEach(columnTitle -> {

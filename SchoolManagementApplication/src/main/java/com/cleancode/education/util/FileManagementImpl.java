@@ -217,9 +217,7 @@ public class FileManagementImpl implements FileManagement{
 			pdfDoc.add(para);
 			
 			
-			PdfPTable table = new PdfPTable(schoolColumnHeader.length);
-			table.setWidthPercentage(90);
-			pdfUtil.addTableHeader(table, schoolColumnHeader);
+			PdfPTable table = pdfUtil.createTable(schoolColumnHeader);
 			for (School school : schools) {
 				pdfUtil.addRows(table, school);
 			}
@@ -249,9 +247,7 @@ public class FileManagementImpl implements FileManagement{
 			pdfDoc.add(para);
 			
 			
-			PdfPTable table = new PdfPTable(teacherColumnHeader.length);
-			table.setWidthPercentage(90);
-			pdfUtil.addTableHeader(table, teacherColumnHeader);
+			PdfPTable table = pdfUtil.createTable(teacherColumnHeader);
 			for (School school : schools) {
 				for (Teacher teacher : school.getTeachers()) {
 					pdfUtil.addRows(table, teacher);
