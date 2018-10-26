@@ -2,12 +2,14 @@ package school_management_application.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -15,9 +17,20 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import school_management_application.DTO.SchoolDto;
 import school_management_application.Model.School;
 import school_management_application.Repository.SchoolRepository;
+
 
 public class SchoolService {
 	private SchoolRepository schoolRepo;
@@ -215,4 +228,62 @@ public class SchoolService {
         	return false;
         }
     }
+
+	public boolean exportSchoolsToPDF(List<Integer> countTeacher, String fileName) {
+		// tạo một document
+        Document document = new Document();
+        Font titlePageFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLDITALIC);
+        Font headerTableFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
+        Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+        Paragraph paragraphTitle = new Paragraph(("School List").toUpperCase(), titlePageFont);
+        PdfPTable table = new PdfPTable(5);
+
+        try {
+        	// khởi tạo một PdfWriter truyền vào document và FileOutputStream
+            PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/output/" + fileName));
+            
+            // mở file để thực hiện viết
+            document.open();
+            // thêm nội dung sử dụng add function
+            paragraphTitle.setAlignment(Element.ALIGN_CENTER);
+            paragraphTitle.setSpacingAfter(8);
+            document.add(paragraphTitle);
+        	//Khởi tạo 5 ô header
+            PdfPCell headerID = new PdfPCell(new Paragraph("ID"));
+            PdfPCell headerName = new PdfPCell(new Paragraph(("School's Name").toUpperCase()));
+            PdfPCell headerAddress = new PdfPCell(new Paragraph(("Address").toUpperCase()));
+            PdfPCell headerNoStudent = new PdfPCell(new Paragraph(("Number Of Student").toUpperCase()));
+            PdfPCell headerNoTeacher = new PdfPCell(new Paragraph(("Number Of Teacher").toUpperCase()));
+            
+        	//Thêm 3 ô header vào table
+            table.addCell(header1);
+            table.addCell(header2);
+            table.addCell(header3);
+
+        	//Khởi tạo 3 ô data: ô số 1 là string, ô số 2 là ảnh, ô số 3 là table
+            PdfPCell data1 = new PdfPCell(new Paragraph("Data String"));
+            PdfPCell data2 = new PdfPCell(Image.getInstance("framgia.png"), false);
+
+            PdfPTable nestedTable = new PdfPTable(2);
+            nestedTable.addCell(new Paragraph("Nested Cell 1"));
+            nestedTable.addCell(new Paragraph("Nested Cell 2"));
+            PdfPCell data3 = new PdfPCell(nestedTable);
+        	//Thêm data vào bảng.
+            table.addCell(data1);
+            table.addCell(data2);
+            table.addCell(data3);
+
+            document.add(table);
+
+            // đóng file
+            document.close();
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+		
+		return true;
+	}
 }
