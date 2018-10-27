@@ -53,7 +53,7 @@ public class AppTest extends TestCase {
     	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
     	schools.add(new School("BKU", "Bach Khoa", 10, "Ho Chi Minh city", 0, null));
     	
-    	boolean check = management.exportDataOfSchools(schools, fileName);
+    	boolean check = management.exportDataOfSchoolsToExcel(schools, fileName);
     	assertEquals(true, check);
     }
     
@@ -64,7 +64,7 @@ public class AppTest extends TestCase {
     	teachers.add(new Teacher(123123123,"Teacher A","Ho Chi Minh"));
     	teachers.add(new Teacher(123564125,"Teacher B","Ho Chi Minh"));
     	
-    	boolean check = management.exportDataOfTeachers(teachers, fileName);
+    	boolean check = management.exportDataOfTeachersToExcel(teachers, fileName);
     	assertEquals(true, check);
     }
     
