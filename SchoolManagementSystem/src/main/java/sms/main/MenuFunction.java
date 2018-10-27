@@ -7,7 +7,7 @@ import sms.model.School;
 import sms.repository.SchoolRepo;
 import sms.repository.TeacherRepo;
 
-public interface DirectFunction {
+public interface MenuFunction {
 	public void viewAllSchool(List<School> schools, Scanner scanner);
 	public void addNewSchool(List<School> schools, Scanner scanner);
 	public void manageTeachersList(List<School> schools, Scanner scanner, SchoolRepo schoolRepo, TeacherRepo teacherRepo);

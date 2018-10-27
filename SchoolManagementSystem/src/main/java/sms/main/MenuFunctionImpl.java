@@ -14,7 +14,7 @@ import sms.view.MainView;
 import sms.view.SchoolView;
 import sms.view.TeacherView;
 
-public class DirectFunctionImpl implements DirectFunction {
+public class MenuFunctionImpl implements MenuFunction {
 	public void viewAllSchool(List<School> schools, Scanner scanner) {
 		SchoolView.displayAllSchool(schools);
 		MainView.loopAgain(scanner);

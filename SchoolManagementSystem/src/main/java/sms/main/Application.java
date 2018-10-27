@@ -17,7 +17,7 @@ public class Application {
 		List<School> schools = new ArrayList<School>();
 		SchoolRepo schoolRepo = new SchoolRepoImpl();
 		TeacherRepo teacherRepo = new TeacherRepoImpl();
-		DirectFunction function = new DirectFunctionImpl();
+		MenuFunction function = new MenuFunctionImpl();
 		boolean programEnd = false;
 		Scanner scanner = new Scanner(System.in);
 
