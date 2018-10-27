@@ -2,12 +2,15 @@ package school_management_application.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -15,6 +18,16 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import school_management_application.DTO.TeacherDto;
 import school_management_application.Model.Teacher;
 import school_management_application.Repository.TeacherRepository;
@@ -261,4 +274,114 @@ public class TeacherService {
         	return false;
         }
     }
+	
+	public boolean exportTeachersToPDF(String fileName) {
+		// tạo một document
+        Document document = new Document();
+        Font titlePageFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLDITALIC);
+        Font headerTableFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
+        Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+        Paragraph paragraphTitle = new Paragraph(("Teachers List").toUpperCase(), titlePageFont);
+        PdfPTable table = new PdfPTable(6);
+
+        try {
+        	// khởi tạo một PdfWriter truyền vào document và FileOutputStream
+            PdfWriter.getInstance(document, new FileOutputStream("src/main/resources/output/" + fileName));
+            
+            // mở file để thực hiện viết
+            document.open();
+            // thêm nội dung sử dụng add function
+            paragraphTitle.setAlignment(Element.ALIGN_CENTER);
+            paragraphTitle.setSpacingAfter(8);
+            document.add(paragraphTitle);
+        	//Khởi tạo 5 ô header
+            PdfPCell headerTeacherID = new PdfPCell(new Paragraph(("Teacher ID").toUpperCase(),headerTableFont));
+            PdfPCell headerSchoolID = new PdfPCell(new Paragraph(("School ID").toUpperCase(),headerTableFont));
+            PdfPCell headerName = new PdfPCell(new Paragraph(("School's Name").toUpperCase(),headerTableFont));
+            PdfPCell headerIdentityCard = new PdfPCell(new Paragraph(("Identity Card").toUpperCase(),headerTableFont));
+            PdfPCell headerPhoneNo = new PdfPCell(new Paragraph(("Phone Number").toUpperCase(),headerTableFont));
+            PdfPCell headerAddress = new PdfPCell(new Paragraph(("Address").toUpperCase(),headerTableFont));
+        	
+            headerTeacherID.setHorizontalAlignment(Element.ALIGN_LEFT);
+        	headerTeacherID.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerSchoolID.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerSchoolID.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerName.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerName.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerIdentityCard.setHorizontalAlignment(Element.ALIGN_LEFT);
+        	headerIdentityCard.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerPhoneNo.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerPhoneNo.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerAddress.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerAddress.setVerticalAlignment(Element.ALIGN_CENTER);
+            //Thêm 6 ô header vào table
+            table.addCell(headerTeacherID);
+            table.addCell(headerSchoolID);
+            table.addCell(headerName);
+            table.addCell(headerIdentityCard);
+            table.addCell(headerPhoneNo);
+            table.addCell(headerAddress);
+            table.setHeaderRows(1);
+            
+            Teacher teacher;
+            List<Teacher> teachers = showAllTeacher();
+            ListIterator<Teacher> itr_teach = teachers.listIterator();
+            
+        	//Thêm data vào bảng.
+            while (itr_teach.hasNext()) {
+            	teacher = itr_teach.next();
+            	ListIterator<String> itr_idenCrd = teacher.getIdentityCard().listIterator();
+            	ListIterator<String> itr_phNo = teacher.getPhoneNo().listIterator();
+            	Paragraph identityCard = new Paragraph();
+            	Paragraph phoneNo = new Paragraph();
+            	
+            	PdfPCell dataTeacherID = new PdfPCell(new Paragraph(String.valueOf(teacher.getTeacherID()),normalFont));
+            	PdfPCell dataSchoolID = new PdfPCell(new Paragraph(teacher.getSchoolID(),normalFont));
+            	PdfPCell dataName = new PdfPCell(new Paragraph(teacher.getName(),normalFont));
+            	
+            	while(itr_idenCrd.hasNext()) {
+            		identityCard.add(new Paragraph(itr_idenCrd.next(),normalFont));
+            	}
+            	PdfPCell dataIdentityCard = new PdfPCell(identityCard);
+            	
+            	while(itr_phNo.hasNext()) {
+            		phoneNo.add(new Paragraph(itr_phNo.next(),normalFont));
+            	}
+            	PdfPCell dataPhoneNo = new PdfPCell(phoneNo);
+            	PdfPCell dataAddress = new PdfPCell(new Paragraph(teacher.getAddress(),normalFont));
+            	
+            	dataTeacherID.setHorizontalAlignment(Element.ALIGN_LEFT);
+            	dataTeacherID.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataSchoolID.setHorizontalAlignment(Element.ALIGN_CENTER);
+            	dataSchoolID.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataName.setHorizontalAlignment(Element.ALIGN_LEFT);
+            	dataName.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataIdentityCard.setHorizontalAlignment(Element.ALIGN_CENTER);
+            	dataIdentityCard.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataPhoneNo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            	dataPhoneNo.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataAddress.setHorizontalAlignment(Element.ALIGN_LEFT);
+            	dataAddress.setVerticalAlignment(Element.ALIGN_CENTER);
+            	   	
+            	table.addCell(dataTeacherID);
+            	table.addCell(dataSchoolID);
+	            table.addCell(dataName);
+	            table.addCell(dataIdentityCard);
+	            table.addCell(dataPhoneNo);
+	            table.addCell(dataAddress);
+            }
+            document.add(table);
+            // đóng file
+            document.close();
+        }
+        catch (DocumentException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+		return true;
+	}
 }
