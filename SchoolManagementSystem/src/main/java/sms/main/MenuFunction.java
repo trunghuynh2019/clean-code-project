@@ -15,4 +15,5 @@ public interface MenuFunction {
 	public void writeDataToTextFile(List<School> schools, Scanner scanner);
 	public void writeDataToExcelFile(List<School> schools, Scanner scanner);
 	public void writeDataToPdfFile(List<School> schools, Scanner scanner);
+	public void writeDataToHtmlFile(List<School> schools, Scanner scanner);
 }

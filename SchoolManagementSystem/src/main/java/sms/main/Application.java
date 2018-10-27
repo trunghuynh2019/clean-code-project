@@ -56,9 +56,14 @@ public class Application {
 				function.writeDataToPdfFile(schools, scanner);
 				break;
 			}
-			case 8:
+			case 8: {
+				function.writeDataToHtmlFile(schools, scanner);
+				break;
+			}
+			case 9: {
 				programEnd = true;
 				return;
+			}
 			}
 		} while (!programEnd);
 

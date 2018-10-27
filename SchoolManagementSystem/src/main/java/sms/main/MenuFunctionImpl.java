@@ -9,6 +9,7 @@ import sms.model.Teacher;
 import sms.repository.SchoolRepo;
 import sms.repository.TeacherRepo;
 import sms.util.ExcelUtil;
+import sms.util.HtmlUtil;
 import sms.util.PdfUtil;
 import sms.util.TextUtil;
 import sms.view.MainView;
@@ -28,7 +29,8 @@ public class MenuFunctionImpl implements MenuFunction {
 		MainView.loopAgain(scanner);
 	}
 
-	public void manageTeachersList(List<School> schools, Scanner scanner, SchoolRepo schoolRepo, TeacherRepo teacherRepo) {
+	public void manageTeachersList(List<School> schools, Scanner scanner, SchoolRepo schoolRepo,
+			TeacherRepo teacherRepo) {
 		SchoolView.displayAllSchool(schools);
 		MainView.enterSchoolId();
 		Optional<School> opSchool = schoolRepo.findSchoolById(schools, scanner.nextLine());
@@ -85,7 +87,8 @@ public class MenuFunctionImpl implements MenuFunction {
 		String teacherFile = scanner.nextLine();
 		TextUtil fileReading = new TextUtil(schoolFile, teacherFile);
 
-		boolean readSuccessfully = fileReading.readSchoolFromTextFile(schools) && fileReading.readTeacherTextFileFile(schools);
+		boolean readSuccessfully = fileReading.readSchoolFromTextFile(schools)
+				&& fileReading.readTeacherTextFileFile(schools);
 		if (readSuccessfully) {
 			MainView.readFileSuccessfully();
 		} else {
@@ -123,9 +126,21 @@ public class MenuFunctionImpl implements MenuFunction {
 	@Override
 	public void writeDataToPdfFile(List<School> schools, Scanner scanner) {
 		PdfUtil pdfUtil = new PdfUtil("truong.pdf", "giaovien.pdf");
-		
-		boolean writeSuccessfully = pdfUtil.writeSchoolToPdfFile(schools)
-				&& pdfUtil.writeTeacherToPdfFile(schools);
+
+		boolean writeSuccessfully = pdfUtil.writeSchoolToPdfFile(schools) && pdfUtil.writeTeacherToPdfFile(schools);
+		if (writeSuccessfully) {
+			MainView.writeFileSuccessfully();
+		} else {
+			MainView.writeFileFailed();
+		}
+		MainView.loopAgain(scanner);
+	}
+
+	@Override
+	public void writeDataToHtmlFile(List<School> schools, Scanner scanner) {
+		HtmlUtil htmlUtil = new HtmlUtil("truong.html", "giaovien.html");
+
+		boolean writeSuccessfully = htmlUtil.writeSchoolToHtmlFile(schools) && htmlUtil.writeTeacherToHtmlFile(schools);
 		if (writeSuccessfully) {
 			MainView.writeFileSuccessfully();
 		} else {

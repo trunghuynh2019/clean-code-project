@@ -16,7 +16,8 @@ public class MainView {
 		System.out.println("\t5. Export data to text file");
 		System.out.println("\t6. Export data to excel file");
 		System.out.println("\t7. Export data to pdf file");
-		System.out.println("\t8. Exit");
+		System.out.println("\t8. Export data to html file");
+		System.out.println("\t9. Exit");
 		System.out.println("------------------------------------");
 		System.out.print("Please enter your choice: ");
 	}
@@ -67,11 +68,11 @@ public class MainView {
 	}
 	
 	public static void readFileSuccessfully() {
-		System.out.println("Reading successfully!...");
+		System.out.println("Imported successfully!...");
 	}
 	
 	public static void writeFileSuccessfully() {
-		System.out.println("Writing successfully!...");
+		System.out.println("Exported successfully!...");
 	}
 	
 	public static void writeFileFailed() {
