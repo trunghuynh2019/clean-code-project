@@ -9,6 +9,7 @@ import sms.model.Teacher;
 import sms.repository.SchoolRepo;
 import sms.repository.TeacherRepo;
 import sms.util.ExcelUtil;
+import sms.util.PdfUtil;
 import sms.util.TextUtil;
 import sms.view.MainView;
 import sms.view.SchoolView;
@@ -111,6 +112,20 @@ public class MenuFunctionImpl implements MenuFunction {
 
 		boolean writeSuccessfully = fileWriting.writeSchoolToExcelFile(schools)
 				&& fileWriting.writeTeacherToExcelFile(schools);
+		if (writeSuccessfully) {
+			MainView.writeFileSuccessfully();
+		} else {
+			MainView.writeFileFailed();
+		}
+		MainView.loopAgain(scanner);
+	}
+
+	@Override
+	public void writeDataToPdfFile(List<School> schools, Scanner scanner) {
+		PdfUtil pdfUtil = new PdfUtil("truong.pdf", "giaovien.pdf");
+		
+		boolean writeSuccessfully = pdfUtil.writeSchoolToPdfFile(schools)
+				&& pdfUtil.writeTeacherToPdfFile(schools);
 		if (writeSuccessfully) {
 			MainView.writeFileSuccessfully();
 		} else {

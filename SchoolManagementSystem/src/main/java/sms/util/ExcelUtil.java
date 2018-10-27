@@ -13,7 +13,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import sms.model.School;
+import sms.model.School.SchoolCells;
 import sms.model.Teacher;
+import sms.model.Teacher.TeacherCells;
 
 public class ExcelUtil {
 	private String schoolFileName;
@@ -39,28 +41,6 @@ public class ExcelUtil {
 
 	public void setTeacherFileName(String teacherFileName) {
 		this.teacherFileName = teacherFileName;
-	}
-	
-	public enum SchoolCells {
-		ID(0), NAME(1), NUMBER_OF_TEACHER(2), NUMBER_OF_STUDENT(3), ADDRESS(4);
-		private final int value;
-		private SchoolCells(int value) {
-			this.value = value;
-		}
-		public int getValue() {
-			return value;
-		}
-	}
-	
-	public enum TeacherCells {
-		ID(0), NAME(1), SCHOOL_ID(2);
-		private final int value;
-		private TeacherCells(int value) {
-			this.value = value;
-		}
-		public int getValue() {
-			return value;
-		}
 	}
 	
 	public Sheet createHeader(Workbook workbook, String sheetName, String[] columns) {
@@ -102,7 +82,7 @@ public class ExcelUtil {
 		}
 
 		// Resize all columns to fit the content size
-		for (int i = 0; i <= SchoolCells.ADDRESS.value; i++) {
+		for (int i = 0; i <= SchoolCells.ADDRESS.getValue(); i++) {
 			sheet.autoSizeColumn(i);
 		}
 

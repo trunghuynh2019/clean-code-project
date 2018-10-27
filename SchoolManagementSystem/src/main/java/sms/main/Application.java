@@ -52,7 +52,11 @@ public class Application {
 				function.writeDataToExcelFile(schools, scanner);
 				break;
 			}
-			case 7:
+			case 7: {
+				function.writeDataToPdfFile(schools, scanner);
+				break;
+			}
+			case 8:
 				programEnd = true;
 				return;
 			}

@@ -121,4 +121,15 @@ public class School {
 		teachers.add(teacher);
 		numOfTeachers = teachers.size();
 	}
+	
+	public enum SchoolCells {
+		ID(0), NAME(1), NUMBER_OF_TEACHER(2), NUMBER_OF_STUDENT(3), ADDRESS(4);
+		private final int value;
+		private SchoolCells(int value) {
+			this.value = value;
+		}
+		public int getValue() {
+			return value;
+		}
+	}
 }

@@ -15,7 +15,8 @@ public class MainView {
 		System.out.println("\t4. Enter data by file text input");
 		System.out.println("\t5. Export data to text file");
 		System.out.println("\t6. Export data to excel file");
-		System.out.println("\t7. Exit");
+		System.out.println("\t7. Export data to pdf file");
+		System.out.println("\t8. Exit");
 		System.out.println("------------------------------------");
 		System.out.print("Please enter your choice: ");
 	}

@@ -60,4 +60,15 @@ public class Teacher {
 	public String toString() {
 		return "Teacher name: " + this.name + "\nSchool Id: " + this.schoolId;
 	}
+	
+	public enum TeacherCells {
+		ID(0), NAME(1), SCHOOL_ID(2);
+		private final int value;
+		private TeacherCells(int value) {
+			this.value = value;
+		}
+		public int getValue() {
+			return value;
+		}
+	}
 }
