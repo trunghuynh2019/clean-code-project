@@ -1,28 +1,26 @@
-package sms.function;
+package sms.util;
 
-import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.List;
-import java.util.Optional;
-
-import sms.functionInterface.FileWritingITF;
-import sms.model.School;
-import sms.model.Teacher;
-import sms.repo.Repository;
-import sms.repoInterface.RepositoryITF;
-
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class FileWriting implements FileWritingITF {
+import sms.model.School;
+import sms.model.Teacher;
+
+public class ExcelUtil {
 	private String schoolFileName;
 	private String teacherFileName;
-	private BufferedWriter writer;
-	private RepositoryITF repo = new Repository();
 
-	public FileWriting(String schoolFileName, String teacherFileName) {
+	public ExcelUtil(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -42,54 +40,6 @@ public class FileWriting implements FileWritingITF {
 
 	public void setTeacherFileName(String teacherFileName) {
 		this.teacherFileName = teacherFileName;
-	}
-
-	public boolean writeSchoolToTextFile(List<School> schools) {
-		try {
-			FileOutputStream file = new FileOutputStream("export/text/" + schoolFileName);
-			writer = new BufferedWriter(new OutputStreamWriter(file));
-			writer.write("Danh sach truong");
-			writer.newLine();
-			writer.newLine();
-
-			Optional<List<String>> schoolsData = repo.getStringFromSchoolList(schools);
-			if (!schoolsData.isPresent()) {
-				return true;
-			}
-			for (String string : schoolsData.get()) {
-				writer.write(string);
-				writer.newLine();
-			}
-			writer.close();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public boolean writeTeacherToTextFile(List<School> schools) {
-		try {
-			FileOutputStream file = new FileOutputStream("export/text/" + teacherFileName);
-			writer = new BufferedWriter(new OutputStreamWriter(file));
-			writer.write("Danh sach giao vien");
-			writer.newLine();
-			writer.newLine();
-
-			Optional<List<String>> teachersData = repo.getStringFromTeacherList(schools);
-			if (!teachersData.isPresent()) {
-				return true;
-			}
-			for (String string : teachersData.get()) {
-				writer.write(string + "\n");
-				writer.newLine();
-			}
-			writer.close();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 	public boolean writeSchoolToExcelFile(List<School> schools) {
@@ -217,5 +167,4 @@ public class FileWriting implements FileWritingITF {
 			return false;
 		}
 	}
-
 }

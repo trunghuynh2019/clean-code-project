@@ -9,11 +9,14 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import sms.model.School;
 import sms.model.Teacher;
-import sms.repo.Repository;
-import sms.repoInterface.RepositoryITF;
+import sms.repository.SchoolRepo;
+import sms.repository.TeacherRepo;
+import sms.repository.impl.SchoolRepoImpl;
+import sms.repository.impl.TeacherRepoImpl;
 
 public class RepositoryTest extends TestCase {
-	private static RepositoryITF repo = new Repository();
+	private static final SchoolRepo SCHOOL_REPO = new SchoolRepoImpl();
+	private static final TeacherRepo TEACHER_REPO = new TeacherRepoImpl();
 	
 	public RepositoryTest(String testName) {
 		super(testName);
@@ -47,7 +50,7 @@ public class RepositoryTest extends TestCase {
 		School school3 = new School("003", "name3");
 		List<School> schools = asList(school1, school2, school3);
 
-		School actual = repo.findSchoolById(schools, "002").get();
+		School actual = SCHOOL_REPO.findSchoolById(schools, "002").get();
 		School expected = school2;
 		assertTrue(actual.equals(expected));
 	}
@@ -57,7 +60,7 @@ public class RepositoryTest extends TestCase {
 		School school2 = new School("002", "name2");
 		List<School> schools = asList(school1, school2);
 
-		School actual = repo.findSchoolByName(schools, "name2").get();
+		School actual = SCHOOL_REPO.findSchoolByName(schools, "name2").get();
 		School expected = school2;
 		assertTrue(actual.equals(expected));
 	}
@@ -71,7 +74,7 @@ public class RepositoryTest extends TestCase {
 		school.addTeacher(teacher2);
 		school.addTeacher(teacher3);
 		
-		Teacher actual = repo.findTeacherById(school.getTeachers(), 4).get();
+		Teacher actual = TEACHER_REPO.findTeacherById(school.getTeachers(), 4).get();
 		Teacher expect = teacher3;
 		assertTrue(actual.equals(expect));
 	}
@@ -85,7 +88,7 @@ public class RepositoryTest extends TestCase {
 		school.addTeacher(teacher2);
 		school.addTeacher(teacher3);
 		
-		Teacher actual = repo.findTeacherByName(school.getTeachers(), "name2").get();
+		Teacher actual = TEACHER_REPO.findTeacherByName(school.getTeachers(), "name2").get();
 		Teacher expect = teacher2;
 		assertTrue(actual.equals(expect));
 	}

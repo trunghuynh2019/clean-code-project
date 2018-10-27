@@ -1,22 +1,34 @@
-package sms.function;
+package sms.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import sms.model.School;
 import sms.model.Teacher;
-import sms.repo.Repository;
-import sms.repoInterface.RepositoryITF;
-import sms.functionInterface.FileReadingITF;
+import sms.repository.SchoolRepo;
+import sms.repository.TeacherRepo;
+import sms.repository.impl.SchoolRepoImpl;
+import sms.repository.impl.TeacherRepoImpl;
 
-public class FileReading implements FileReadingITF {
+public class TextUtil {
 	private String schoolFileName;
 	private String teacherFileName;
-	private RepositoryITF repo = new Repository();
+	private BufferedWriter writer;
+	private SchoolRepo schoolRepo = new SchoolRepoImpl();
+	private TeacherRepo teacherRepo = new TeacherRepoImpl();
+
+	public TextUtil(String schoolFileName, String teacherFileName) {
+		super();
+		this.schoolFileName = schoolFileName;
+		this.teacherFileName = teacherFileName;
+	}
 
 	public String getSchoolFileName() {
 		return schoolFileName;
@@ -33,14 +45,8 @@ public class FileReading implements FileReadingITF {
 	public void setTeacherFileName(String teacherFileName) {
 		this.teacherFileName = teacherFileName;
 	}
-
-	public FileReading(String schoolFileName, String teacherFileName) {
-		super();
-		this.schoolFileName = schoolFileName;
-		this.teacherFileName = teacherFileName;
-	}
-
-	public boolean readSchoolFile(List<School> schools) {
+	
+	public boolean readSchoolFromTextFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		InputStreamReader inputStreamReader;
 		try {
@@ -67,7 +73,7 @@ public class FileReading implements FileReadingITF {
 		}
 	}
 
-	public boolean readTeacherFile(List<School> schools) {
+	public boolean readTeacherTextFileFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		InputStreamReader inputStreamReader;
 		try {
@@ -84,7 +90,7 @@ public class FileReading implements FileReadingITF {
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] teacherData = line.substring(2).split(Pattern.quote(" ||| "));
 				Teacher teacher = new Teacher(Integer.parseInt(teacherData[0]), teacherData[1], teacherData[2]);
-				Optional<School> school = repo.findSchoolById(schools, teacher.getSchoolId());
+				Optional<School> school = schoolRepo.findSchoolById(schools, teacher.getSchoolId());
 				if (school.isPresent()) {
 					school.get().addTeacher(teacher);
 				}
@@ -95,5 +101,53 @@ public class FileReading implements FileReadingITF {
 			return false;
 		}
 
+	}
+
+	public boolean writeSchoolToTextFile(List<School> schools) {
+		try {
+			FileOutputStream file = new FileOutputStream("export/text/" + schoolFileName);
+			writer = new BufferedWriter(new OutputStreamWriter(file));
+			writer.write("Danh sach truong");
+			writer.newLine();
+			writer.newLine();
+
+			Optional<List<String>> schoolsData = schoolRepo.getStringFromSchoolList(schools);
+			if (!schoolsData.isPresent()) {
+				return true;
+			}
+			for (String string : schoolsData.get()) {
+				writer.write(string);
+				writer.newLine();
+			}
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean writeTeacherToTextFile(List<School> schools) {
+		try {
+			FileOutputStream file = new FileOutputStream("export/text/" + teacherFileName);
+			writer = new BufferedWriter(new OutputStreamWriter(file));
+			writer.write("Danh sach giao vien");
+			writer.newLine();
+			writer.newLine();
+
+			Optional<List<String>> teachersData = teacherRepo.getStringFromTeacherList(schools);
+			if (!teachersData.isPresent()) {
+				return true;
+			}
+			for (String string : teachersData.get()) {
+				writer.write(string + "\n");
+				writer.newLine();
+			}
+			writer.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
