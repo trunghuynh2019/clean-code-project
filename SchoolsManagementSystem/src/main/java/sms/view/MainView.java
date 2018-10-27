@@ -8,23 +8,32 @@ public class MainView {
 		System.out.println("\n========== SCHOOL MANAGEMENT SYSTEM ==========");
 		System.out.println("|   1. View All Schools                      |");
 		System.out.println("|   2. Add A New School                      |");
-		System.out.println("|   3. Add School List From File             |");
-		System.out.println("|   4. Manage Teacher Of School              |");
-		System.out.println("|   5. Export All School Into Excel File     |");
-		System.out.println("|   6. Exit                                  |");
+		System.out.println("|   3. Manage Teacher Of School              |");
+		System.out.println("|   4. File Management                       |");
+		System.out.println("|   5. Exit                                  |");
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
 
+	public static void showFileManagementMenu(String type) {
+		System.out.println("\n========== FILE MANAGEMENT SYSTEM ==========");
+		System.out.println("|  1. Export All "+type+" Into Excel File  ");
+		System.out.println("|  2. Export All "+type+" Into PDF File ");
+		System.out.println("|  3. Export All "+type+" Into HTML File ");
+		System.out.println("|  4. Import All "+type+" From Text File ");
+		System.out.println("|  5. Back To Main Menu                ");
+		System.out.println("==============================================");
+		System.out.print("Please Enter Your Choice: ");
+	}
+	
 	public static void showTeacherManagementMenu(School school) {
 		System.out.println("========= Welcome to " + school.getName().toUpperCase() + " school! =========");
 		System.out.println("|   1. View All Teachers                ");
 		System.out.println("|   2. Sign Contract With Teacher       ");
-		System.out.println("|   3. Sign Contract With Teacher List From File    ");
-		System.out.println("|   4. Search Teacher By Name           ");
-		System.out.println("|   5. Search Teacher By Address        ");
-		System.out.println("|   6. Export All Teacher Into Excel File ");
-		System.out.println("|   7. Back To Main Menu                ");
+		System.out.println("|   3. Search Teacher By Name           ");
+		System.out.println("|   4. Search Teacher By Address        ");
+		System.out.println("|   5. File Management					");
+		System.out.println("|   6. Back To Main Menu                ");
 		System.out.println("========================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
