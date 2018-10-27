@@ -1,4 +1,24 @@
 -------------------------------------------------------------------------------
 Test set: school_management_application.AppTest
 -------------------------------------------------------------------------------
-Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 sec
+Tests run: 11, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.068 sec <<< FAILURE!
+testSignInContractWithTeacherSuccessful(school_management_application.AppTest)  Time elapsed: 0.048 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: com/itextpdf/text/DocumentException
+	at school_management_application.AppTest.testSignInContractWithTeacherSuccessful(AppTest.java:115)
+Caused by: java.lang.ClassNotFoundException: com.itextpdf.text.DocumentException
+	at java.net.URLClassLoader.findClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	... 29 more
+
+testSignInContractWithTeacherErrorDuplicateData(school_management_application.AppTest)  Time elapsed: 0.002 sec  <<< ERROR!
+java.lang.NoClassDefFoundError: com/itextpdf/text/DocumentException
+	at school_management_application.AppTest.testSignInContractWithTeacherErrorDuplicateData(AppTest.java:124)
+Caused by: java.lang.ClassNotFoundException: com.itextpdf.text.DocumentException
+	at java.net.URLClassLoader.findClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Unknown Source)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	... 29 more
+

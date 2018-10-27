@@ -153,7 +153,7 @@ public class AppTest
     	assertEquals("Name",teachRepo.findByTeacherID(1).getName());
     }
     
-    public void testSaveTeacherToRepositoryWithTeacherIDErrorDuplicate(){
+    public void testSaveDuplicateTeacherToRepositoryWithTeacherID(){
     	Teacher teacher = new Teacher();
     	TeacherRepository teachRepo = new TeacherRepository();
     	
@@ -177,5 +177,54 @@ public class AppTest
     	teach.setName("Name2");
     	teachRepo.save(teach);
     	assertEquals(Integer.valueOf(2),teachRepo.findAll().get(1).getTeacherID());
+    }
+    
+    public void testOverrideATeacherList() {
+    	TeacherRepository teachRepo = new TeacherRepository();
+    	Teacher teacher1 = new Teacher();
+    	Teacher teacher2 = new Teacher();
+    	Teacher teacher3 = new Teacher();
+    	Teacher teacher4 = new Teacher();
+    	List<Teacher> teachers = new ArrayList<Teacher>();
+    	
+    	teacher1.setName("Name1");
+    	teacher2.setName("Name2");
+    	teachRepo.save(teacher1);
+    	teachRepo.save(teacher2);
+    	teacher3.setName("Name3");
+    	teacher4.setName("Name4");
+    	teachers.add(teacher3);
+    	teachers.add(teacher4);
+    	teachRepo.setTeachers(teachers);
+    	assertEquals("Name3",teachRepo.findAll().get(0).getName());
+    	assertEquals("Name4",teachRepo.findAll().get(1).getName());    	
+    }
+    
+    public void testFindTeacherByTeacherIDSuccessful() {
+    	TeacherDto teacherDto = new TeacherDto();
+    	TeacherDto teacherDto1 = new TeacherDto();
+    	Teacher teach = new Teacher();
+    	TeacherService teachSev = new TeacherService();
+    	
+    	teacherDto.setName("name");
+    	teacherDto1.setName("name1");
+    	teachSev.signContractWithTeacher(teacherDto);
+    	teachSev.signContractWithTeacher(teacherDto1);
+    	teach = teachSev.findTeacherByTeacherID(1);
+    	assertEquals("name",teach.getName());
+    }
+    
+    public void testFindTeacherByTeacherIDCantFound() {
+    	TeacherDto teacherDto = new TeacherDto();
+    	TeacherDto teacherDto1 = new TeacherDto();
+    	Teacher teach = new Teacher();
+    	TeacherService teachSev = new TeacherService();
+    	
+    	teacherDto.setName("name");
+    	teacherDto1.setName("name1");
+    	teachSev.signContractWithTeacher(teacherDto);
+    	teachSev.signContractWithTeacher(teacherDto1);
+    	teach = teachSev.findTeacherByTeacherID(3);
+    	assertEquals(null,teach);
     }
 }
