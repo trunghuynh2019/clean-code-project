@@ -249,41 +249,72 @@ public class SchoolService {
             paragraphTitle.setSpacingAfter(8);
             document.add(paragraphTitle);
         	//Khởi tạo 5 ô header
-            PdfPCell headerID = new PdfPCell(new Paragraph("ID"));
-            PdfPCell headerName = new PdfPCell(new Paragraph(("School's Name").toUpperCase()));
-            PdfPCell headerAddress = new PdfPCell(new Paragraph(("Address").toUpperCase()));
-            PdfPCell headerNoStudent = new PdfPCell(new Paragraph(("Number Of Student").toUpperCase()));
-            PdfPCell headerNoTeacher = new PdfPCell(new Paragraph(("Number Of Teacher").toUpperCase()));
+            PdfPCell headerID = new PdfPCell(new Paragraph("ID",headerTableFont));
+            PdfPCell headerName = new PdfPCell(new Paragraph(("School's Name").toUpperCase(),headerTableFont));
+            PdfPCell headerAddress = new PdfPCell(new Paragraph(("Address").toUpperCase(),headerTableFont));
+            PdfPCell headerNoStudent = new PdfPCell(new Paragraph(("Number Of Student").toUpperCase(),headerTableFont));
+            PdfPCell headerNoTeacher = new PdfPCell(new Paragraph(("Number Of Teacher").toUpperCase(),headerTableFont));
+        	
+            headerID.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerID.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerName.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerName.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerAddress.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerAddress.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerNoStudent.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerNoStudent.setVerticalAlignment(Element.ALIGN_CENTER);
+        	headerNoTeacher.setHorizontalAlignment(Element.ALIGN_CENTER);
+        	headerNoTeacher.setVerticalAlignment(Element.ALIGN_CENTER);
+            //Thêm 5 ô header vào table
+            table.addCell(headerID);
+            table.addCell(headerName);
+            table.addCell(headerAddress);
+            table.addCell(headerNoStudent);
+            table.addCell(headerNoTeacher);
+            table.setHeaderRows(1);
             
-        	//Thêm 3 ô header vào table
-            table.addCell(header1);
-            table.addCell(header2);
-            table.addCell(header3);
-
-        	//Khởi tạo 3 ô data: ô số 1 là string, ô số 2 là ảnh, ô số 3 là table
-            PdfPCell data1 = new PdfPCell(new Paragraph("Data String"));
-            PdfPCell data2 = new PdfPCell(Image.getInstance("framgia.png"), false);
-
-            PdfPTable nestedTable = new PdfPTable(2);
-            nestedTable.addCell(new Paragraph("Nested Cell 1"));
-            nestedTable.addCell(new Paragraph("Nested Cell 2"));
-            PdfPCell data3 = new PdfPCell(nestedTable);
+            School school;
+            List<School> schools = showAllSchool();
+            ListIterator<School> itr_sch = schools.listIterator();
+            ListIterator<Integer> itr_count = countTeacher.listIterator();
+            
         	//Thêm data vào bảng.
-            table.addCell(data1);
-            table.addCell(data2);
-            table.addCell(data3);
-
+            while (itr_sch.hasNext() && itr_count.hasNext()) {
+            	school = itr_sch.next();
+            	PdfPCell dataID = new PdfPCell(new Paragraph(school.getID(),normalFont));
+            	PdfPCell dataName = new PdfPCell(new Paragraph(school.getName(),normalFont));
+            	PdfPCell dataAddress = new PdfPCell(new Paragraph(school.getAddress(),normalFont));
+            	PdfPCell dataNoStudent = new PdfPCell(new Paragraph(String.valueOf(school.getCountStudent()),normalFont));
+            	PdfPCell dataNoTeacher = new PdfPCell(new Paragraph(String.valueOf(itr_count.next()),normalFont));
+            	
+            	dataID.setHorizontalAlignment(Element.ALIGN_LEFT);
+            	dataID.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataName.setHorizontalAlignment(Element.ALIGN_LEFT);
+            	dataName.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataAddress.setHorizontalAlignment(Element.ALIGN_LEFT);
+            	dataAddress.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataNoStudent.setHorizontalAlignment(Element.ALIGN_CENTER);
+            	dataNoStudent.setVerticalAlignment(Element.ALIGN_CENTER);
+            	dataNoTeacher.setHorizontalAlignment(Element.ALIGN_CENTER);
+            	dataNoTeacher.setVerticalAlignment(Element.ALIGN_CENTER);            	
+            	table.addCell(dataID);
+	            table.addCell(dataName);
+	            table.addCell(dataAddress);
+	            table.addCell(dataNoStudent);
+	            table.addCell(dataNoTeacher);
+            }
             document.add(table);
-
             // đóng file
             document.close();
-
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
-		
+        catch (DocumentException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
 		return true;
 	}
 }
