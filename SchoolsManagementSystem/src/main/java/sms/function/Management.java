@@ -2,9 +2,12 @@ package sms.function;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -16,11 +19,57 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import static j2html.TagCreator.body;
+import static j2html.TagCreator.each;
+import static j2html.TagCreator.h1;
+import static j2html.TagCreator.head;
+import static j2html.TagCreator.html;
+import static j2html.TagCreator.table;
+import static j2html.TagCreator.td;
+import static j2html.TagCreator.title;
+import static j2html.TagCreator.tr;
+
 import sms.model.School;
 import sms.model.Teacher;
 
 public class Management implements ManagementInterface {
 
+	private enum SchoolCells {
+		ID(0), NAME(1), ADDRESS(2), NUM_TEACHER(3), NUM_STUDENT(4);
+		
+		private final int value;
+		private SchoolCells(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return this.value;
+		}
+	}
+	
+	private enum TeacherCells {
+		NAME(0), ADDRESS(1), PHONE(2);
+		
+		private final int value;
+		private TeacherCells(int value) {
+			this.value = value;
+		}
+		
+		public int getValue() {
+			return this.value;
+		}
+	}
+	
 	private static HSSFCellStyle createStyleForTitle(HSSFWorkbook workbook) {
 		HSSFFont font = workbook.createFont();
 		font.setBold(true);
@@ -29,7 +78,7 @@ public class Management implements ManagementInterface {
 		return style;
 	}
 
-	public boolean exportDataOfSchools(List<School> schools, String fileName) {
+	public boolean exportDataOfSchoolsToExcel(List<School> schools, String fileName) {
 		boolean check = false;
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("School Sheet");
@@ -53,25 +102,19 @@ public class Management implements ManagementInterface {
 			rowNum++;
 			row = sheet.createRow(rowNum);
 
-			int pos = 0;
-			
-			cell = row.createCell(pos, CellType.STRING);
+			cell = row.createCell(SchoolCells.ID.getValue(), CellType.STRING);
 			cell.setCellValue(school.getId());
 
-			pos++;
-			cell = row.createCell(pos, CellType.STRING);
+			cell = row.createCell(SchoolCells.NAME.getValue(), CellType.STRING);
 			cell.setCellValue(school.getName());
 
-			pos++;
-			cell = row.createCell(pos, CellType.STRING);
+			cell = row.createCell(SchoolCells.ADDRESS.getValue(), CellType.STRING);
 			cell.setCellValue(school.getAddress());
 
-			pos++;
-			cell = row.createCell(pos, CellType.NUMERIC);
+			cell = row.createCell(SchoolCells.NUM_STUDENT.getValue(), CellType.NUMERIC);
 			cell.setCellValue(school.getNumberOfTeachers());
 
-			pos++;
-			cell = row.createCell(pos, CellType.NUMERIC);
+			cell = row.createCell(SchoolCells.NUM_TEACHER.getValue(), CellType.NUMERIC);
 			cell.setCellValue(school.getNumberOfStudents());
 		}
 
@@ -94,7 +137,7 @@ public class Management implements ManagementInterface {
 		return check;
 	}
 
-	public boolean exportDataOfTeachers(List<Teacher> teachers, String fileName) {
+	public boolean exportDataOfTeachersToExcel(List<Teacher> teachers, String fileName) {
 		boolean check = false;
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("School Sheet");
@@ -117,18 +160,14 @@ public class Management implements ManagementInterface {
 		for (Teacher teacher : teachers) {
 			rowNum++;
 			row = sheet.createRow(rowNum);
-
-			int pos = 0;
 			
-			cell = row.createCell(pos, CellType.STRING);
+			cell = row.createCell(TeacherCells.NAME.getValue(), CellType.STRING);
 			cell.setCellValue(teacher.getName());
 			
-			pos++;
-			cell = row.createCell(pos, CellType.STRING);
+			cell = row.createCell(TeacherCells.ADDRESS.getValue(), CellType.STRING);
 			cell.setCellValue(teacher.getAddress());
 
-			pos++;
-			cell = row.createCell(pos, CellType.STRING);
+			cell = row.createCell(TeacherCells.PHONE.getValue(), CellType.STRING);
 			cell.setCellValue(String.valueOf(teacher.getPhone()));
 
 		}
@@ -152,8 +191,182 @@ public class Management implements ManagementInterface {
 		return check;
 	}
 
+	public boolean exportDataOfSchoolsToPDF(List<School> schools, String fileName) {
+		boolean check = false;
+		String[] headerColumn = {"ID","Name","Address","Number Of Teacher", "Number Of Student"};
+		
+		PdfPTable table = new PdfPTable(headerColumn.length);
+		table.setWidthPercentage(100);
+		
+		for (String headerTitle : headerColumn) {
+			PdfPCell cHeader = new PdfPCell(new Paragraph(headerTitle));
+			cHeader.setBorderWidth(3);
+			cHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			table.addCell(cHeader);
+		}
+		
+		for (School school : schools) {
+			table.addCell(school.getId());
+			table.addCell(school.getName());
+			table.addCell(school.getAddress());
+			table.addCell(school.getNumberOfTeachers()+"");
+			table.addCell(school.getNumberOfStudents()+"");
+		}
+		
+		Document pdfDocument = new Document(PageSize.A4);
+		
+		try {
+			File f = new File(fileName);
+			FileOutputStream fOutput = new FileOutputStream(f);
+			
+			PdfWriter.getInstance(pdfDocument, fOutput).setPdfVersion(PdfWriter.PDF_VERSION_1_7);
+			
+			pdfDocument.open();
+			
+			Paragraph para = new Paragraph("Schools List: \n\n");
+			para.setAlignment(Element.ALIGN_JUSTIFIED);
+			pdfDocument.add(para);
+			
+			pdfDocument.add(table);
+		}catch (FileNotFoundException | DocumentException e) {
+			e.printStackTrace();
+		}finally {
+			pdfDocument.close();
+		}
+		return check;
+	}
+	
+	public boolean exportDataOfTeachersToPDF(List<Teacher> teachers, String fileName) {
+		boolean check = false;
+		String[] headerColumn = {"Name","Address","Phone"};
+		
+		PdfPTable table = new PdfPTable(headerColumn.length);
+		table.setWidthPercentage(100);
+		
+		for (String headerTitle : headerColumn) {
+			PdfPCell cHeader = new PdfPCell(new Paragraph(headerTitle));
+			cHeader.setBorderWidth(3);
+			cHeader.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			table.addCell(cHeader);
+		}
+		
+		for (Teacher teacher : teachers) {
+			table.addCell(teacher.getName());
+			table.addCell(teacher.getAddress());
+			table.addCell(teacher.getPhone()+"");
+		}
+		
+		Document pdfDocument = new Document(PageSize.A4);
+		
+		try {
+			File f = new File(fileName);
+			FileOutputStream fOutput = new FileOutputStream(f);
+			
+			PdfWriter.getInstance(pdfDocument, fOutput).setPdfVersion(PdfWriter.PDF_VERSION_1_7);
+			
+			pdfDocument.open();
+			
+			Paragraph para = new Paragraph("Schools List: \n\n");
+			para.setAlignment(Element.ALIGN_JUSTIFIED);
+			pdfDocument.add(para);
+			
+			pdfDocument.add(table);
+		}catch (FileNotFoundException | DocumentException e) {
+			e.printStackTrace();
+		}finally {
+			pdfDocument.close();
+		}
+		return check;
+	}
+	
+
+	@Override
+	public boolean exportDataOfSchoolsToHTML(List<School> schools, String fileName) {
+		String dataHtml =
+			html(
+					head(
+						title("Schools List")
+					),
+					body(
+						h1("Schools List"),
+						table(
+							tr(
+								td("ID"),
+								td("Name"),
+								td("Address"),
+								td("Number Of Teacher"),
+								td("Number Of Student")
+							),
+							each(schools, 
+								school -> tr(
+									td(school.getId()),
+									td(school.getName()),
+									td(school.getAddress()),
+									td(school.getNumberOfTeachers()+""),
+									td(school.getNumberOfStudents()+"")
+								)
+							)
+						)
+					)
+			).render();
+		
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(fileName);
+			pw.println(dataHtml);
+		}catch (IOException e) {
+			// TODO: handle exception
+		}finally {
+			if(pw!=null) {
+				pw.close();
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean exportDataOfTeachersToHTML(List<Teacher> teachers, String fileName) {
+		String dataHtml =
+				html(
+						head(
+							title("Teachers List")
+						),
+						body(
+							h1("Teachers List"),
+							table(
+								tr(
+									td("Name"),
+									td("Address"),
+									td("Phone")
+								),
+								each(teachers, 
+									teacher -> tr(
+										td(teacher.getName()),
+										td(teacher.getAddress()),
+										td(teacher.getPhone()+"")
+									)
+								)
+							)
+						)
+				).render();
+			
+			PrintWriter pw = null;
+			try {
+				pw = new PrintWriter(fileName);
+				pw.println(dataHtml);
+			}catch (IOException e) {
+				// TODO: handle exception
+			}finally {
+				if(pw!=null) {
+					pw.close();
+				}
+			}
+			return false;
+	}
+	
 	public void loadDatabaseOfSchool(String fileName, List<School> schools) {
-		File f = new File(fileName);
+		String tmpFileName = System.getProperty("user.dir")+"\\fileData\\"+fileName;
+		File f = new File(tmpFileName);
 		FileReader fr = null;
 		BufferedReader br = null;
 		try {
@@ -164,7 +377,7 @@ public class Management implements ManagementInterface {
 			while ((tmp = br.readLine()) != null) {
 				stk = new StringTokenizer(tmp, "|||");
 				School school = new School(stk.nextToken().toUpperCase(), stk.nextToken(),
-						Integer.parseInt(stk.nextToken()), stk.nextToken(), 0, null);
+						Integer.parseInt(stk.nextToken()), stk.nextToken(), 0, new ArrayList<Teacher>());
 				addSchool(schools, school);
 			}
 		} catch (IOException e) {
@@ -182,7 +395,8 @@ public class Management implements ManagementInterface {
 	}
 
 	public void loadDatabaseOfTeacher(String fileName, School school) {
-		File f = new File(fileName);
+		String tmpFileName = System.getProperty("user.dir")+"\\fileData\\"+fileName;
+		File f = new File(tmpFileName);
 		FileReader fr = null;
 		BufferedReader br = null;
 		try {
@@ -193,6 +407,7 @@ public class Management implements ManagementInterface {
 			while ((tmp = br.readLine()) != null) {
 				stk = new StringTokenizer(tmp, "|||");
 				Teacher teacher = new Teacher(Integer.parseInt(stk.nextToken()), stk.nextToken(), stk.nextToken());
+				
 				signContractWithTeacher(school, teacher);
 			}
 			school.setNumberOfTeachers(school.getTeachers().size());
@@ -242,5 +457,6 @@ public class Management implements ManagementInterface {
 		}
 		return null;
 	}
+
 
 }
