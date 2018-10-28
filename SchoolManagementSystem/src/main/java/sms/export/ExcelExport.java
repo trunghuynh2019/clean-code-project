@@ -1,4 +1,4 @@
-package sms.util;
+package sms.export;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,11 +17,11 @@ import sms.model.School.SchoolCells;
 import sms.model.Teacher;
 import sms.model.Teacher.TeacherCells;
 
-public class ExcelUtil {
+public class ExcelExport implements FileExport {
 	private String schoolFileName;
 	private String teacherFileName;
 
-	public ExcelUtil(String schoolFileName, String teacherFileName) {
+	public ExcelExport(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -65,7 +65,8 @@ public class ExcelUtil {
 		return sheet;
 	}
 
-	public boolean writeSchoolToExcelFile(List<School> schools) {
+	@Override
+	public boolean exportSchoolsToFile(List<School> schools) {
 		Workbook workbook = new XSSFWorkbook();
 		String[] columns = {"ID", "Name", "Number of Teacher", "Number of Student", "Address"};
 		Sheet sheet = createHeader(workbook, "truong.xlsx", columns);
@@ -100,7 +101,8 @@ public class ExcelUtil {
 		}
 	}
 
-	public boolean writeTeacherToExcelFile(List<School> schools) {
+	@Override
+	public boolean exportTeachersToFile(List<School> schools) {
 		Workbook workbook = new XSSFWorkbook();
 		String[] columns = {"ID", "Name", "SchoolID"};
 		Sheet sheet = createHeader(workbook, "giaovien.xlsx", columns);

@@ -1,4 +1,4 @@
-package sms.util;
+package sms.export;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -18,11 +18,11 @@ import com.itextpdf.text.pdf.PdfWriter;
 import sms.model.School;
 import sms.model.Teacher;
 
-public class PdfUtil {
+public class PdfExport implements FileExport {
 	private String schoolFileName;
 	private String teacherFileName;
 
-	public PdfUtil(String schoolFileName, String teacherFileName) {
+	public PdfExport(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -63,7 +63,8 @@ public class PdfUtil {
 		}
 	}
 
-	public boolean writeSchoolToPdfFile(List<School> schools) {
+	@Override
+	public boolean exportSchoolsToFile(List<School> schools) {
 		Document pDocument = new Document(PageSize.A4);
 		FileOutputStream fileOut;
 		try {
@@ -71,7 +72,7 @@ public class PdfUtil {
 			PdfWriter.getInstance(pDocument, fileOut);
 			pDocument.open();
 			
-			Paragraph title = new Paragraph("DANH SACH TRUONG\n");
+			Paragraph title = new Paragraph("DANH SACH TRUONG\n	");
 			title.setAlignment(Element.ALIGN_CENTER);
 			pDocument.add(title);
 			
@@ -93,8 +94,9 @@ public class PdfUtil {
 			return false;
 		}
 	}
-	
-	public boolean writeTeacherToPdfFile(List<School> schools) {
+
+	@Override
+	public boolean exportTeachersToFile(List<School> schools) {
 		Document pDocument = new Document(PageSize.A4);
 		FileOutputStream fileOut;
 		try {

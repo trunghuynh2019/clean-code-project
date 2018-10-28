@@ -1,4 +1,4 @@
-package sms.util;
+package sms.export;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,14 +17,14 @@ import sms.repository.TeacherRepo;
 import sms.repository.impl.SchoolRepoImpl;
 import sms.repository.impl.TeacherRepoImpl;
 
-public class TextUtil {
+public class TextExport implements FileExport {
 	private String schoolFileName;
 	private String teacherFileName;
 	private BufferedWriter writer;
 	private SchoolRepo schoolRepo = new SchoolRepoImpl();
 	private TeacherRepo teacherRepo = new TeacherRepoImpl();
 
-	public TextUtil(String schoolFileName, String teacherFileName) {
+	public TextExport(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -45,13 +45,14 @@ public class TextUtil {
 	public void setTeacherFileName(String teacherFileName) {
 		this.teacherFileName = teacherFileName;
 	}
-	
+
 	public boolean readSchoolFromTextFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		InputStreamReader inputStreamReader;
 		try {
 			try {
-				inputStreamReader = new InputStreamReader(this.getClass().getResourceAsStream("/file/" + schoolFileName));
+				inputStreamReader = new InputStreamReader(
+						this.getClass().getResourceAsStream("/file/" + schoolFileName));
 			} catch (NullPointerException e) {
 				return false;
 			}
@@ -78,7 +79,8 @@ public class TextUtil {
 		InputStreamReader inputStreamReader;
 		try {
 			try {
-				inputStreamReader = new InputStreamReader(this.getClass().getResourceAsStream("/file/" + teacherFileName));
+				inputStreamReader = new InputStreamReader(
+						this.getClass().getResourceAsStream("/file/" + teacherFileName));
 			} catch (NullPointerException e) {
 				return false;
 			}
@@ -103,7 +105,8 @@ public class TextUtil {
 
 	}
 
-	public boolean writeSchoolToTextFile(List<School> schools) {
+	@Override
+	public boolean exportSchoolsToFile(List<School> schools) {
 		try {
 			FileOutputStream file = new FileOutputStream("export/text/" + schoolFileName);
 			writer = new BufferedWriter(new OutputStreamWriter(file));
@@ -127,7 +130,8 @@ public class TextUtil {
 		}
 	}
 
-	public boolean writeTeacherToTextFile(List<School> schools) {
+	@Override
+	public boolean exportTeachersToFile(List<School> schools) {
 		try {
 			FileOutputStream file = new FileOutputStream("export/text/" + teacherFileName);
 			writer = new BufferedWriter(new OutputStreamWriter(file));

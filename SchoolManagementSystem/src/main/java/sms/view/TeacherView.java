@@ -7,15 +7,15 @@ import sms.model.School;
 import sms.model.Teacher;
 
 public class TeacherView {
-	public static void displayTeacher(Teacher teacher) {
+	public void displayTeacher(Teacher teacher) {
 		System.out.println(teacher.toString());
 	}
 
-	public static void displayTeacherNotFound() {
+	public void displayTeacherNotFound() {
 		System.out.println("Teacher not found!");
 	}
 	
-	public static void displayAllTeachersOfSchool(School school) {
+	public void displayAllTeachersOfSchool(School school) {
 		if (school.getNumOfTeachers() == 0) {
 			System.out.println("There is no teacher...");
 		} else {
@@ -29,7 +29,7 @@ public class TeacherView {
 		}
 	}
 
-	public static void insertTeacherData(Teacher teacher, Scanner scanner) {
+	public void insertTeacherData(Teacher teacher, Scanner scanner) {
 		System.out.print("Teacher id: ");
 		teacher.setId(scanner.nextInt());
 		scanner.nextLine();

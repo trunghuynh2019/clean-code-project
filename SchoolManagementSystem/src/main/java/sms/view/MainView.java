@@ -5,7 +5,7 @@ import java.util.Scanner;
 import sms.model.School;
 
 public class MainView {
-	public static void displayMainMenu() {
+	public void displayMainMenu() {
 		System.out.println("====================================");
 		System.out.println("----  SCHOOL MANAGEMENT SYSTEM  ----");
 		
@@ -22,7 +22,7 @@ public class MainView {
 		System.out.print("Please enter your choice: ");
 	}
 
-	public static void displayManageTeacherMenu(School school) {
+	public void displayManageTeacherMenu(School school) {
 		System.out.println("--------------------");
 		System.out.println("Welcome to " + school.getName() + " school!");
 		System.out.println("1. View all teachers");
@@ -34,48 +34,66 @@ public class MainView {
 		System.out.print("Please enter your choice: ");
 	}
 
-	public static void loopAgain(Scanner scanner) {
+	public void loopAgain(Scanner scanner) {
 		System.out.print("Press Enter to continue...");
 		scanner.nextLine();
 	}
 
-	public static void enterSchoolId() {
+	public void enterSchoolId() {
 		System.out.print("Enter a school id to manage its teachers list: ");
 	}
 
-	public static void enterTeacherName() {
+	public void enterTeacherName() {
 		System.out.print("Enter a teacher name to search: ");
 	}
 
-	public static void enterTeacherId() {
+	public void enterTeacherId() {
 		/*System.out.print("Enter a teacher address to search: ");*/
 		System.out.print("Enter a teacher id to search: ");
 	}
 	
 	//
-	public static void enterSchoolFileName() {
+	public void enterSchoolFileName() {
 		System.out.println("First, put the files into folder src/main/resources/file");
 		System.out.println("Second, enter the name of file. Ex: truong.txt, giaovien.txt");
 		System.out.print("Name of school file: ");
 	}
 	
-	public static void enterTeacherFileName() {
+	public void enterTeacherFileName() {
 		System.out.print("Name of teacher file: ");
 	}
 	
-	public static void fileNotFound() {
+	public void fileNotFound() {
 		System.out.println("File not found!...");
 	}
 	
-	public static void readFileSuccessfully() {
+	public void readFileSuccessfully() {
 		System.out.println("Imported successfully!...");
 	}
 	
-	public static void writeFileSuccessfully() {
+	public void exportFileSuccessfully() {
 		System.out.println("Exported successfully!...");
 	}
 	
-	public static void writeFileFailed() {
+	public void exportFileFailed() {
 		System.out.println("Writing failed!...");
+	}
+	
+	public void importFileResult(boolean importSuccessfully, Scanner scanner) {
+		if (importSuccessfully) {
+			readFileSuccessfully();
+		} else {
+			fileNotFound();
+		}
+		loopAgain(scanner);
+	}
+	
+	public void exportFileResult(boolean exportSuccessfully, Scanner scanner) {
+		if (exportSuccessfully) {
+			exportFileSuccessfully();
+		} else {
+			exportFileFailed();
+		}
+		loopAgain(scanner);
 	}
 }

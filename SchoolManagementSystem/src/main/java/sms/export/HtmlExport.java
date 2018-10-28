@@ -1,4 +1,4 @@
-package sms.util;
+package sms.export;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -22,11 +22,11 @@ import static j2html.TagCreator.tr;
 
 import sms.model.School;
 
-public class HtmlUtil {
+public class HtmlExport implements FileExport {
 	private String schoolFileName;
 	private String teacherFileName;
 
-	public HtmlUtil(String schoolFileName, String teacherFileName) {
+	public HtmlExport(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -80,7 +80,8 @@ public class HtmlUtil {
 														.render();
 	}
 
-	public boolean writeSchoolToHtmlFile(List<School> schools) {
+	@Override
+	public boolean exportSchoolsToFile(List<School> schools) {
 		PrintWriter pWriter = null;
 		try {
 			pWriter = new PrintWriter("export/html/" + schoolFileName);
@@ -93,7 +94,8 @@ public class HtmlUtil {
 		}
 	}
 
-	public boolean writeTeacherToHtmlFile(List<School> schools) {
+	@Override
+	public boolean exportTeachersToFile(List<School> schools) {
 		PrintWriter pWriter = null;
 		try {
 			pWriter = new PrintWriter("export/html/" + teacherFileName);

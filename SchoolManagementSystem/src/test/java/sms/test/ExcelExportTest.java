@@ -6,10 +6,10 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import sms.export.ExcelExport;
 import sms.model.School;
-import sms.util.ExcelUtil;
 
-public class ExcelUtilTest extends TestCase {
+public class ExcelExportTest extends TestCase {
 	private static final String SCHOOL_FILE_NAME = "truong.xlsx";
 	private static final String TEACHER_FILE_NAME = "giaovien.xlsx";
 
@@ -19,25 +19,25 @@ public class ExcelUtilTest extends TestCase {
 			"Quang Ngai");
 	private static final List<School> SCHOOLS = Arrays.asList(SCHOOL1, SCHOOL2);
 
-	private static ExcelUtil excelUtil;
+	private static ExcelExport export;
 
-	public ExcelUtilTest(String testName) {
+	public ExcelExportTest(String testName) {
 		super(testName);
 	}
 
 	public static Test suite() {
-		return new TestSuite(ExcelUtilTest.class);
+		return new TestSuite(ExcelExportTest.class);
 	}
 	
 	public void testWriteSchoolToExcelFileSuccessfully() {
-		excelUtil = new ExcelUtil(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		boolean result = excelUtil.writeSchoolToExcelFile(SCHOOLS);
+		export = new ExcelExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		boolean result = export.exportSchoolsToFile(SCHOOLS);
 		assertTrue(result);
 	}
 	
 	public void testWriteTeacherToExcelFileSuccessfully() {
-		excelUtil = new ExcelUtil(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		boolean result = excelUtil.writeTeacherToExcelFile(SCHOOLS);
+		export = new ExcelExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		boolean result = export.exportTeachersToFile(SCHOOLS);
 		assertTrue(result);
 	}
 }
