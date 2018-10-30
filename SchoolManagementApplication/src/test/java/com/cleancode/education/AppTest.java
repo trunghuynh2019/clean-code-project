@@ -3,10 +3,6 @@ package com.cleancode.education;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import com.cleancode.education.controller.SchoolController;
 import com.cleancode.education.controller.impl.SchoolControllerImpl;
 import com.cleancode.education.models.School;
@@ -15,11 +11,7 @@ import com.cleancode.education.repository.SchoolRepository;
 import com.cleancode.education.repository.impl.SchoolRepositoryImpl;
 import com.cleancode.education.service.SchoolService;
 import com.cleancode.education.service.impl.SchoolServiceImpl;
-import com.cleancode.education.util.ExcelUtil;
-import com.cleancode.education.util.HtmlUtil;
-import com.cleancode.education.util.PdfUtil;
 import com.cleancode.education.views.PrinterSupport;
-import com.itextpdf.text.pdf.PdfPTable;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -303,115 +295,4 @@ public class AppTest
     	assertEquals(expectedTeacherFile, dataExported);
     }
     
-    public void testCreateSheetWithHeaderFunction() {
-    	ExcelUtil excelUtil = new ExcelUtil();
-    	String[] headerColumns = {"CMND", "Name", "Working School's ID"};
-        Workbook workbook = new XSSFWorkbook(); 
-        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", headerColumns);
-      
-        assertEquals("CMND", sheet.getRow(0).getCell(0).getStringCellValue());
-        assertEquals("Name", sheet.getRow(0).getCell(1).getStringCellValue());
-        assertEquals("Working School's ID", sheet.getRow(0).getCell(2).getStringCellValue());
-    }
-    
-    public void testCreateRowByTeacher() {
-    	
-    	ExcelUtil excelUtil = new ExcelUtil();
-    	String[] headerColumns = {"CMND", "Name", "Working School's ID"};
-        Workbook workbook = new XSSFWorkbook(); 
-        Sheet sheet = excelUtil.createSheetWithHeader(workbook, "Teacher", headerColumns);
-        
-        Teacher teacher1 = new Teacher("285656456", "Le Van A", "nbk-vl");
-        Teacher teacher2 = new Teacher("285656567", "Le Van B", "nbk-qn");
-        List<Teacher> teachers = new ArrayList<>();
-        teachers.add(teacher1);
-        teachers.add(teacher2);
-        
-        int currentRow = 1;
-        for (Teacher teacher : teachers) {
-            excelUtil.createRowForSheetBy(sheet, currentRow++, teacher);
-        }
-        
-        assertEquals("285656456", sheet.getRow(1).getCell(0).getStringCellValue());
-        assertEquals("Le Van A", sheet.getRow(1).getCell(1).getStringCellValue());
-        assertEquals("nbk-vl", sheet.getRow(1).getCell(2).getStringCellValue());
-        assertEquals("285656567", sheet.getRow(2).getCell(0).getStringCellValue());
-        assertEquals("Le Van B", sheet.getRow(2).getCell(1).getStringCellValue());
-        assertEquals("nbk-qn", sheet.getRow(2).getCell(2).getStringCellValue());
-        
-    }
-    
-    public void testColumnHeaderInPdf() {
-    	PdfUtil pdfUtil = new PdfUtil();
-//    	String[] teacherColumnHeader = {"CMND", "Name", "Working School's ID"};
-    	String[] schoolColumnHeader = {"ID", "Name", "Number Of Teacher", "Address", "Teacher's CMND"};
-    	
-    	PdfPTable table = new PdfPTable(schoolColumnHeader.length);
-    	pdfUtil.addTableHeader(table, schoolColumnHeader);
-    	
-    	assertEquals(5, table.getRow(0).getCells().length);
-    }
-    
-    public void testExportSchoolDataToHtmlShouldBeSameAsExpectedSchoolFile() {
-
-		StringBuilder htmlBuilder = new StringBuilder();
-		htmlBuilder.append("<html>");
-		htmlBuilder.append("<head><title>School Management</title></head>");
-		htmlBuilder.append("<body>");
-		htmlBuilder.append("<h1>Danh sach truong</h1>");
-		htmlBuilder.append("<table><tbody>");
-		htmlBuilder.append("<tr>"
-				+ "<td>ID</td>"
-				+ "<td>Name</td>"
-				+ "<td>Number of teacher</td>"
-				+ "<td>Address</td>"
-				+ "<td>Teacher&#x27;s CMND</td></tr>");
-		htmlBuilder.append("<tr>"
-				+ "<td>nbk-vl</td>"
-				+ "<td>Truong trung hoc Chuyen Nguyen Binh Khiem</td>"
-				+ "<td>0</td>"
-				+ "<td>Vinh Long</td>"
-				+ "<td></td></tr>");
-		htmlBuilder.append("</tbody></table></body></html>");
-		String expectedHtml = htmlBuilder.toString();
-		
-		School school = new School("nbk-vl", "Truong trung hoc Chuyen Nguyen Binh Khiem", "Vinh Long", new ArrayList<Teacher>(), 2000);
-		List<School> schools = new ArrayList<>();
-		schools.add(school);
-		
-		HtmlUtil htmlUtil = new HtmlUtil();
-		
-		assertEquals(expectedHtml, htmlUtil.schoolDataToHtml(schools));
-    }
-    
-    public void testExportTeacherDataToHtmlShouldBeSameAsExpectedTeacherFile() {
-
-		StringBuilder htmlBuilder = new StringBuilder();
-		htmlBuilder.append("<html>");
-		htmlBuilder.append("<head><title>School Management</title></head>");
-		htmlBuilder.append("<body>");
-		htmlBuilder.append("<h1>Danh sach giao vien</h1>");
-		htmlBuilder.append("<table><tbody>");
-		htmlBuilder.append("<tr>"
-				+ "<td>ID</td>"
-				+ "<td>Name</td>"
-				+ "<td>Working School&#x27;s Id</td></tr>");
-		htmlBuilder.append("<tr>"
-				+ "<td>285656680</td>"
-				+ "<td>Nguyen Van A</td>"
-				+ "<td>nbk-vl</td></tr>");
-		htmlBuilder.append("</tbody></table></body></html>");
-		String expectedHtml = htmlBuilder.toString();
-		
-		Teacher teacher = new Teacher("285656680","Nguyen Van A", "nbk-vl");
-		List<Teacher> teachers = new ArrayList<>();
-		teachers.add(teacher);
-		School school = new School("nbk-vl", "Truong trung hoc Chuyen Nguyen Binh Khiem", "Vinh Long", teachers, 2000);
-		List<School> schools = new ArrayList<>();
-		schools.add(school);
-		
-		HtmlUtil htmlUtil = new HtmlUtil();
-		
-		assertEquals(expectedHtml, htmlUtil.teacherDataToHtml(schools));
-    }
 }

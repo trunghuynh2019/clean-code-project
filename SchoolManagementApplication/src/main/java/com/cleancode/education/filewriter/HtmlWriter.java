@@ -2,10 +2,10 @@
  * Title
  * 
  * @author Huy
- * @date Oct 24, 2018
+ * @date Oct 30, 2018
  * @version 1.0
  */
-package com.cleancode.education.util;
+package com.cleancode.education.filewriter;
 
 import static j2html.TagCreator.body;
 import static j2html.TagCreator.each;
@@ -18,13 +18,48 @@ import static j2html.TagCreator.td;
 import static j2html.TagCreator.title;
 import static j2html.TagCreator.tr;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import com.cleancode.education.models.School;
 
-public class HtmlUtil {
+public class HtmlWriter implements FileWriter {
+
+	@Override
+	public void exportSchool(List<School> schools, String fileName) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter("resources/" + fileName);
+			pw.println(convertSchoolDataToHtml(schools));
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+	}
+
+	@Override
+	public void exportTeacher(List<School> schools, String fileName) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter("resources/" + fileName);
+			pw.println(convertTeacherDataToHtml(schools));
+		} 
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
+
+	}
 	
-	public String schoolDataToHtml(List<School> schools) {
+	private String convertSchoolDataToHtml(List<School> schools) {
 		return html(
 				head(
 					title("School Management")
@@ -51,7 +86,7 @@ public class HtmlUtil {
 			).render();
 	}
 	
-	public String teacherDataToHtml(List<School> schools) {
+	private String convertTeacherDataToHtml(List<School> schools) {
 		return html(
 				head(
 					title("School Management")
@@ -75,5 +110,4 @@ public class HtmlUtil {
 				)
 			).render();
 	}
-
 }

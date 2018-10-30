@@ -10,16 +10,25 @@ package com.cleancode.education.controller.impl;
 import java.util.List;
 
 import com.cleancode.education.controller.SchoolController;
+import com.cleancode.education.filereader.FileReader;
+import com.cleancode.education.filereader.TextReader;
+import com.cleancode.education.filewriter.ExcelWriter;
+import com.cleancode.education.filewriter.FileWriter;
+import com.cleancode.education.filewriter.HtmlWriter;
+import com.cleancode.education.filewriter.PdfWriter;
+import com.cleancode.education.filewriter.TextWriter;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 import com.cleancode.education.service.SchoolService;
-import com.cleancode.education.util.FileManagement;
-import com.cleancode.education.util.FileManagementImpl;
 import com.cleancode.education.views.SchoolPrinter;
 
 public class SchoolControllerImpl implements SchoolController{
 	private SchoolService schoolService;
-	private FileManagement fileManagement = new FileManagementImpl();
+	private FileWriter excelWriter = new ExcelWriter();
+	private FileWriter pdfWriter = new PdfWriter();
+	private FileWriter textWriter = new TextWriter();
+	private FileWriter htmlWriter = new HtmlWriter();
+	private FileReader textReader = new TextReader();
 	private SchoolPrinter schoolPrinter = new SchoolPrinter();
 	
 	public SchoolControllerImpl(SchoolService schoolService) {
@@ -89,7 +98,7 @@ public class SchoolControllerImpl implements SchoolController{
 
 	@Override
 	public void addSchoolsFrom(String fileName) {
-		List<School> schools = fileManagement.getSchoolsFrom(fileName);
+		List<School> schools = textReader.importSchool(fileName);
 		for (School school : schools) {
 			addSchool(school);
 		}		
@@ -97,7 +106,7 @@ public class SchoolControllerImpl implements SchoolController{
 
 	@Override
 	public void signContractWithTeacherFrom(String fileName) {
-		List<Teacher> teachers = fileManagement.getTeachersFrom(fileName);
+		List<Teacher> teachers = textReader.importTeacher(fileName);
 		for(Teacher teacher : teachers) {
 			signContractWithTeacher(teacher);
 		}
@@ -106,49 +115,49 @@ public class SchoolControllerImpl implements SchoolController{
 	@Override
 	public void exportSchoolsToText(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportSchoolsToText(schools, fileName);
+		textWriter.exportSchool(schools, fileName);
 	}
 
 	@Override
 	public void exportSchoolsToExcel(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportSchoolsToExcel(schools, fileName);
+		excelWriter.exportSchool(schools, fileName);
 	}
 
 	@Override
 	public void exportTeacherToText(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportTeachersToText(schools, fileName);
+		textWriter.exportTeacher(schools, fileName);
 	}
 
 	@Override
 	public void exportTeacherToExcel(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportTeachersToExcel(schools, fileName);		
+		excelWriter.exportTeacher(schools, fileName);	
 	}
 
 	@Override
 	public void exportSchoolToPDF(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportSchoolsToPdf(schools, fileName);
+		pdfWriter.exportSchool(schools, fileName);
 	}
 
 	@Override
 	public void exportSchoolToHtml(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportSchoolsToHtml(schools, fileName);
+		htmlWriter.exportSchool(schools, fileName);
 	}
 
 	@Override
 	public void exportTeacherToPDF(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportTeachersToPdf(schools, fileName);
+		pdfWriter.exportTeacher(schools, fileName);
 	}
 
 	@Override
 	public void exportTeacherToHtml(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
-		fileManagement.exportTeachersToHtml(schools, fileName);
+		htmlWriter.exportTeacher(schools, fileName);
 	}
 
 }
