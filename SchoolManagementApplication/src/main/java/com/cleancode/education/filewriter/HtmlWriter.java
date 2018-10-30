@@ -12,6 +12,9 @@ import static j2html.TagCreator.each;
 import static j2html.TagCreator.h1;
 import static j2html.TagCreator.head;
 import static j2html.TagCreator.html;
+import static j2html.TagCreator.link;
+import static j2html.TagCreator.meta;
+import static j2html.TagCreator.script;
 import static j2html.TagCreator.table;
 import static j2html.TagCreator.tbody;
 import static j2html.TagCreator.td;
@@ -62,8 +65,11 @@ public class HtmlWriter implements FileWriter {
 	private String convertSchoolDataToHtml(List<School> schools) {
 		return html(
 				head(
-					title("School Management")
-				),
+						meta().withName("viewport").withContent("width=device-width, initial-scale=1"), title("Schools"),
+						link().withRel("stylesheet")
+								.withHref("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"),
+						script().withSrc("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"),
+						script().withSrc("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")),
 				body(
 					h1("Danh sach truong"),
 					table(
@@ -81,7 +87,7 @@ public class HtmlWriter implements FileWriter {
 								td(String.valueOf(school.getNumberOfTeacher())),
 								td(school.getAddress()),
 								td(school.getTeacherId())
-							))))
+							)))).withClasses("table", "table-hover")
 				)
 			).render();
 	}
@@ -89,8 +95,11 @@ public class HtmlWriter implements FileWriter {
 	private String convertTeacherDataToHtml(List<School> schools) {
 		return html(
 				head(
-					title("School Management")
-				),
+						meta().withName("viewport").withContent("width=device-width, initial-scale=1"), title("Schools"),
+						link().withRel("stylesheet")
+								.withHref("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"),
+						script().withSrc("https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"),
+						script().withSrc("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")),
 				body(
 					h1("Danh sach giao vien"),
 					table(
@@ -106,7 +115,7 @@ public class HtmlWriter implements FileWriter {
 											td(teacher.getName()),
 											td(teacher.getSchoolId())
 									
-							)))))
+							))))).withClasses("table", "table-hover")
 				)
 			).render();
 	}
