@@ -34,6 +34,9 @@ import school_management_application.Repository.SchoolRepository;
 
 public class SchoolService {
 	private SchoolRepository schoolRepo;
+	private Row row;
+	private Cell cell;
+	private PdfPTable table;
 	private HSSFCellStyle createStyleForTitle(HSSFWorkbook workbook) {
         HSSFFont font = workbook.createFont();
         font.setBold(true);
@@ -155,67 +158,23 @@ public class SchoolService {
 		return schoolRepo.findAll();
 	}
 	
-	public boolean exportSchoolsToExcel(List<Integer> countTeacher, String fileName) throws IOException {
-        int rownum = 0;
-        Cell cell;
-        Row row;
-        School school;
-        FileOutputStream outFile;
-        
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet("Schools");
-        List<School> schools = showAllSchool();
-        HSSFCellStyle style = createStyleForTitle(workbook);
-        ListIterator<School> itr_sch = schools.listIterator();
-        ListIterator<Integer> itr_count = countTeacher.listIterator();
-        File file = new File("src/main/resources/output/" + fileName);
-        
-        row = sheet.createRow(rownum);
-        // ID
-        cell = row.createCell(0, CellType.STRING);
-        cell.setCellValue("ID");
-        cell.setCellStyle(style);
-        // School Name
-        cell = row.createCell(1, CellType.STRING);
-        cell.setCellValue("School Name");
-        cell.setCellStyle(style);
-        // Address
-        cell = row.createCell(2, CellType.STRING);
-        cell.setCellValue("Address");
-        cell.setCellStyle(style);
-        // Number Of Student
-        cell = row.createCell(3, CellType.STRING);
-        cell.setCellValue("Number Of Student");
-        cell.setCellStyle(style);
-        // Number Of Teacher
-        cell = row.createCell(4, CellType.STRING);
-        cell.setCellValue("Number Of Teacher");
-        cell.setCellStyle(style);
-        // Data
-        while (itr_sch.hasNext() && itr_count.hasNext()) {
-	        school = itr_sch.next();
-	        rownum++;
-            row = sheet.createRow(rownum);
-            // ID (A)
-            cell = row.createCell(0, CellType.STRING);
-            cell.setCellValue(school.getID());
-            // School Name (B)
-            cell = row.createCell(1, CellType.STRING);
-            cell.setCellValue(school.getName());
-            // Address (C)
-            cell = row.createCell(2, CellType.STRING);
-            cell.setCellValue(school.getAddress());
-            // Number Of Student (D)
-            cell = row.createCell(3, CellType.NUMERIC);
-            cell.setCellValue(school.getCountStudent());
-            // Number Of Teacher
-            cell = row.createCell(4, CellType.NUMERIC);
-            cell.setCellValue(itr_count.next());
-        }
-        for(int i = 0; i < 4; i++) {
-            sheet.autoSizeColumn(i);
-        }
-        file.getParentFile().mkdirs();
+	public void addCellToRowExport(int cellIndex, String cellType, String cellValue, HSSFCellStyle style) {
+		
+		if(cellType.equals("String")) {
+			cell = row.createCell(cellIndex, CellType.STRING);
+		}
+		else {
+			cell = row.createCell(cellIndex, CellType.NUMERIC);
+		}
+		cell.setCellValue(cellValue);
+		cell.setCellStyle(style);
+	}
+	
+	public boolean createExcelFile(String fileName, HSSFWorkbook workbook) {
+		FileOutputStream outFile;
+		File file = new File("src/main/resources/output/" + fileName);
+		
+		file.getParentFile().mkdirs();
         try {
 	        outFile = new FileOutputStream(file);
 	        workbook.write(outFile);
@@ -225,18 +184,115 @@ public class SchoolService {
         }
         catch (Exception ex) {
         	ex.printStackTrace();
-        	return false;
         }
+        return false;
+	}
+	
+	
+	public boolean exportSchoolsToExcel(List<Integer> countTeacher, String fileName) throws IOException {
+        int rownum = 0;
+        int cellIndex = 0;
+        int headerIndex = 0;        
+        School school;
+        
+        String headerValue[]= {"ID","School Name","Address","Number Of Student","Number Of Teacher"};
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Schools");
+        HSSFCellStyle style = createStyleForTitle(workbook);
+        List<School> schools = showAllSchool();
+        ListIterator<School> itr_sch = schools.listIterator();
+        ListIterator<Integer> itr_count = countTeacher.listIterator();
+        
+        row = sheet.createRow(rownum);
+        while(cellIndex<5 && headerIndex<headerValue.length) {
+        	addCellToRowExport(cellIndex,"String",headerValue[headerIndex],style);
+        	cellIndex++;
+        	headerIndex++;
+        }
+        // Data
+        while (itr_sch.hasNext() && itr_count.hasNext()) {
+	        school = itr_sch.next();
+	        rownum++;
+            row = sheet.createRow(rownum);
+            // ID (A)
+            addCellToRowExport(0,"String",school.getID(),style);
+            // School Name (B)
+            addCellToRowExport(1,"String",school.getName(),style);
+            // Address (C)
+            addCellToRowExport(2,"String",school.getAddress(),style);
+            // Number Of Student (D)
+            addCellToRowExport(3,"Numeric",String.valueOf(school.getCountStudent()),style);
+            // Number Of Teacher (E)
+            addCellToRowExport(4,"Numeric",String.valueOf(itr_count.next()),style);
+        }
+        for(int i = 0; i < 4; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        return createExcelFile(fileName,workbook);
     }
+	
+	public Font chooseFontForParagraphExport(String fontType) {
+		Font titlePage = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLDITALIC);
+        Font headerTable = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
+        Font normal = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
+		
+        if(fontType.equals("titlePage")) {
+        	return titlePage;
+        }
+        else {
+        	if(fontType.equals("headerTable")) {
+        		return headerTable;
+        	}
+        	else {
+        		return normal;
+        	}
+        }
+        
+	}
+	
+	public void modifyAndAddNewCellToTableExport(String paragraphString, String fontType, int isUpperCase, String horizon, String vertical) {
+		PdfPCell cellName;
+		
+		if(isUpperCase == 1) {
+			cellName = new PdfPCell(new Paragraph(paragraphString.toUpperCase(),chooseFontForParagraphExport(fontType)));
+		}
+		else {
+			cellName = new PdfPCell(new Paragraph(paragraphString,chooseFontForParagraphExport(fontType)));
+		}
+		
+		if(horizon.equals("left")) {
+			cellName.setHorizontalAlignment(Element.ALIGN_LEFT);
+		}
+		else {
+			if(horizon.equals("right")) {
+				cellName.setHorizontalAlignment(Element.ALIGN_RIGHT);
+			}
+			else {
+				cellName.setHorizontalAlignment(Element.ALIGN_CENTER);
+			}
+		}
+		if(vertical.equals("left")) {
+			cellName.setVerticalAlignment(Element.ALIGN_LEFT);
+		}
+		else {
+			if(vertical.equals("right")) {
+				cellName.setVerticalAlignment(Element.ALIGN_RIGHT);
+			}
+			else {
+				cellName.setVerticalAlignment(Element.ALIGN_CENTER);
+			}
+		}
+		table.addCell(cellName);
+	}
 
 	public boolean exportSchoolsToPDF(List<Integer> countTeacher, String fileName) {
-		// tạo một document
         Document document = new Document();
-        Font titlePageFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLDITALIC);
-        Font headerTableFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
-        Font normalFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
-        Paragraph paragraphTitle = new Paragraph(("School List").toUpperCase(), titlePageFont);
-        PdfPTable table = new PdfPTable(5);
+        Paragraph paragraphTitle = new Paragraph(("School List").toUpperCase(), chooseFontForParagraphExport("titlePage"));
+        table = new PdfPTable(5);
+        School school;
+        List<School> schools = showAllSchool();
+        ListIterator<School> itr_sch = schools.listIterator();
+        ListIterator<Integer> itr_count = countTeacher.listIterator();
 
         try {
         	// khởi tạo một PdfWriter truyền vào document và FileOutputStream
@@ -248,63 +304,23 @@ public class SchoolService {
             paragraphTitle.setAlignment(Element.ALIGN_CENTER);
             paragraphTitle.setSpacingAfter(8);
             document.add(paragraphTitle);
-        	//Khởi tạo 5 ô header
-            PdfPCell headerID = new PdfPCell(new Paragraph("ID",headerTableFont));
-            PdfPCell headerName = new PdfPCell(new Paragraph(("School's Name").toUpperCase(),headerTableFont));
-            PdfPCell headerAddress = new PdfPCell(new Paragraph(("Address").toUpperCase(),headerTableFont));
-            PdfPCell headerNoStudent = new PdfPCell(new Paragraph(("Number Of Student").toUpperCase(),headerTableFont));
-            PdfPCell headerNoTeacher = new PdfPCell(new Paragraph(("Number Of Teacher").toUpperCase(),headerTableFont));
-        	
-            headerID.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	headerID.setVerticalAlignment(Element.ALIGN_CENTER);
-        	headerName.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	headerName.setVerticalAlignment(Element.ALIGN_CENTER);
-        	headerAddress.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	headerAddress.setVerticalAlignment(Element.ALIGN_CENTER);
-        	headerNoStudent.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	headerNoStudent.setVerticalAlignment(Element.ALIGN_CENTER);
-        	headerNoTeacher.setHorizontalAlignment(Element.ALIGN_CENTER);
-        	headerNoTeacher.setVerticalAlignment(Element.ALIGN_CENTER);
-            //Thêm 5 ô header vào table
-            table.addCell(headerID);
-            table.addCell(headerName);
-            table.addCell(headerAddress);
-            table.addCell(headerNoStudent);
-            table.addCell(headerNoTeacher);
-            table.setHeaderRows(1);
-            
-            School school;
-            List<School> schools = showAllSchool();
-            ListIterator<School> itr_sch = schools.listIterator();
-            ListIterator<Integer> itr_count = countTeacher.listIterator();
-            
+        	//Khởi tạo 5 ô header, canh lề và thêm 5 ô header vào table
+            modifyAndAddNewCellToTableExport("ID","headerTable",0,"center","center");
+            modifyAndAddNewCellToTableExport("School's Name","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExport("Address","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExport("Number Of Student","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExport("Number Of Teacher","headerTable",1,"center","center");
         	//Thêm data vào bảng.
             while (itr_sch.hasNext() && itr_count.hasNext()) {
             	school = itr_sch.next();
-            	PdfPCell dataID = new PdfPCell(new Paragraph(school.getID(),normalFont));
-            	PdfPCell dataName = new PdfPCell(new Paragraph(school.getName(),normalFont));
-            	PdfPCell dataAddress = new PdfPCell(new Paragraph(school.getAddress(),normalFont));
-            	PdfPCell dataNoStudent = new PdfPCell(new Paragraph(String.valueOf(school.getCountStudent()),normalFont));
-            	PdfPCell dataNoTeacher = new PdfPCell(new Paragraph(String.valueOf(itr_count.next()),normalFont));
-            	
-            	dataID.setHorizontalAlignment(Element.ALIGN_LEFT);
-            	dataID.setVerticalAlignment(Element.ALIGN_CENTER);
-            	dataName.setHorizontalAlignment(Element.ALIGN_LEFT);
-            	dataName.setVerticalAlignment(Element.ALIGN_CENTER);
-            	dataAddress.setHorizontalAlignment(Element.ALIGN_LEFT);
-            	dataAddress.setVerticalAlignment(Element.ALIGN_CENTER);
-            	dataNoStudent.setHorizontalAlignment(Element.ALIGN_CENTER);
-            	dataNoStudent.setVerticalAlignment(Element.ALIGN_CENTER);
-            	dataNoTeacher.setHorizontalAlignment(Element.ALIGN_CENTER);
-            	dataNoTeacher.setVerticalAlignment(Element.ALIGN_CENTER);            	
-            	table.addCell(dataID);
-	            table.addCell(dataName);
-	            table.addCell(dataAddress);
-	            table.addCell(dataNoStudent);
-	            table.addCell(dataNoTeacher);
+            	modifyAndAddNewCellToTableExport(school.getID(),"normal",0,"left","center");
+            	modifyAndAddNewCellToTableExport(school.getName(),"normal",0,"left","center");
+            	modifyAndAddNewCellToTableExport(school.getAddress(),"normal",0,"left","center");
+            	modifyAndAddNewCellToTableExport(String.valueOf(school.getCountStudent()),"normal",0,"center","center");
+            	modifyAndAddNewCellToTableExport(String.valueOf(itr_count.next()),"normal",0,"center","center");
             }
+            table.setHeaderRows(1);
             document.add(table);
-            // đóng file
             document.close();
         }
         catch (DocumentException e) {
