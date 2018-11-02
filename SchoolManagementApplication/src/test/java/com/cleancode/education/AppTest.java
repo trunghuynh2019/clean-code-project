@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.cleancode.education.controller.SchoolController;
 import com.cleancode.education.controller.impl.SchoolControllerImpl;
+import com.cleancode.education.filereader.FileReader;
+import com.cleancode.education.filereader.JsonReader;
 import com.cleancode.education.models.School;
 import com.cleancode.education.models.Teacher;
 import com.cleancode.education.repository.SchoolRepository;
@@ -23,12 +25,13 @@ import junit.framework.TestSuite;
 public class AppTest 
     extends TestCase
 {
+	private static final String SCHOOL_DATABASE = "schooldatabase";
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    public AppTest( String testName )
+     public AppTest( String testName )
     {
         super( testName );
     }
@@ -82,37 +85,37 @@ public class AppTest
     
     
     public void testAddSchoolWithEmptyList() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	schoolController.addSchool(new School());
     	
-    	assertEquals(1, schoolService.getAllSchool().size());
+    	assertEquals(4, schoolService.getAllSchool().size());
     }
     
     public void testAddSchoolWithNoneEmptyList() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	schoolController.addSchool(new School("nbk-vl","NBK","VL",null,50));
     	
     	schoolController.addSchool(new School());
     	
-    	assertEquals(2, schoolService.getAllSchool().size());
+    	assertEquals(4, schoolService.getAllSchool().size());
     }
     
     public void testAddExistedSchoolShouldNotIncreaseTheNumberOfSchool() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	schoolController.addSchool(new School("nbk-vl","NBK","VL",null,50));
     	schoolController.addSchool(new School("nbk-vl","BK","HCM",null,50));
     	
-    	assertEquals(1, schoolService.getAllSchool().size());
+    	assertEquals(3, schoolService.getAllSchool().size());
     }
     
     public void testAddExistedSchoolShouldUpdateSchoolInfo() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	schoolController.addSchool(new School("nbk-vl","NBK","VL",null,50));
@@ -126,7 +129,7 @@ public class AppTest
     }
     
     public void testSignContractWithTeacher() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	schoolController.addSchool(new School("nbk-vl","NBK","VL",new ArrayList<Teacher>(),50));
@@ -136,7 +139,7 @@ public class AppTest
     }
     
     public void testSignContractWithTeacherHaveSchoolIdNotExistedInSystem() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -148,7 +151,7 @@ public class AppTest
     }
     
     public void testAddSchoolFromFile(){
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -156,11 +159,11 @@ public class AppTest
     	String fileName = "truong.txt";
     	schoolController.addSchoolsFrom(fileName);
     	
-    	assertEquals(2, schoolService.getAllSchool().size());
+    	assertEquals(3, schoolService.getAllSchool().size());
     }
     
     public void testAddSchoolFromFileShouldNotIncreaseTheNumberOfSchoolIfSchoolExisted() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -169,11 +172,11 @@ public class AppTest
     	String fileName = "truong.txt";
     	schoolController.addSchoolsFrom(fileName);
     	
-    	assertEquals(2, schoolService.getAllSchool().size());
+    	assertEquals(3, schoolService.getAllSchool().size());
     }
     
     public void testAddSchoolFromFileShouldUpdateSchoolInfoIfSchoolExisted() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	schoolController.addSchool(new School("nbk-vl","","",null,50));
@@ -187,7 +190,7 @@ public class AppTest
     }
     
     public void testSignContractWithTeacherFromFile() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -202,7 +205,7 @@ public class AppTest
     }
     
     public void testAddTeacherFromFileShouldNotIncreaseTheNumberOfTeacherIfTeacherExisted() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -220,7 +223,7 @@ public class AppTest
     }
     
     public void testAddTeacherFromFileShouldUpdateTeacherInfoIfTeacherExisted() {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -295,4 +298,17 @@ public class AppTest
     	assertEquals(expectedTeacherFile, dataExported);
     }
     
+    public void testReadingSchoolDataFromJsonFile(){
+    	FileReader jsonReader = new JsonReader();
+    	List<School> schools = jsonReader.importSchool("exportedschool.json");
+    	assertEquals(schools.get(0).getId(),"nbk-vl");
+    	assertEquals(schools.get(1).getId(),"nbk-qn");
+    }
+    
+    public void testReadingTeacherDataFromJsonFile(){
+    	FileReader jsonReader = new JsonReader();
+    	List<Teacher> teachers = jsonReader.importTeacher("exportedteacher.json");
+    	assertEquals(teachers.get(0).getId(),"337829999");
+    	assertEquals(teachers.get(1).getId(),"334442222");
+    }
 }

@@ -15,6 +15,7 @@ import com.cleancode.education.filereader.TextReader;
 import com.cleancode.education.filewriter.ExcelWriter;
 import com.cleancode.education.filewriter.FileWriter;
 import com.cleancode.education.filewriter.HtmlWriter;
+import com.cleancode.education.filewriter.JsonWriter;
 import com.cleancode.education.filewriter.PdfWriter;
 import com.cleancode.education.filewriter.TextWriter;
 import com.cleancode.education.models.School;
@@ -28,6 +29,7 @@ public class SchoolControllerImpl implements SchoolController{
 	private FileWriter pdfWriter = new PdfWriter();
 	private FileWriter textWriter = new TextWriter();
 	private FileWriter htmlWriter = new HtmlWriter();
+	private FileWriter jsonWriter = new JsonWriter();
 	private FileReader textReader = new TextReader();
 	private SchoolPrinter schoolPrinter = new SchoolPrinter();
 	
@@ -113,13 +115,13 @@ public class SchoolControllerImpl implements SchoolController{
 	}
 
 	@Override
-	public void exportSchoolsToText(String fileName) {
+	public void exportSchoolToText(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
 		textWriter.exportSchool(schools, fileName);
 	}
 
 	@Override
-	public void exportSchoolsToExcel(String fileName) {
+	public void exportSchoolToExcel(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
 		excelWriter.exportSchool(schools, fileName);
 	}
@@ -158,6 +160,18 @@ public class SchoolControllerImpl implements SchoolController{
 	public void exportTeacherToHtml(String fileName) {
 		List<School> schools = schoolService.getAllSchool();
 		htmlWriter.exportTeacher(schools, fileName);
+	}
+
+	@Override
+	public void exportSchoolToJson(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		jsonWriter.exportSchool(schools, fileName);
+	}
+	
+	@Override
+	public void exportTeacherToJson(String fileName) {
+		List<School> schools = schoolService.getAllSchool();
+		jsonWriter.exportTeacher(schools, fileName);
 	}
 
 }

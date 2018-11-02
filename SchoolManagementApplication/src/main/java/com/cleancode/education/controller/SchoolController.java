@@ -19,14 +19,16 @@ public interface SchoolController {
 	void signContractWithTeacher(Teacher teacher);
 	void signContractWithTeacherFrom(String fileName);
 	
-	void exportSchoolsToText(String fileName);
-	void exportSchoolsToExcel(String fileName);
+	void exportSchoolToText(String fileName);
+	void exportSchoolToExcel(String fileName);
 	void exportSchoolToPDF(String fileName);
 	void exportSchoolToHtml(String fileName);
+	void exportSchoolToJson(String fileName);	
 	
 	void exportTeacherToText(String fileName);
 	void exportTeacherToExcel(String fileName);
 	void exportTeacherToPDF(String fileName);
 	void exportTeacherToHtml(String fileName);
+	void exportTeacherToJson(String fileName);
 	
 }

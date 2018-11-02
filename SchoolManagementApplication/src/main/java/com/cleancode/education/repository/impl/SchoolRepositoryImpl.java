@@ -10,11 +10,19 @@ package com.cleancode.education.repository.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cleancode.education.filereader.FileReader;
+import com.cleancode.education.filereader.JsonReader;
 import com.cleancode.education.models.School;
 import com.cleancode.education.repository.SchoolRepository;
 
 public class SchoolRepositoryImpl implements SchoolRepository {
+	
+	private FileReader jsonReader = new JsonReader();
 	private List<School> schools = new ArrayList<>();
+	
+	public SchoolRepositoryImpl(String SCHOOL_DATABASE) {
+		this.schools = jsonReader.importSchool(SCHOOL_DATABASE + ".json");
+	}
 	
 	public List<School> getSchools() {
 		return schools;

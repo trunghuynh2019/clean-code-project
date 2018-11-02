@@ -26,10 +26,13 @@ public class App
 {
 	private static final String EXPORTED_SCHOOL_FILE_NAME = "exportedschool";
 	private static final String EXPORTED_TEACHER_FILE_NAME = "exportedteacher";
+	private static final String SCHOOL_DATABASE = "schooldatabase";
+	private static final String TEACHER_DATABASE = "teacherdatabase";
 	
     public static void main( String[] args )
     {
-    	SchoolRepository schoolRepository = new SchoolRepositoryImpl();
+    	
+    	SchoolRepository schoolRepository = new SchoolRepositoryImpl(SCHOOL_DATABASE);
     	SchoolService schoolService = new SchoolServiceImpl(schoolRepository);
     	SchoolController schoolController = new SchoolControllerImpl(schoolService);
     	
@@ -78,25 +81,34 @@ public class App
     			schoolController.signContractWithTeacherFrom(teacherFile);
     			break;
     		case 7: // Export schools/teachers to text
-    			schoolController.exportSchoolsToText(EXPORTED_SCHOOL_FILE_NAME + ".txt");
+    			schoolController.exportSchoolToText(EXPORTED_SCHOOL_FILE_NAME + ".txt");
     			schoolController.exportTeacherToText(EXPORTED_TEACHER_FILE_NAME + ".txt");
-    			System.out.println("Data exported to " + EXPORTED_SCHOOL_FILE_NAME + ".txt and " + EXPORTED_TEACHER_FILE_NAME + ".txt" );
+    			printer.printExportedMessage(EXPORTED_SCHOOL_FILE_NAME + ".txt", EXPORTED_TEACHER_FILE_NAME + ".txt");
     			break;
     		case 8: // Export to excel
-    			schoolController.exportSchoolsToExcel(EXPORTED_SCHOOL_FILE_NAME + ".xlsx");
+    			schoolController.exportSchoolToExcel(EXPORTED_SCHOOL_FILE_NAME + ".xlsx");
 				schoolController.exportTeacherToExcel(EXPORTED_TEACHER_FILE_NAME + ".xlsx");
-				System.out.println("Data exported to " + EXPORTED_SCHOOL_FILE_NAME + ".xlsx and " + EXPORTED_TEACHER_FILE_NAME + ".xlsx" );
+				printer.printExportedMessage(EXPORTED_SCHOOL_FILE_NAME + ".xlsx", EXPORTED_TEACHER_FILE_NAME + ".xlsx");
     			break;
     		case 9: // Export to pdf
     			schoolController.exportSchoolToPDF(EXPORTED_SCHOOL_FILE_NAME + ".pdf"); 
     			schoolController.exportTeacherToPDF(EXPORTED_TEACHER_FILE_NAME + ".pdf");
+    			printer.printExportedMessage(EXPORTED_SCHOOL_FILE_NAME + ".pdf", EXPORTED_TEACHER_FILE_NAME + ".pdf");
     			break;
     		case 10: // Export to html
     			schoolController.exportSchoolToHtml(EXPORTED_SCHOOL_FILE_NAME + ".html");
     			schoolController.exportTeacherToHtml(EXPORTED_TEACHER_FILE_NAME + ".html");
+    			printer.printExportedMessage(EXPORTED_SCHOOL_FILE_NAME + ".html", EXPORTED_TEACHER_FILE_NAME + ".html");
     			break;
-    		case 11: // Exit
+    		case 11: // Export to json
+    			schoolController.exportSchoolToJson(EXPORTED_SCHOOL_FILE_NAME + ".json");
+    			schoolController.exportTeacherToJson(EXPORTED_TEACHER_FILE_NAME + ".json");
+    			printer.printExportedMessage(EXPORTED_SCHOOL_FILE_NAME + ".json", EXPORTED_TEACHER_FILE_NAME + ".json");
+    			break;
+    		case 12: // Exit
     			flag = false;
+    			schoolController.exportSchoolToJson(SCHOOL_DATABASE + ".json");
+    			schoolController.exportTeacherToJson(TEACHER_DATABASE + ".json");
     			break;
     		}
     		

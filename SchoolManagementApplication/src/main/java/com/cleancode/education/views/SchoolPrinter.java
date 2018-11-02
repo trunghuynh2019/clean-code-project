@@ -55,7 +55,8 @@ public class SchoolPrinter {
 		System.out.println("|   8. Export School/Teacher To Excel File   |");
 		System.out.println("|   9. Export School/Teacher To Pdf File     |");
 		System.out.println("|   10. Export School/Teacher To Html File   |");
-		System.out.println("|   11. Exit                                 |");
+		System.out.println("|   11. Export School/Teacher To Json File   |");
+		System.out.println("|   12. Exit                                 |");
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}
@@ -114,6 +115,10 @@ public class SchoolPrinter {
 		System.out.print("\nPlease enter school Id: ");
 		String schoolId = scanner.nextLine();
 		return schoolId;
+	}
+	
+	public void printExportedMessage(String schoolFileName, String teacherFileName) {
+		System.out.println("Data exported to " + schoolFileName + " and " + teacherFileName );
 	}
 	
 }
