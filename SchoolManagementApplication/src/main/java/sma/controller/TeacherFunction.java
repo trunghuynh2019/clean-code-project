@@ -369,9 +369,6 @@ public class TeacherFunction {
 	public void TeachersWriteIntoExcel()
 	{
 		XSSFWorkbook workbook = new XSSFWorkbook();
-        /* CreationHelper helps us create instances of various things like DataFormat, 
-           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
-        //CreationHelper createHelper = workbook.getCreationHelper();
 
         // Create a Sheet
         Sheet sheet = workbook.createSheet("Teacher");
@@ -418,14 +415,8 @@ public class TeacherFunction {
 
             row.createCell(0)
                     .setCellValue(teacher.getId());
-
             row.createCell(1)
                     .setCellValue(teacher.getName());
-
-            //Cell dateOfBirthCell = row.createCell(2);
-            //dateOfBirthCell.setCellValue(employee.getDateOfBirth());
-            //dateOfBirthCell.setCellStyle(dateCellStyle);
-
             row.createCell(2)
                     .setCellValue(teacher.getSchoolId());
             row.createCell(3)

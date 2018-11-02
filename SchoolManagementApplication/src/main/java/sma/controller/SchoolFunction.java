@@ -167,12 +167,8 @@ public class SchoolFunction {
 	{
 		
 		 // Create a Workbook
-        //Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
         XSSFWorkbook workbook = new XSSFWorkbook();
-        /* CreationHelper helps us create instances of various things like DataFormat, 
-           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
-        //CreationHelper createHelper = workbook.getCreationHelper();
-
+        
         // Create a Sheet
         Sheet sheet = workbook.createSheet("School");
 
@@ -212,10 +208,6 @@ public class SchoolFunction {
             cell.setCellValue("Number of Teacher");
             cell.setCellStyle(headerCellStyle);
 
-        // Create Cell Style for formatting Date
-        //CellStyle dateCellStyle = workbook.createCellStyle();
-        //dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
-
         // Create Other rows and cells with employees data
         int rowNum = 0;
         for(School school: schools) {
@@ -223,14 +215,8 @@ public class SchoolFunction {
 
             row.createCell(0)
                     .setCellValue(school.getId());
-
             row.createCell(1)
                     .setCellValue(school.getName());
-
-            //Cell dateOfBirthCell = row.createCell(2);
-            //dateOfBirthCell.setCellValue(employee.getDateOfBirth());
-            //dateOfBirthCell.setCellStyle(dateCellStyle);
-
             row.createCell(2)
                     .setCellValue(school.getAddress());
             row.createCell(3)
@@ -250,7 +236,6 @@ public class SchoolFunction {
         FileOutputStream fileOut = new FileOutputStream(path+"\\src\\main\\java\\file\\schools.xlsx");
         workbook.write(fileOut);
         fileOut.close();
-     // Closing the workbook
         workbook.close();
         }
         catch (IOException e) 
