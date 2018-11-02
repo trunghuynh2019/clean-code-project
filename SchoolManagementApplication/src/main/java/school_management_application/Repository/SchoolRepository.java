@@ -27,6 +27,12 @@ public class SchoolRepository implements SchoolInterface {
         }
 		
 	}
+	
+	public List<School> setSchools(List<School> schools) {
+		
+		this.schools = schools;
+		return this.schools;
+	}
 
 	public School findByID(String ID) {
 		ListIterator<School> itr = schools.listIterator();

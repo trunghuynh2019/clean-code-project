@@ -2,10 +2,15 @@ package school_management_application.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -17,6 +22,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+
+import com.google.gson.stream.JsonWriter;
+import com.google.gson.stream.JsonReader;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -122,6 +130,11 @@ public class SchoolService {
 			return school;
 		}
 		return null;
+	}
+	
+	public List<School> importNewSchools(List<School> schools){
+		
+		return schoolRepo.setSchools(schools);
 	}
 
 	public Integer displayNumberOfSchool() {
@@ -250,7 +263,7 @@ public class SchoolService {
         
 	}
 	
-	public void modifyAndAddNewCellToTableExport(String paragraphString, String fontType, int isUpperCase, String horizon, String vertical) {
+	public void modifyAndAddNewCellToTableExportInPDF(String paragraphString, String fontType, int isUpperCase, String horizon, String vertical) {
 		PdfPCell cellName;
 		
 		if(isUpperCase == 1) {
@@ -305,19 +318,19 @@ public class SchoolService {
             paragraphTitle.setSpacingAfter(8);
             document.add(paragraphTitle);
         	//Khởi tạo 5 ô header, canh lề và thêm 5 ô header vào table
-            modifyAndAddNewCellToTableExport("ID","headerTable",0,"center","center");
-            modifyAndAddNewCellToTableExport("School's Name","headerTable",1,"center","center");
-            modifyAndAddNewCellToTableExport("Address","headerTable",1,"center","center");
-            modifyAndAddNewCellToTableExport("Number Of Student","headerTable",1,"center","center");
-            modifyAndAddNewCellToTableExport("Number Of Teacher","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExportInPDF("ID","headerTable",0,"center","center");
+            modifyAndAddNewCellToTableExportInPDF("School's Name","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExportInPDF("Address","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExportInPDF("Number Of Student","headerTable",1,"center","center");
+            modifyAndAddNewCellToTableExportInPDF("Number Of Teacher","headerTable",1,"center","center");
         	//Thêm data vào bảng.
             while (itr_sch.hasNext() && itr_count.hasNext()) {
             	school = itr_sch.next();
-            	modifyAndAddNewCellToTableExport(school.getID(),"normal",0,"left","center");
-            	modifyAndAddNewCellToTableExport(school.getName(),"normal",0,"left","center");
-            	modifyAndAddNewCellToTableExport(school.getAddress(),"normal",0,"left","center");
-            	modifyAndAddNewCellToTableExport(String.valueOf(school.getCountStudent()),"normal",0,"center","center");
-            	modifyAndAddNewCellToTableExport(String.valueOf(itr_count.next()),"normal",0,"center","center");
+            	modifyAndAddNewCellToTableExportInPDF(school.getID(),"normal",0,"left","center");
+            	modifyAndAddNewCellToTableExportInPDF(school.getName(),"normal",0,"left","center");
+            	modifyAndAddNewCellToTableExportInPDF(school.getAddress(),"normal",0,"left","center");
+            	modifyAndAddNewCellToTableExportInPDF(String.valueOf(school.getCountStudent()),"normal",0,"center","center");
+            	modifyAndAddNewCellToTableExportInPDF(String.valueOf(itr_count.next()),"normal",0,"center","center");
             }
             table.setHeaderRows(1);
             document.add(table);
@@ -333,4 +346,124 @@ public class SchoolService {
         }
 		return true;
 	}
+	
+	public List<School> writeJsonStream(OutputStream out, List<School> schools) throws IOException {
+		List<School> schoolsWriter;
+		JsonWriter writer = new JsonWriter(new OutputStreamWriter(out,"UTF-8"));
+		
+		writer.setIndent("    ");
+		schoolsWriter = writeSchoolsArray(writer, schools);
+		writer.close();
+		return schoolsWriter;
+	}
+
+    public List<School> writeSchoolsArray(JsonWriter writer, List<School> schools) throws IOException {
+	    List<School> schoolsWriter = new ArrayList<School>();
+    	
+    	writer.beginArray();
+	    for (School school : schools) {
+	    	schoolsWriter.add(writeSchool(writer, school));
+	    }
+	    writer.endArray();
+	    return schoolsWriter;
+    }
+
+    public School writeSchool(JsonWriter writer, School school) throws IOException {
+	    
+    	writer.beginObject();
+	    writer.name("ID").value(school.getID());
+	    writer.name("Name").value(school.getName());
+	    writer.name("Address").value(school.getAddress());
+	    writer.name("Number of student").value(school.getCountStudent());
+	    writer.endObject();
+	    return school;
+    }
+
+	public boolean jsonWriterToSaveData(String fileName) throws FileNotFoundException {
+       File outFile= new File("src/main/resources/input/" + fileName);
+       
+       outFile.getParentFile().mkdirs();
+       OutputStream os = new FileOutputStream(outFile);
+       
+       try {
+    	   writeJsonStream(os,showAllSchool());
+       }
+       catch (IOException e) {
+    	   e.printStackTrace();
+    	   return false;
+       }
+       return true;
+	}
+	
+	public List<School> readJsonStream(InputStream in) throws IOException {
+	    JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+	    
+	    try {
+	    	return readSchoolsArray(reader);
+	    }
+	    finally {
+	    	reader.close();
+	    }
+	}
+
+    public List<School> readSchoolsArray(JsonReader reader) throws IOException {
+		List<School> schools = new ArrayList<School>();
+		
+		reader.beginArray();
+		while (reader.hasNext()) {
+			schools.add(readSchool(reader));
+		}
+		reader.endArray();
+		return schools;
+    }
+
+    public School readSchool(JsonReader reader) throws IOException {
+	    String ID = null;
+	    String schoolName = null;
+	    String address = null;
+	    int countStudent = 0;
+	    
+	    reader.beginObject();
+	    while(reader.hasNext()) {
+	        String readerName = reader.nextName();
+	        
+	        if(readerName.equals("ID")) {
+	        	ID = reader.nextString();
+	        }
+	        else {
+		        if(readerName.equals("Name")) {
+		        	schoolName = reader.nextString();
+		        }
+		        else {
+			        if(readerName.equals("Address")) {
+			        	address = reader.nextString(); 
+			        }
+			        else {
+				        if(readerName.equals("Number of student")) {
+				        	countStudent = reader.nextInt();
+				        }
+				        else {
+				        	reader.skipValue();
+				        }
+			        }
+		        }
+	        }
+	    }
+	    reader.endObject();
+	    return new School(ID,schoolName,address,countStudent);
+    }
+    
+    public List<School> jsonReaderToLoadData(String fileName) throws FileNotFoundException {
+        List<School> schools = null;
+    	InputStream in = new FileInputStream("src/main/resources/input/" + fileName);
+        
+        try {
+     	   schools = readJsonStream(in);
+     	   schools = importNewSchools(schools);
+        }
+        catch (IOException e) {
+     	   e.printStackTrace();
+        }
+        return schools;
+ 	}
 }

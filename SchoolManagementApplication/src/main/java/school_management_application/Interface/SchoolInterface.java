@@ -6,6 +6,7 @@ import school_management_application.Model.School;
 public interface SchoolInterface {
 	
 	public void save(School school);
+	public List<School> setSchools(List<School> schools);
 	public School findByID(String ID);
     public List<School> findByName(String name);
     public School findByAddress(String address);
