@@ -1,9 +1,11 @@
 package sma.controller;
 
+import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -86,6 +88,9 @@ public class TeacherFunction {
 		school.setTeachers(teachers); 
 	}
 	
+	/**
+	 * Saving teachers into xml file
+	 */
 	public void SaveTeachersToXML()
 	{
 		try {
@@ -99,6 +104,30 @@ public class TeacherFunction {
 		}
 	}
 	
+	/**
+	 * connect data xml file
+	 * @return teachers
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Teacher> SaveXMLFileToTeachers()
+	{
+		try {
+			XMLDecoder xmlDecoder = new XMLDecoder(new FileInputStream(path+"\\src\\main\\java\\data\\teachers.xml"));
+			teachers = (List<Teacher>)xmlDecoder.readObject();
+			xmlDecoder.close();
+			return teachers;
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Writing text File to teachers 
+	 * @param teachers
+	 */
 	public void WritingFileToTeachers(List<Teacher> teachers)
 	{
 		System.out.println(path);
@@ -129,6 +158,9 @@ public class TeacherFunction {
 		
 	}
 	
+	/**
+	 * Writing teachers into pdf file
+	 */
 	public void TeachersWriteIntoPDF() 
 	{  
 		 // Tạo đối tượng tài liệu
@@ -188,6 +220,10 @@ public class TeacherFunction {
 			}
 	}
 	
+	/**
+	 * Writing teachers into HTML file 
+	 * @throws NullPointerException
+	 */
 	public void TeachersWriteIntoHTML() throws NullPointerException 
 	{  
 		String id, schoolId, name, address, phone;

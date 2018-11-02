@@ -29,6 +29,10 @@ public class MainMenu {
 		MenuTeachersControl menuTeachersControl = new MenuTeachersControl();
 		SchoolFunction schoolFunction = new SchoolFunction(schools, teachers);
 		TeacherFunction teacherFunction = new TeacherFunction(teachers);
+		
+		//Connect Database
+		schools = schoolFunction.SaveXMLFileToSchools();
+		teacherFunction.SaveXMLFileToTeachers();
 		do {
 		appMenu.mainMenu();
 		int choice = input.nextInt();
