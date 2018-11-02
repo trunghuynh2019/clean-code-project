@@ -10,6 +10,8 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +34,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import sma.entity.School;
 import sma.entity.Teacher;
+import sma.dto.*;
+
+import lombok.Data;
 
 public class SchoolFunction {
 	
@@ -39,6 +44,7 @@ public class SchoolFunction {
 	List<Teacher> teachers;
 	private static String[] columns = {"Id", "Name", "SchoolId", "Address","Phone"};
 	private static String path = System.getProperty("user.dir");
+	private XMLEncoder xmlFile;
 	
 	public SchoolFunction() {
 		super();
@@ -78,11 +84,23 @@ public class SchoolFunction {
 			this.schools.add(school);
 			// Input of Teachers
 			teacherFunction.signContractWithTeacher(input,schoolId,teachers);
-			
 		}
-		
+		SaveSchoolsToXML();
 	}
 	
+	public void SaveSchoolsToXML()
+	{
+		try
+		{
+			xmlFile = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(path+"\\src\\main\\java\\data\\schools.xml")));
+			xmlFile.writeObject(schools);
+			xmlFile.close();
+		}
+		catch(Exception e)
+		{
+			e.getMessage();
+		}
+	}
 	public void WritingFileToSchools(List<School> schools) 
 	{
 		String path = System.getProperty("user.dir");
@@ -92,6 +110,7 @@ public class SchoolFunction {
 			//write data 
 			BufferedReader br = new BufferedReader(fr);
 			String newLine, line; 
+			
 			while ((line = br.readLine())!= null)
 			{
 				newLine = line.substring(2);
@@ -101,6 +120,7 @@ public class SchoolFunction {
 			}
 			br.close();
 			fr.close();
+			SaveSchoolsToXML();
 			SchoolsWriteIntoExcel();
 		}
 		catch(IOException ignored)

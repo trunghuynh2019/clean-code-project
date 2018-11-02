@@ -1,11 +1,14 @@
 package sma.controller;
 
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Scanner;
@@ -34,6 +37,8 @@ public class TeacherFunction {
 	List<Teacher> teachers;
 	private static String[] columns = {"Id", "Name", "SchoolId", "Address","Phone"};
 	private static String path = System.getProperty("user.dir");
+
+	private XMLEncoder xmlFile;
 	public TeacherFunction() {
 		super();
 	}
@@ -77,10 +82,23 @@ public class TeacherFunction {
 			this.teachers.add(teacher);	
 			
 		}
+		SaveTeachersToXML();
 		school.setTeachers(teachers); 
-		school.setNumOfTeachers(teachers.size());
 	}
-		
+	
+	public void SaveTeachersToXML()
+	{
+		try {
+			xmlFile = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(path+"\\src\\main\\java\\data\\teachers.xml")));
+			this.xmlFile.writeObject(teachers);
+			xmlFile.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void WritingFileToTeachers(List<Teacher> teachers)
 	{
 		System.out.println(path);
@@ -97,9 +115,11 @@ public class TeacherFunction {
 		
 				Teacher teacher = new Teacher(data[0],data[1],data[2]);
 				teachers.add(teacher);
+				
 			}
 			br.close();
 			fr.close();
+			SaveTeachersToXML();
 			TeachersWriteIntoExcel();
 		}
 		catch(IOException ignored)
