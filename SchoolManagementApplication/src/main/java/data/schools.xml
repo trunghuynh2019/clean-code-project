@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_181" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <object class="sma.entity.School">
+    <void property="address">
+     <string>Vinh Long</string>
+    </void>
+    <void property="id">
+     <string>nbk-vl</string>
+    </void>
+    <void property="name">
+     <string>Truong trung hoc Chuyen Nguyen Binh Khiem</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="sma.entity.School">
+    <void property="address">
+     <string>Quang Ngai</string>
+    </void>
+    <void property="id">
+     <string>nbk-qn</string>
+    </void>
+    <void property="name">
+     <string>Truong trung hoc Chuyen Nguyen Binh Khiem</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="sma.entity.School">
+    <void property="address">
+     <string>Vinh Long</string>
+    </void>
+    <void property="id">
+     <string>nbk-vl</string>
+    </void>
+    <void property="name">
+     <string>Truong trung hoc Chuyen Nguyen Binh Khiem</string>
+    </void>
+   </object>
+  </void>
+  <void method="add">
+   <object class="sma.entity.School">
+    <void property="address">
+     <string>Quang Ngai</string>
+    </void>
+    <void property="id">
+     <string>nbk-qn</string>
+    </void>
+    <void property="name">
+     <string>Truong trung hoc Chuyen Nguyen Binh Khiem</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>
