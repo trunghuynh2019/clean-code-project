@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -18,6 +20,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
+import com.google.gson.stream.JsonWriter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -332,5 +335,48 @@ public class SchoolService {
             return false;
         }
 		return true;
+	}
+	
+	public void writeJsonStream(OutputStream out, List<School> schools) throws IOException {
+		JsonWriter writer = new JsonWriter(new OutputStreamWriter(out,"UTF-8"));
+		
+		writer.setIndent("    ");
+		writeSchoolsArray(writer, schools);
+		writer.close();
+	}
+
+    public void writeSchoolsArray(JsonWriter writer, List<School> schools) throws IOException {
+	    
+    	writer.beginArray();
+	    for (School school : schools) {
+	    	writeSchool(writer, school);
+	    }
+	    writer.endArray();
+    }
+
+    public void writeSchool(JsonWriter writer, School school) throws IOException {
+	    
+    	writer.beginObject();
+	    writer.name("ID").value(school.getID());
+	    writer.name("Name").value(school.getName());
+	    writer.name("Address").value(school.getAddress());
+	    writer.name("Number of student").value(school.getCountStudent());
+	    writer.endObject();
+    }
+
+	public boolean jsonWriterToSaveData(String fileName) throws FileNotFoundException {
+       File outFile= new File("src/main/resources/output/" + fileName);
+       
+       outFile.getParentFile().mkdirs();
+       OutputStream os = new FileOutputStream(outFile);
+       
+       try {
+    	   writeJsonStream(os,showAllSchool());
+       }
+       catch (IOException e) {
+    	   e.printStackTrace();
+    	   return false;
+       }
+       return true;
 	}
 }
