@@ -10,4 +10,6 @@ public interface FileExportService {
 	public void exportToExcelFile(List<School> schools, Scanner scanner);
 	public void exportToPdfFile(List<School> schools, Scanner scanner);
 	public void exportToHtmlFile(List<School> schools, Scanner scanner);
+	
+	public String exportToJsonString(List<School> schools);
 }

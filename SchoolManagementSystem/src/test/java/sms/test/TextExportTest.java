@@ -9,7 +9,8 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import sms.export.TextExport;
+import sms.file.JsonExport;
+import sms.file.TextExport;
 import sms.model.School;
 
 public class TextExportTest extends TestCase {
@@ -33,22 +34,22 @@ public class TextExportTest extends TestCase {
 	
 	public void testReadSchoolFromTextFileSuccessfully() {
 		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		assertTrue(export.readSchoolFromTextFile(schools));
+		assertTrue(export.importSchoolFromTextFile(schools));
 	}
 	
 	public void testReadSchoolFromTextFileNotFound() {
 		export = new TextExport("a.txt", TEACHER_FILE_NAME);
-		assertFalse(export.readSchoolFromTextFile(schools));
+		assertFalse(export.importSchoolFromTextFile(schools));
 	}
 	
 	public void testReadTeacherFromTextFileSuccessful() {
 		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		assertTrue(export.readTeacherTextFileFile(schools));
+		assertTrue(export.importTeacherFromTextFile(schools));
 	}
 	
 	public void testReadTeacherFromTextFileNotFound() {
 		export = new TextExport(SCHOOL_FILE_NAME, "b.txt");
-		assertFalse(export.readTeacherTextFileFile(schools));
+		assertFalse(export.importTeacherFromTextFile(schools));
 	}
 	
 	public void testAddSchoolToList() {
@@ -57,7 +58,7 @@ public class TextExportTest extends TestCase {
 		List<School> expected = asList(school1, school2);
 		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
 		schools = new ArrayList<School>();
-		export.readSchoolFromTextFile(schools);
+		export.importSchoolFromTextFile(schools);
 		assertTrue(schools.equals(expected));
 	}
 	

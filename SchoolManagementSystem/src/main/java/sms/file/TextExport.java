@@ -1,4 +1,4 @@
-package sms.export;
+package sms.file;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -46,7 +46,7 @@ public class TextExport implements FileExport {
 		this.teacherFileName = teacherFileName;
 	}
 
-	public boolean readSchoolFromTextFile(List<School> schools) {
+	public boolean importSchoolFromTextFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		InputStreamReader inputStreamReader;
 		try {
@@ -74,7 +74,7 @@ public class TextExport implements FileExport {
 		}
 	}
 
-	public boolean readTeacherTextFileFile(List<School> schools) {
+	public boolean importTeacherFromTextFile(List<School> schools) {
 		BufferedReader bufferedReader;
 		InputStreamReader inputStreamReader;
 		try {

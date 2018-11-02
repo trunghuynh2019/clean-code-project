@@ -3,11 +3,13 @@ package sms.service.impl;
 import java.util.List;
 import java.util.Scanner;
 
-import sms.export.ExcelExport;
-import sms.export.FileExport;
-import sms.export.HtmlExport;
-import sms.export.PdfExport;
-import sms.export.TextExport;
+import com.google.gson.Gson;
+
+import sms.file.ExcelExport;
+import sms.file.FileExport;
+import sms.file.HtmlExport;
+import sms.file.PdfExport;
+import sms.file.TextExport;
 import sms.model.School;
 import sms.service.FileExportService;
 import sms.view.MainView;
@@ -45,6 +47,11 @@ public class FileExportServiceImpl implements FileExportService {
 		boolean exportSuccessfully = fileExport.exportSchoolsToFile(schools)
 				&& fileExport.exportTeachersToFile(schools);
 		VIEW.exportFileResult(exportSuccessfully, scanner);
+	}
+
+	@Override
+	public String exportToJsonString(List<School> schools) {
+		return new Gson().toJson(schools);
 	}
 
 }

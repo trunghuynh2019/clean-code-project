@@ -6,7 +6,7 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import sms.export.ExcelExport;
+import sms.file.ExcelExport;
 import sms.model.School;
 
 public class ExcelExportTest extends TestCase {
