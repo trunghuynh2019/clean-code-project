@@ -1,72 +1,27 @@
 package sma.entity;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@Data 
+@ToString 
+@EqualsAndHashCode(of = {"id","name"})
 public class Teacher {
 	
-	String id;
-	
-	String name;
-	String schoolId;
-	String address;
-	String phone;
-	
-	public Teacher() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	private String id;
+	private String name;
+	private String schoolId;
+	private String address;
+	private String phone;
 	
 	
-	
+
 	public Teacher(String id, String name, String schoolId) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.schoolId = schoolId;
-	}
-
-
-
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getSchoolId() {
-		return schoolId;
-	}
-	public void setSchoolId(String schoolId) {
-		this.schoolId = schoolId;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-	    return obj instanceof Teacher &&
-	        getName().equals(((Teacher) obj).getName());
-	}
-	
-	public boolean equalId(Teacher teacher) {
-		return this.id.equals(teacher.getId());
 	}
 	
 	public Teacher(String id, String name, String address, String phone, String schoolId) {
@@ -76,6 +31,11 @@ public class Teacher {
         this.phone = phone;
         this.schoolId = schoolId;
     }
+
+	public Teacher() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 
 }
