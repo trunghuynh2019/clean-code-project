@@ -44,4 +44,15 @@ public class TeacherRepoImpl implements TeacherRepo {
 			return Optional.of(teachersData);
 		}
 	}
+
+	@Override
+	public Optional<List<Teacher>> getAllTeachersFromSchoolList(List<School> schools) {
+		List<Teacher> teachers = new ArrayList<>();
+		for (School school : schools) {
+			for (Teacher teacher : school.getTeachers()) {
+				teachers.add(teacher);
+			}
+		}
+		return Optional.ofNullable(teachers);
+	}
 }

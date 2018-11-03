@@ -69,7 +69,7 @@ public class TextReader implements FileReader {
 	}
 
 	@Override
-	public boolean importTeacherFromFile(List<School> schools) {
+	public boolean importTeacherFromFile(List<School> schools, List<Teacher> teachers) {
 		BufferedReader bufferedReader;
 		InputStreamReader inputStreamReader;
 		try {

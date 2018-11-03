@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import sms.filewriter.JsonWriter;
 import sms.model.School;
 import sms.repository.SchoolRepo;
 import sms.repository.TeacherRepo;
@@ -23,13 +22,25 @@ import sms.view.MainView;
 public class Application {
 
 	public static void main(String[] args) {
+		SchoolService schoolService = new SchoolServiceImpl();
+		TeacherService teacherService = new TeacherServiceImpl();
+		FileImportService fileImportService = new FileImportServiceImpl();
+		FileExportService fileExportService = new FileExportServiceImpl();
+
 		List<School> schools = new ArrayList<School>();
+
 		SchoolRepo schoolRepo = new SchoolRepoImpl();
 		TeacherRepo teacherRepo = new TeacherRepoImpl();
+
 		MainView view = new MainView();
 		boolean programEnd = false;
 		Scanner scanner = new Scanner(System.in);
 
+		try {
+			fileImportService.importByJsonFile(schools, scanner);
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+		}
 		do {
 			view.displayMainMenu();
 			int choice = scanner.nextInt();
@@ -37,44 +48,35 @@ public class Application {
 
 			switch (choice) {
 			case 1: {
-				SchoolService service = new SchoolServiceImpl();
-				service.viewAllSchools(schools, scanner);
+				schoolService.viewAllSchools(schools, scanner);
 				break;
 			}
 			case 2: {
-				SchoolService service = new SchoolServiceImpl();
-				service.addNewSchool(schools, scanner);
+				schoolService.addNewSchool(schools, scanner);
 				break;
 			}
 			case 3: {
-				TeacherService service = new TeacherServiceImpl();
-				service.manageTeachers(schools, scanner, schoolRepo, teacherRepo);
+				teacherService.manageTeachers(schools, scanner, schoolRepo, teacherRepo);
 				break;
 			}
 			case 4: {
-				FileImportService service = new FileImportServiceImpl();
-				service.importByTextFile(schools, scanner);
-				System.out.println(new JsonWriter().exportSchoolToJson(schools));
+				fileImportService.importByTextFile(schools, scanner);
 				break;
 			}
 			case 5: {
-				FileExportService service = new FileExportServiceImpl();
-				service.exportToTextFile(schools, scanner);
+				fileExportService.exportToTextFile(schools, scanner);
 				break;
 			}
 			case 6: {
-				FileExportService service = new FileExportServiceImpl();
-				service.exportToExcelFile(schools, scanner);
+				fileExportService.exportToExcelFile(schools, scanner);
 				break;
 			}
 			case 7: {
-				FileExportService service = new FileExportServiceImpl();
-				service.exportToPdfFile(schools, scanner);
+				fileExportService.exportToPdfFile(schools, scanner);
 				break;
 			}
 			case 8: {
-				FileExportService service = new FileExportServiceImpl();
-				service.exportToHtmlFile(schools, scanner);
+				fileExportService.exportToHtmlFile(schools, scanner);
 				break;
 			}
 			case 9: {
@@ -82,9 +84,9 @@ public class Application {
 				return;
 			}
 			}
+			fileExportService.exportToJsonFile(schools, scanner);
 		} while (!programEnd);
 
 	}
 
-	
 }

@@ -11,5 +11,5 @@ public interface FileExportService {
 	public void exportToPdfFile(List<School> schools, Scanner scanner);
 	public void exportToHtmlFile(List<School> schools, Scanner scanner);
 	
-	public String exportToJsonString(List<School> schools);
+	public void exportToJsonFile(List<School> schools, Scanner scanner);
 }

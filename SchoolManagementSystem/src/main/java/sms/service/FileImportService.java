@@ -7,5 +7,5 @@ import sms.model.School;
 
 public interface FileImportService {
 	public boolean importByTextFile(List<School> schools, Scanner scanner);
-	public boolean importByJsonString(List<School> schools, String json);
+	public boolean importByJsonFile(List<School> schools, Scanner scanner);
 }
