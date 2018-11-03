@@ -379,20 +379,20 @@ public class SchoolService {
 	    return school;
     }
 
-	public boolean jsonWriterToSaveData(String fileName) throws FileNotFoundException {
-       File outFile= new File("src/main/resources/output/" + fileName);
+	public List<School> jsonWriterToSaveData(String fileName) throws FileNotFoundException {
+       File outFile= new File("src/main/resources/input/" + fileName);
+       List<School> schools = null;
        
        outFile.getParentFile().mkdirs();
        OutputStream os = new FileOutputStream(outFile);
        
        try {
-    	   writeJsonStream(os,showAllSchool());
+    	   schools = writeJsonStream(os,showAllSchool());
        }
        catch (IOException e) {
     	   e.printStackTrace();
-    	   return false;
        }
-       return true;
+       return schools;
 	}
 	
 	public List<School> readJsonStream(InputStream in) throws IOException {

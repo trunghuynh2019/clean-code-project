@@ -2,10 +2,15 @@ package school_management_application.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +23,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
+
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -138,6 +146,11 @@ public class TeacherService {
         
         return teachRepo.getsize();
     }
+    
+    public List<Teacher> importNewTeachers(List<Teacher> teachers){
+		
+		return teachRepo.setTeachers(teachers);
+	}
     
     public Teacher findTeacher(TeacherDto teacherDto){
 	    List<Teacher> teach_name = teachRepo.findByName(teacherDto.getName());
@@ -384,4 +397,151 @@ public class TeacherService {
         }
 		return true;
 	}
+	
+	public List<Teacher> writeJsonStream(OutputStream out, List<Teacher> teachers) throws IOException {
+		List<Teacher> teachersWriter;
+		JsonWriter writer = new JsonWriter(new OutputStreamWriter(out,"UTF-8"));
+		
+		writer.setIndent("    ");
+		teachersWriter = writeTeachersArray(writer, teachers);
+		writer.close();
+		return teachersWriter;
+	}
+
+    public List<Teacher> writeTeachersArray(JsonWriter writer, List<Teacher> teachers) throws IOException {
+	    List<Teacher> teachersWriter = new ArrayList<Teacher>();
+    	
+    	writer.beginArray();
+	    for (Teacher teacher : teachers) {
+	    	teachersWriter.add(writeTeacher(writer, teacher));
+	    }
+	    writer.endArray();
+	    return teachersWriter;
+    }
+
+    public Teacher writeTeacher(JsonWriter writer, Teacher teacher) throws IOException {
+	    
+    	writer.beginObject();
+	    writer.name("TeacherID").value(teacher.getTeacherID());
+	    writer.name("SchoolID").value(teacher.getSchoolID());
+	    writer.name("Name").value(teacher.getName());
+	    writer.name("IdentityCard");
+	    writeDoublesArray(writer, teacher.getIdentityCard());
+	    writer.name("PhoneNumber");
+	    writeDoublesArray(writer, teacher.getPhoneNo());
+	    writer.name("Address").value(teacher.getAddress());
+	    writer.endObject();
+	    return teacher;
+    }
+    
+    public void writeDoublesArray(JsonWriter writer, List<String> arrayVariable) throws IOException {
+        
+    	writer.beginArray();
+        for (String value : arrayVariable) {
+        	writer.value(value);
+        }
+        writer.endArray();
+    }
+
+	public List<Teacher> jsonWriterToSaveData(String fileName) throws FileNotFoundException {
+       File outFile= new File("src/main/resources/input/" + fileName);
+       List<Teacher> teachers = null;
+       
+       outFile.getParentFile().mkdirs();
+       OutputStream os = new FileOutputStream(outFile);
+       
+       try {
+    	   teachers = writeJsonStream(os,showAllTeacher());
+       }
+       catch (IOException e) {
+    	   e.printStackTrace();
+       }
+       return teachers;
+	}
+	
+	public List<Teacher> readJsonStream(InputStream in) throws IOException {
+	    JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+	    
+	    try {
+	    	return readTeachersArray(reader);
+	    }
+	    finally {
+	    	reader.close();
+	    }
+	}
+
+    public List<Teacher> readTeachersArray(JsonReader reader) throws IOException {
+		List<Teacher> teachers = new ArrayList<Teacher>();
+		
+		reader.beginArray();
+		while (reader.hasNext()) {
+			teachers.add(readTeacher(reader));
+		}
+		reader.endArray();
+		return teachers;
+    }
+
+    public Teacher readTeacher(JsonReader reader) throws IOException {
+	    int teacherID = 0;
+    	String schoolID = null;
+	    String teacherName = null;
+	    List<String> identityCard = null;
+	    List<String> phoneNo = null;
+	    String address = null;
+	    
+	    reader.beginObject();
+	    while(reader.hasNext()) {
+	        String readerName = reader.nextName();
+	        
+	        switch (readerName) {
+		        case "TeacherID":
+		        	teacherID = reader.nextInt();
+		        	break;
+		        case "SchoolID":
+		        	schoolID = reader.nextString();
+			        break;
+		        case "Name":
+		        	teacherName = reader.nextString();
+				    break;
+		        case "IdentityCard":
+		        	identityCard = readStringsArray(reader);
+					break;
+		        case "PhoneNumber":
+	        		phoneNo = readStringsArray(reader);
+					break;
+		        case "Address":
+					address = reader.nextString(); 
+					break;
+				default:
+					reader.skipValue();
+	        }
+	    }
+	    reader.endObject();
+	    return new Teacher(teacherID, schoolID, teacherName, identityCard, phoneNo, address);
+    }
+    
+    public List<String> readStringsArray(JsonReader reader) throws IOException {
+        List<String> values = new ArrayList<String>();
+
+        reader.beginArray();
+        while (reader.hasNext()) {
+          values.add(reader.nextString());
+        }
+        reader.endArray();
+        return values;
+      }
+    
+    public List<Teacher> jsonReaderToLoadData(String fileName) throws FileNotFoundException {
+        List<Teacher> teachers = null;
+    	InputStream in = new FileInputStream("src/main/resources/input/" + fileName);
+    	
+        try {
+     	   teachers = readJsonStream(in);
+     	   teachers = importNewTeachers(teachers);
+        }
+        catch (IOException e) {
+     	   e.printStackTrace();
+        }
+        return teachers;
+ 	}
 }

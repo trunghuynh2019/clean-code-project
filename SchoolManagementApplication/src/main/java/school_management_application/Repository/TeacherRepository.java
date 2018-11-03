@@ -35,9 +35,10 @@ public class TeacherRepository implements TeacherInterface {
         teacherID++;        
     }
     
-    public void setTeachers(List<Teacher> teachers) {
+    public List<Teacher> setTeachers(List<Teacher> teachers) {
     	
     	this.teachers = teachers;
+    	return teachers;
     }
     
     public Teacher findByTeacherID(Integer teacherID) {

@@ -6,7 +6,7 @@ import school_management_application.Model.Teacher;
 public interface TeacherInterface {
 	
 	public void save(Teacher teacher);
-	public void setTeachers(List<Teacher> teachers);
+	public List<Teacher> setTeachers(List<Teacher> teachers);
     public Teacher findByTeacherID(Integer teacherID);
     public List<Teacher> findBySchoolID(String schoolID);
     public List<Teacher> findByName(String name);
