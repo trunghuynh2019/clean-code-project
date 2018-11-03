@@ -26,7 +26,6 @@ public class FileImportServiceImpl implements FileImportService {
 		FileReader textReader = new TextReader(schoolFile, teacherFile);
 		// Confuse!!!
 		List<Teacher> teachers = new ArrayList<>();
-		schools = new ArrayList<>();
 
 		boolean importSuccessfully = textReader.importSchoolFromFile(schools)
 				&& textReader.importTeacherFromFile(schools, teachers);
@@ -39,7 +38,6 @@ public class FileImportServiceImpl implements FileImportService {
 		FileReader jsonReader = new JsonReader(SCHOOL_FILE + ".json", TEACHER_FILE + ".json");
 		// Confuse!!!
 		List<Teacher> teachers = new ArrayList<>();
-		schools = new ArrayList<>();
 
 		boolean importSuccessfully = jsonReader.importSchoolFromFile(schools)
 				&& jsonReader.importTeacherFromFile(schools, teachers);
