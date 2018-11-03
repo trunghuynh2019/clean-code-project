@@ -4,99 +4,70 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import sms.function.*;
+import sms.management.file.export.ExcelExport;
+import sms.management.file.export.FileExport;
+import sms.management.file.export.HtmlExport;
+import sms.management.file.export.JSonExport;
+import sms.management.file.export.PdfExport;
+import sms.management.file.importt.FileImport;
+import sms.management.file.importt.JSonImport;
+import sms.management.file.importt.TextImport;
+import sms.management.function.*;
 import sms.model.*;
 import sms.view.*;
 
 public class SchoolManagementSystem {
 
 	private final static String PATH = System.getProperty("user.dir") + "\\fileData\\";
-	private final static String FILE_DATA_SCHOOL = "dataSchool";
-	private final static String FILE_DATA_TEACHER = "dataTeacher";
-	
+	private final static String FILE_DATA_SCHOOL = PATH + "dataSchool";
+	private final static String FILE_DATA_TEACHER = PATH + "dataTeacher";
 	public static void main(String[] args) {
-		List<School> schools= new ArrayList<School>();
-		ManagementInterface management = new Management();
 		Scanner scanner = new Scanner(System.in);
+		
+		List<School> schools= new ArrayList<School>();
+		Management management = new ManagementImpl();
+		
+		FileExport fileExport = null;
+		FileImport fileImport = null;
+
 		boolean stopProgram=true;
 		int choice;
+		
 		do {
 			MainView.showMainMenu();
 			choice = MainView.getMainOption(scanner);
 			System.out.println();
 			
 			switch (choice) {
-				case 1: viewAllSchool(schools); break;
-				case 2: addNewSchool(schools, scanner, management); break;
-				case 3: manageTeachersList(schools, scanner, management); break;
-				case 4: manageFileSchool(schools, management, scanner); break;
+				case 1: {
+					if(schools.isEmpty()) {
+						SchoolView.showEmptySchool();
+					}else {
+						management.viewAllSchool(schools); 
+					}
+					break;
+				}
+				case 2:{
+					School school = new School();
+					SchoolView.enterInformationOfSchool(school,scanner);
+					management.addSchool(schools, school);
+					break;
+				}
+				case 3: manageTeachersList(schools, fileExport, fileImport, management, scanner); break;
+				case 4: manageFileSchool(schools, fileExport, fileImport, scanner); break;
 				case 5: stopProgram=false; break;
 			}
 		} while(stopProgram);
 	}
 
-	// export data of school into excel file
-	public static void exportAllSchool(List<School> schools,ManagementInterface management) {
-		management.exportDataOfSchoolsToExcel(schools, PATH+FILE_DATA_SCHOOL + ".xls");
-	}
 	
-	// export data of teacher into excel file
-	public static void exportAllTeacher(List<Teacher> teachers,ManagementInterface management) {
-		management.exportDataOfTeachersToExcel(teachers, PATH+FILE_DATA_TEACHER + ".xls");
-	}
-	
-	// export data of school into pdf file
-	public static void exportAllShoolInPdf(List<School> schools, ManagementInterface management) {
-		management.exportDataOfSchoolsToPDF(schools,  PATH+FILE_DATA_SCHOOL + ".pdf");
-	}
-	
-	// export data of teacher into pdf file
-	public static void exportAllTeacherInPdf(List<Teacher> teachers, ManagementInterface management) {
-		management.exportDataOfTeachersToPDF(teachers, PATH+FILE_DATA_TEACHER + ".pdf");
-	}
-	
-	// export data of school into html file
-	public static void exportAllShoolInHtml(List<School> schools, ManagementInterface management) {
-		management.exportDataOfSchoolsToHTML(schools, PATH+FILE_DATA_SCHOOL + ".html");
-	}
-	
-	// export data of teacher into html file
-	public static void exportAllTeacherInHtml(List<Teacher> teachers, ManagementInterface management) {
-		management.exportDataOfTeachersToHTML(teachers, PATH+FILE_DATA_TEACHER + ".html");
-	}
-	
-	// Show information of all school in list
-	public static void viewAllSchool(List<School> schools) {
-		SchoolView.showAllSchool(schools);
-	}
-
-	// add new school into list school
-	public static void addNewSchool(List<School> schools, Scanner scanner, ManagementInterface management) {
-		School school = new School();
-		SchoolView.enterInformationOfSchool(school,scanner);
-		management.addSchool(schools, school);
-	}
-
-	
-	// add the school list from file name
-	public static void importAllSchoolFromTextFile(List<School> schools, Scanner scanner, ManagementInterface management) {
-		SchoolView.enterFileNameOfSchool();
-		management.loadDatabaseOfSchool(scanner.nextLine(), schools);
-		MainView.confirmLoadingFile();
-	}
-	
-	// add the teacher list from file name
-	public static void importAllTeacherFromTextFile(School school, Scanner scanner, ManagementInterface management) {
-		SchoolView.enterFileNameOfSchool();
-		management.loadDatabaseOfTeacher(scanner.nextLine(), school);
-		MainView.confirmLoadingFile();
-	}
-	
-	// manage Teacher list
-	public static void manageTeachersList(List<School> schools, Scanner scanner, ManagementInterface management) {
+	/*
+	 * Teachers List Management
+	 */
+	public static void manageTeachersList(List<School> schools, FileExport fileExport, FileImport fileImport, Management management, Scanner scanner) {
 		boolean backToMainMenu = true;
 		
-		viewAllSchool(schools);
+		management.viewAllSchool(schools);
 		
 		SchoolView.enterSchoolId();
 		School school = management.searchSchoolById(schools, scanner.nextLine().toUpperCase());
@@ -104,84 +75,211 @@ public class SchoolManagementSystem {
 			SchoolView.showSchoolNotFound();
 			return;
 		} else {
+			List<Teacher> teachers = school.getTeachers();
+			if(teachers==null) {
+				school.setTeachers(new ArrayList<Teacher>());
+			}
 			do {
 				MainView.showTeacherManagementMenu(school);
 				int choice = MainView.getTeacherManagementOption(scanner);
 				System.out.println();
 				switch (choice) {
-					case 1: TeacherView.showAllTeachers(school); break;
+					case 1: {
+						if(teachers.isEmpty()) {
+							TeacherView.showMessageEmptyTeacherList();
+						}else {
+							management.viewAllTeacher(teachers);
+						} 
+						break;
+					}
 					case 2: {
-						List<Teacher> teachers = school.getTeachers();
-						if(teachers==null) {
-							school.setTeachers(new ArrayList<Teacher>());
-						}
 						Teacher teacher = new Teacher();
 						TeacherView.enterInformationOfTeacher(teacher, scanner);
-						management.signContractWithTeacher(school, teacher);
+						management.signContractWithTeacher(teachers, teacher);
 						break;
 					}
 					case 3: {
-						List<Teacher> teachers = school.getTeachers();
-						if(teachers==null) {
+						if(teachers.isEmpty()) {
 							TeacherView.showMessageEmptyTeacherList();
-						}
-						else {
+						}else {
 							TeacherView.enterTeacherName();
 							Teacher teacher = management.searchTeacherByName(school.getTeachers(), scanner.nextLine());
-							if (teacher == null) TeacherView.showTeacherNotFound();
-							else TeacherView.showInformationOfTeacher(teacher);
+							if (teacher == null) {
+								TeacherView.showTeacherNotFound();
+							}else {
+								TeacherView.showInformationOfTeacher(teacher);
+							}
 						}
 						break;
 					}
 					case 4: {
-						List<Teacher> teachers = school.getTeachers();
-						if(teachers==null) {
+						if(teachers.isEmpty()) {
 							TeacherView.showMessageEmptyTeacherList();
-						}
-						else {
+						} else {
 							TeacherView.enterTeacherAddress();
 							Teacher teacher = management.searchTeacherByAddress(school.getTeachers(), scanner.nextLine());
-							if (teacher == null) TeacherView.showTeacherNotFound();
-							else TeacherView.showInformationOfTeacher(teacher);
+							if (teacher == null) {
+								TeacherView.showTeacherNotFound();
+							}else {
+								TeacherView.showInformationOfTeacher(teacher);
+							}
 						}
 						break;
 					}
-					case 5: manageFileTeacher(school, management, scanner); break;
+					case 5: manageFileTeacher(teachers, fileExport, fileImport,  scanner); break;
 					case 6: backToMainMenu=false; break;
 				}
 			}while(backToMainMenu);
 		}
 	}
 	
-	public static void manageFileSchool(List<School> schools,ManagementInterface management,  Scanner sc) {
+	/*
+	 *  File Management
+	 */
+	public static void manageFileSchool(List<School> schools, FileExport fileExport, FileImport fileImport, Scanner scanner) {
 		int choice;
 		boolean backToMain = true;
+		boolean checkHandleFile;
 		do {
 			MainView.showFileManagementMenu("School");
-			choice = MainView.getMainOption(sc);
+			choice = MainView.getMainOption(scanner);
 			switch(choice) {
-				case 1: exportAllSchool(schools, management); break;
-				case 2: exportAllShoolInPdf(schools, management); break;
-				case 3: exportAllShoolInHtml(schools, management); break;
-				case 4: importAllSchoolFromTextFile(schools, sc, management); break;
-				case 5: backToMain = false; break;
+				case 1:{
+					fileExport = new ExcelExport();
+					checkHandleFile = fileExport.exportDataOfSchoolToFile(schools, FILE_DATA_SCHOOL+".xls"); 
+					if(checkHandleFile) {
+						SchoolView.showStatusExportFile("Successed!");
+					}else {
+						SchoolView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 2:{
+					fileExport = new PdfExport();
+					checkHandleFile = fileExport.exportDataOfSchoolToFile(schools, FILE_DATA_SCHOOL+".pdf"); 
+					if(checkHandleFile) {
+						SchoolView.showStatusExportFile("Successed!");
+					}else {
+						SchoolView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 3:{
+					fileExport = new HtmlExport();
+					checkHandleFile = fileExport.exportDataOfSchoolToFile(schools, FILE_DATA_SCHOOL+".html"); 
+					if(checkHandleFile) {
+						SchoolView.showStatusExportFile("Successed!");
+					}else {
+						SchoolView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 4:{
+					fileExport = new JSonExport();
+					checkHandleFile = fileExport.exportDataOfSchoolToFile(schools, FILE_DATA_SCHOOL+".json"); 
+					if(checkHandleFile) {
+						SchoolView.showStatusExportFile("Successed!");
+					}else {
+						SchoolView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 5:{
+					fileImport = new JSonImport();
+					checkHandleFile = fileImport.importDataOfSchoolFromFile(schools, FILE_DATA_SCHOOL+".json"); 
+					if(checkHandleFile) {
+						SchoolView.showStatusImportFile("Successed!");
+					}else {
+						SchoolView.showStatusImportFile("Failed!");
+					}
+					break;
+				}
+				case 6:{
+					fileImport = new TextImport();
+					SchoolView.enterFileNameOfSchool();
+					checkHandleFile = fileImport.importDataOfSchoolFromFile(schools, scanner.nextLine()); 
+					if(checkHandleFile) {
+						SchoolView.showStatusImportFile("Successed!");
+					}else {
+						SchoolView.showStatusImportFile("Failed!");
+					}
+					break;
+				}
+				case 7: backToMain = false; break;
 			}
 		}while(backToMain);
 	}
 	
-	public static void manageFileTeacher(School school,ManagementInterface management,  Scanner sc) {
+	public static void manageFileTeacher(List<Teacher> teachers, FileExport fileExport, FileImport fileImport,  Scanner scanner) {
 		int choice;
 		boolean backToMain = true;
-		List<Teacher> teachers = school.getTeachers();
+		boolean checkHanleFile;
 		do {
-			MainView.showFileManagementMenu("School");
-			choice = MainView.getMainOption(sc);
+			MainView.showFileManagementMenu("Teacher");
+			choice = MainView.getMainOption(scanner);
 			switch(choice) {
-				case 1: exportAllTeacher(teachers, management);break;
-				case 2: exportAllTeacherInPdf(teachers, management); break;
-				case 3: exportAllTeacherInHtml(teachers, management); break;
-				case 4: importAllTeacherFromTextFile(school, sc, management);
-				case 5: backToMain = false; break;
+				case 1:{
+					fileExport = new ExcelExport();
+					checkHanleFile = fileExport.exportDataOfTeacherToFile(teachers, FILE_DATA_TEACHER+".xls");
+					if(checkHanleFile) {
+						TeacherView.showStatusExportFile("Successed!");
+					}else {
+						TeacherView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 2:{
+					fileExport = new PdfExport();
+					checkHanleFile = fileExport.exportDataOfTeacherToFile(teachers, FILE_DATA_TEACHER+".pdf"); 
+					if(checkHanleFile) {
+						TeacherView.showStatusExportFile("Successed!");
+					}else {
+						TeacherView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 3:{
+					fileExport = new HtmlExport();
+					checkHanleFile = fileExport.exportDataOfTeacherToFile(teachers, FILE_DATA_TEACHER+".html"); 
+					if(checkHanleFile) {
+						TeacherView.showStatusExportFile("Successed!");
+					}else {
+						TeacherView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 4:{
+					fileExport = new JSonExport();
+					checkHanleFile = fileExport.exportDataOfTeacherToFile(teachers, FILE_DATA_TEACHER+".json"); 
+					if(checkHanleFile) {
+						TeacherView.showStatusExportFile("Successed!");
+					}else {
+						TeacherView.showStatusExportFile("Failed!");
+					}
+					break;
+				}
+				case 5:{
+					fileImport = new JSonImport();
+					checkHanleFile = fileImport.importDataOfTeacherFromFile(teachers, FILE_DATA_TEACHER+".json"); 
+					if(checkHanleFile) {
+						TeacherView.showStatusImportFile("Successed!");
+					}else {
+						TeacherView.showStatusImportFile("Failed!");
+					}
+					break;
+				}
+				case 6:{
+					fileImport = new TextImport();
+					TeacherView.enterFileNameOfTeacher();
+					checkHanleFile = fileImport.importDataOfTeacherFromFile(teachers, scanner.nextLine()); 
+					if(checkHanleFile) {
+						TeacherView.showStatusImportFile("Successed!");
+					}else {
+						TeacherView.showStatusImportFile("Failed!");
+					}
+					break;
+				}
+				case 7: backToMain = false; break;
 			}
 		}while(backToMain);
 	}
