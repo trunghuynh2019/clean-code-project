@@ -7,8 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.io.InputStream;
 import java.io.InputStreamReader;
+=======
+>>>>>>> 663dbac63f66da70460979c94e09dd3561b2c3bc
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -24,8 +27,11 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 
 import com.google.gson.stream.JsonWriter;
+<<<<<<< HEAD
 import com.google.gson.stream.JsonReader;
 
+=======
+>>>>>>> 663dbac63f66da70460979c94e09dd3561b2c3bc
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -347,6 +353,7 @@ public class SchoolService {
 		return true;
 	}
 	
+<<<<<<< HEAD
 	public List<School> writeJsonStream(OutputStream out, List<School> schools) throws IOException {
 		List<School> schoolsWriter;
 		JsonWriter writer = new JsonWriter(new OutputStreamWriter(out,"UTF-8"));
@@ -369,6 +376,26 @@ public class SchoolService {
     }
 
     public School writeSchool(JsonWriter writer, School school) throws IOException {
+=======
+	public void writeJsonStream(OutputStream out, List<School> schools) throws IOException {
+		JsonWriter writer = new JsonWriter(new OutputStreamWriter(out,"UTF-8"));
+		
+		writer.setIndent("    ");
+		writeSchoolsArray(writer, schools);
+		writer.close();
+	}
+
+    public void writeSchoolsArray(JsonWriter writer, List<School> schools) throws IOException {
+	    
+    	writer.beginArray();
+	    for (School school : schools) {
+	    	writeSchool(writer, school);
+	    }
+	    writer.endArray();
+    }
+
+    public void writeSchool(JsonWriter writer, School school) throws IOException {
+>>>>>>> 663dbac63f66da70460979c94e09dd3561b2c3bc
 	    
     	writer.beginObject();
 	    writer.name("ID").value(school.getID());
@@ -376,11 +403,18 @@ public class SchoolService {
 	    writer.name("Address").value(school.getAddress());
 	    writer.name("Number of student").value(school.getCountStudent());
 	    writer.endObject();
+<<<<<<< HEAD
 	    return school;
     }
 
 	public boolean jsonWriterToSaveData(String fileName) throws FileNotFoundException {
        File outFile= new File("src/main/resources/input/" + fileName);
+=======
+    }
+
+	public boolean jsonWriterToSaveData(String fileName) throws FileNotFoundException {
+       File outFile= new File("src/main/resources/output/" + fileName);
+>>>>>>> 663dbac63f66da70460979c94e09dd3561b2c3bc
        
        outFile.getParentFile().mkdirs();
        OutputStream os = new FileOutputStream(outFile);
@@ -394,6 +428,7 @@ public class SchoolService {
        }
        return true;
 	}
+<<<<<<< HEAD
 	
 	public List<School> readJsonStream(InputStream in) throws IOException {
 	    JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
@@ -467,4 +502,6 @@ public class SchoolService {
         }
         return schools;
  	}
+=======
+>>>>>>> 663dbac63f66da70460979c94e09dd3561b2c3bc
 }
