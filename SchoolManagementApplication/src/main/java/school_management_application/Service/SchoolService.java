@@ -457,6 +457,7 @@ public class SchoolService {
         List<School> schools = null;
     	InputStream in = new FileInputStream("src/main/resources/input/" + fileName);
         
+    	
         try {
      	   schools = readJsonStream(in);
      	   schools = importNewSchools(schools);
