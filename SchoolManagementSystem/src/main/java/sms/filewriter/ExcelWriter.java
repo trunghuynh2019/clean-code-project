@@ -1,4 +1,4 @@
-package sms.file;
+package sms.filewriter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,11 +17,11 @@ import sms.model.School.SchoolCells;
 import sms.model.Teacher;
 import sms.model.Teacher.TeacherCells;
 
-public class ExcelExport implements FileExport {
+public class ExcelWriter implements FileWriter {
 	private String schoolFileName;
 	private String teacherFileName;
 
-	public ExcelExport(String schoolFileName, String teacherFileName) {
+	public ExcelWriter(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -43,7 +43,7 @@ public class ExcelExport implements FileExport {
 		this.teacherFileName = teacherFileName;
 	}
 	
-	public Sheet createHeader(Workbook workbook, String sheetName, String[] columns) {
+	private Sheet createHeader(Workbook workbook, String sheetName, String[] columns) {
 		Sheet sheet = workbook.createSheet(sheetName);
 
 		Font headerFont = workbook.createFont();

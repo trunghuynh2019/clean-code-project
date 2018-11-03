@@ -1,4 +1,4 @@
-package sms.file;
+package sms.filewriter;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -13,16 +13,14 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-
 import sms.model.School;
 import sms.model.Teacher;
 
-public class PdfExport implements FileExport {
+public class PdfWriter implements FileWriter {
 	private String schoolFileName;
 	private String teacherFileName;
 
-	public PdfExport(String schoolFileName, String teacherFileName) {
+	public PdfWriter(String schoolFileName, String teacherFileName) {
 		super();
 		this.schoolFileName = schoolFileName;
 		this.teacherFileName = teacherFileName;
@@ -44,14 +42,14 @@ public class PdfExport implements FileExport {
 		this.teacherFileName = teacherFileName;
 	}
 
-	public PdfPTable createTable(String[] header) {
+	private PdfPTable createTable(String[] header) {
 		PdfPTable table = new PdfPTable(header.length);
 		table.setWidthPercentage(90);
 		createHeader(table, header);
 		return table;
 	}
 
-	public void createHeader(PdfPTable table, String[] header) {
+	private void createHeader(PdfPTable table, String[] header) {
 		for (int i = 0; i < header.length; i++) {
 			PdfPCell cell = new PdfPCell();
 			cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -69,7 +67,7 @@ public class PdfExport implements FileExport {
 		FileOutputStream fileOut;
 		try {
 			fileOut = new FileOutputStream("export/pdf/" + schoolFileName);
-			PdfWriter.getInstance(pDocument, fileOut);
+			com.itextpdf.text.pdf.PdfWriter.getInstance(pDocument, fileOut);
 			pDocument.open();
 			
 			Paragraph title = new Paragraph("DANH SACH TRUONG\n	");
@@ -101,7 +99,7 @@ public class PdfExport implements FileExport {
 		FileOutputStream fileOut;
 		try {
 			fileOut = new FileOutputStream("export/pdf/" + teacherFileName);
-			PdfWriter.getInstance(pDocument, fileOut);
+			com.itextpdf.text.pdf.PdfWriter.getInstance(pDocument, fileOut);
 			pDocument.open();
 			
 			Paragraph title = new Paragraph("DANH SACH GIAO VIEN\n");

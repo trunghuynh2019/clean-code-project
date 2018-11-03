@@ -5,11 +5,11 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 
-import sms.file.ExcelExport;
-import sms.file.FileExport;
-import sms.file.HtmlExport;
-import sms.file.PdfExport;
-import sms.file.TextExport;
+import sms.filewriter.ExcelWriter;
+import sms.filewriter.FileWriter;
+import sms.filewriter.HtmlWriter;
+import sms.filewriter.PdfWriter;
+import sms.filewriter.TextWriter;
 import sms.model.School;
 import sms.service.FileExportService;
 import sms.view.MainView;
@@ -19,33 +19,33 @@ public class FileExportServiceImpl implements FileExportService {
 
 	@Override
 	public void exportToTextFile(List<School> schools, Scanner scanner) {
-		FileExport fileExport = new TextExport("truong.txt", "giaovien.txt");
-		boolean exportSuccessfully = fileExport.exportSchoolsToFile(schools)
-				&& fileExport.exportTeachersToFile(schools);
+		FileWriter fileWriter = new TextWriter("truong.txt", "giaovien.txt");
+		boolean exportSuccessfully = fileWriter.exportSchoolsToFile(schools)
+				&& fileWriter.exportTeachersToFile(schools);
 		VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 
 	@Override
 	public void exportToExcelFile(List<School> schools, Scanner scanner) {
-		FileExport fileExport = new ExcelExport("truong.xlsx", "giaovien.xlsx");
-		boolean exportSuccessfully = fileExport.exportSchoolsToFile(schools)
-				&& fileExport.exportTeachersToFile(schools);
+		FileWriter fileWriter = new ExcelWriter("truong.xlsx", "giaovien.xlsx");
+		boolean exportSuccessfully = fileWriter.exportSchoolsToFile(schools)
+				&& fileWriter.exportTeachersToFile(schools);
 		VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 
 	@Override
 	public void exportToPdfFile(List<School> schools, Scanner scanner) {
-		FileExport fileExport = new PdfExport("truong.pdf", "giaovien.pdf");
-		boolean exportSuccessfully = fileExport.exportSchoolsToFile(schools)
-				&& fileExport.exportTeachersToFile(schools);
+		FileWriter fileWriter = new PdfWriter("truong.pdf", "giaovien.pdf");
+		boolean exportSuccessfully = fileWriter.exportSchoolsToFile(schools)
+				&& fileWriter.exportTeachersToFile(schools);
 		VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 
 	@Override
 	public void exportToHtmlFile(List<School> schools, Scanner scanner) {
-		FileExport fileExport = new HtmlExport("truong.html", "giaovien.html");
-		boolean exportSuccessfully = fileExport.exportSchoolsToFile(schools)
-				&& fileExport.exportTeachersToFile(schools);
+		FileWriter fileWriter = new HtmlWriter("truong.html", "giaovien.html");
+		boolean exportSuccessfully = fileWriter.exportSchoolsToFile(schools)
+				&& fileWriter.exportTeachersToFile(schools);
 		VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 

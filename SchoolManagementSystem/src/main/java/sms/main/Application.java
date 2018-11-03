@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.google.gson.JsonElement;
-
-import sms.file.JsonExport;
+import sms.filewriter.JsonWriter;
 import sms.model.School;
 import sms.repository.SchoolRepo;
 import sms.repository.TeacherRepo;
@@ -56,7 +54,7 @@ public class Application {
 			case 4: {
 				FileImportService service = new FileImportServiceImpl();
 				service.importByTextFile(schools, scanner);
-				System.out.println(new JsonExport().exportSchoolToJson(schools));
+				System.out.println(new JsonWriter().exportSchoolToJson(schools));
 				break;
 			}
 			case 5: {

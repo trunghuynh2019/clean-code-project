@@ -6,7 +6,7 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import sms.file.ExcelExport;
+import sms.filewriter.ExcelWriter;
 import sms.model.School;
 
 public class ExcelExportTest extends TestCase {
@@ -19,7 +19,7 @@ public class ExcelExportTest extends TestCase {
 			"Quang Ngai");
 	private static final List<School> SCHOOLS = Arrays.asList(SCHOOL1, SCHOOL2);
 
-	private static ExcelExport export;
+	private static ExcelWriter export;
 
 	public ExcelExportTest(String testName) {
 		super(testName);
@@ -30,13 +30,13 @@ public class ExcelExportTest extends TestCase {
 	}
 	
 	public void testWriteSchoolToExcelFileSuccessfully() {
-		export = new ExcelExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		export = new ExcelWriter(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
 		boolean result = export.exportSchoolsToFile(SCHOOLS);
 		assertTrue(result);
 	}
 	
 	public void testWriteTeacherToExcelFileSuccessfully() {
-		export = new ExcelExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		export = new ExcelWriter(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
 		boolean result = export.exportTeachersToFile(SCHOOLS);
 		assertTrue(result);
 	}

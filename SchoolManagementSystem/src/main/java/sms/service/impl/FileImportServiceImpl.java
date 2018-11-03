@@ -3,7 +3,8 @@ package sms.service.impl;
 import java.util.List;
 import java.util.Scanner;
 
-import sms.file.TextExport;
+import sms.filereader.FileReader;
+import sms.filereader.TextReader;
 import sms.model.School;
 import sms.service.FileImportService;
 import sms.view.MainView;
@@ -17,10 +18,10 @@ public class FileImportServiceImpl implements FileImportService{
 		String schoolFile = scanner.nextLine();
 		VIEW.enterTeacherFileName();
 		String teacherFile = scanner.nextLine();
-		TextExport textExport = new TextExport(schoolFile, teacherFile);
+		FileReader textReader = new TextReader(schoolFile, teacherFile);
 
-		boolean importSuccessfully = textExport.importSchoolFromTextFile(schools)
-				&& textExport.importTeacherFromTextFile(schools);
+		boolean importSuccessfully = textReader.importSchoolFromFile(schools)
+				&& textReader.importTeacherFromFile(schools);
 		VIEW.importFileResult(importSuccessfully, scanner);
 		return importSuccessfully;
 	}

@@ -1,4 +1,4 @@
-package sms.file;
+package sms.filewriter;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import sms.model.School;
 import sms.model.Teacher;
 import sms.repository.impl.SchoolRepoImpl;
 
-public class JsonExport {
+public class JsonWriter {
 	public boolean importSchoolFromJson(List<School> schools, String schoolJson) {
 		schools = new Gson().fromJson(schoolJson, new TypeToken<List<School>>() {
 		}.getType());

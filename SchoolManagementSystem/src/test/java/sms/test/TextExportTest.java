@@ -9,14 +9,17 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import sms.file.JsonExport;
-import sms.file.TextExport;
+import sms.filereader.FileReader;
+import sms.filereader.TextReader;
+import sms.filewriter.FileWriter;
+import sms.filewriter.TextWriter;
 import sms.model.School;
 
 public class TextExportTest extends TestCase {
 	private static final String SCHOOL_FILE_NAME = "truong.txt";
 	private static final String TEACHER_FILE_NAME = "giaovien.txt";
-	private static TextExport export;
+	private static FileReader importFile;
+	private static FileWriter exportFile;
 	private static List<School> schools = new ArrayList<School>();
 	private static final School SCHOOL1 = new School("nbk-vl", "Truong trung hoc Chuyen Nguyen Binh Khiem", 2000,
 			"Vinh Long");
@@ -33,44 +36,44 @@ public class TextExportTest extends TestCase {
 	}
 	
 	public void testReadSchoolFromTextFileSuccessfully() {
-		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		assertTrue(export.importSchoolFromTextFile(schools));
+		importFile = new TextReader(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		assertTrue(importFile.importSchoolFromFile(schools));
 	}
 	
 	public void testReadSchoolFromTextFileNotFound() {
-		export = new TextExport("a.txt", TEACHER_FILE_NAME);
-		assertFalse(export.importSchoolFromTextFile(schools));
+		importFile = new TextReader("a.txt", TEACHER_FILE_NAME);
+		assertFalse(importFile.importSchoolFromFile(schools));
 	}
 	
 	public void testReadTeacherFromTextFileSuccessful() {
-		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		assertTrue(export.importTeacherFromTextFile(schools));
+		importFile = new TextReader(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		assertTrue(importFile.importTeacherFromFile(schools));
 	}
 	
 	public void testReadTeacherFromTextFileNotFound() {
-		export = new TextExport(SCHOOL_FILE_NAME, "b.txt");
-		assertFalse(export.importTeacherFromTextFile(schools));
+		importFile = new TextReader(SCHOOL_FILE_NAME, "b.txt");
+		assertFalse(importFile.importTeacherFromFile(schools));
 	}
 	
 	public void testAddSchoolToList() {
 		School school1 = new School("nbk-vl", "Truong trung hoc Chuyen Nguyen Binh Khiem", 2000, "Vinh Long");
 		School school2 = new School("nbk-qn", "Truong trung hoc Chuyen Nguyen Binh Khiem", 2500, "Quang Ngai");
 		List<School> expected = asList(school1, school2);
-		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		importFile = new TextReader(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
 		schools = new ArrayList<School>();
-		export.importSchoolFromTextFile(schools);
+		importFile.importSchoolFromFile(schools);
 		assertTrue(schools.equals(expected));
 	}
 	
 	public void testWriteSchoolToTextFileSuccessfully() {
-		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		boolean result = export.exportSchoolsToFile(SCHOOLS);
+		exportFile = new TextWriter(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		boolean result = exportFile.exportSchoolsToFile(SCHOOLS);
 		assertTrue(result);
 	}
 	
 	public void testWriteTeacherToTextFileSuccessfully() {
-		export = new TextExport(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
-		boolean result = export.exportTeachersToFile(SCHOOLS);
+		exportFile = new TextWriter(SCHOOL_FILE_NAME, TEACHER_FILE_NAME);
+		boolean result = exportFile.exportTeachersToFile(SCHOOLS);
 		assertTrue(result);
 	}
 }
