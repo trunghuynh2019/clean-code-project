@@ -3,7 +3,14 @@ package sms.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import sms.function.Management;
+import sms.management.file.export.ExcelExport;
+import sms.management.file.export.FileExport;
+import sms.management.file.export.HtmlExport;
+import sms.management.file.export.JSonExport;
+import sms.management.file.importt.FileImport;
+import sms.management.file.importt.JSonImport;
+import sms.management.file.importt.TextImport;
+import sms.management.function.ManagementImpl;
 import sms.model.School;
 import sms.model.Teacher;
 import junit.framework.Test;
@@ -15,8 +22,13 @@ import junit.framework.TestSuite;
  */
 public class AppTest extends TestCase {
 	
-	private static Management management = new Management();
-
+	private static ManagementImpl management = null;
+	private static FileExport fileExport = null;
+	private static FileImport fileImport = null;
+	private final static String PATH = System.getProperty("user.dir") + "\\fileData\\";
+	private final static String FILE_DATA_SCHOOL = PATH + "dataSchool";
+	private final static String FILE_DATA_TEACHER = PATH + "dataTeacher";
+	
     /**
      * Create the test case
      *
@@ -46,51 +58,125 @@ public class AppTest extends TestCase {
     /*
      * Test Management Class
      */
-    // test export data of school
-    public void testExportDataOfAllSchoolInSchoolSystem() {
+    // test import data of teacher in json file
+    public void testImportDataOfAllTeacherInSchoolSystemInJSON() {
+    	fileImport = new JSonImport();
+    	List<Teacher> teachers = new ArrayList<Teacher>();
+    	String fileName = FILE_DATA_TEACHER + ".json";
+    	
+    	fileImport.importDataOfTeacherFromFile(teachers, fileName);
+    	assertEquals(2, teachers.size());
+    }
+    
+ // test import data of teacher in json file
+    public void testImportDataOfAllSchoolInSchoolSystemInJSON() {
+    	fileImport = new JSonImport();
     	List<School> schools = new ArrayList<School>();
-    	String fileName = "dataSchool.xls";
+    	String fileName = FILE_DATA_SCHOOL + ".json";
+    	
+    	fileImport.importDataOfSchoolFromFile(schools, fileName);
+    	assertEquals(2, schools.size());
+    }
+    
+    
+    // test export data of teacher in json file
+    public void testExportDataOfAllTeacherInSchoolSystemInJSON() {
+    	fileExport = new JSonExport();
+    	List<Teacher> teachers = new ArrayList<Teacher>();
+    	String fileName = FILE_DATA_TEACHER + ".json";
+    	teachers.add(new Teacher(334442222,"Tran Van Thanh","Vinh Long"));
+    	teachers.add(new Teacher(337829999,"Nguyen Thi Tho","Quang Ngai"));
+    	
+    	boolean check = fileExport.exportDataOfTeacherToFile(teachers, fileName);
+    	assertEquals(true, check);
+    }
+    
+    // test export data of school in json file
+    public void testExportDataOfAllSchoolInSchoolSystemInJSON() {
+    	fileExport = new JSonExport();
+    	List<School> schools = new ArrayList<School>();
+    	String fileName = FILE_DATA_SCHOOL + ".json";
     	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
     	schools.add(new School("BKU", "Bach Khoa", 10, "Ho Chi Minh city", 0, null));
     	
-    	boolean check = management.exportDataOfSchoolsToExcel(schools, fileName);
+    	boolean check = fileExport.exportDataOfSchoolToFile(schools, fileName);
     	assertEquals(true, check);
     }
     
- // test export data of school
-    public void testExportDataTeacherOfEachSchool() {
+    
+    // test export data of school in html file
+    public void testExportDataOfAllTeacherInSchoolSystemInHTML() {
+    	fileExport = new HtmlExport();
     	List<Teacher> teachers = new ArrayList<Teacher>();
-    	String fileName = "dataTeacher.xls";
+    	String fileName = FILE_DATA_TEACHER + ".html";
+    	teachers.add(new Teacher(334442222,"Tran Van Thanh","Vinh Long"));
+    	teachers.add(new Teacher(337829999,"Nguyen Thi Tho","Quang Ngai"));
+    	
+    	boolean check = fileExport.exportDataOfTeacherToFile(teachers, fileName);
+    	assertEquals(true, check);
+    }
+    
+    // test export data of school in html file
+    public void testExportDataOfAllSchoolInSchoolSystemInHTML() {
+    	fileExport = new HtmlExport();
+    	List<School> schools = new ArrayList<School>();
+    	String fileName = FILE_DATA_SCHOOL + ".html";
+    	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
+    	schools.add(new School("BKU", "Bach Khoa", 10, "Ho Chi Minh city", 0, null));
+    	
+    	boolean check = fileExport.exportDataOfSchoolToFile(schools, fileName);
+    	assertEquals(true, check);
+    }
+    
+    // test export data of school in excel file
+    public void testExportDataOfAllSchoolInSchoolSystem() {
+    	fileExport = new ExcelExport();
+    	List<School> schools = new ArrayList<School>();
+    	String fileName = FILE_DATA_SCHOOL + ".xls";
+    	schools.add(new School("FPT-U", "FPT", 5, "Ho Chi Minh city", 0, null));
+    	schools.add(new School("BKU", "Bach Khoa", 10, "Ho Chi Minh city", 0, null));
+    	
+    	boolean check = fileExport.exportDataOfSchoolToFile(schools, fileName);
+    	assertEquals(true, check);
+    }
+    
+    // test export data of Teacher in excel file
+    public void testExportDataTeacherOfEachSchool() {
+    	fileExport = new ExcelExport();
+    	List<Teacher> teachers = new ArrayList<Teacher>();
+    	String fileName = FILE_DATA_TEACHER + ".xls";
     	teachers.add(new Teacher(123123123,"Teacher A","Ho Chi Minh"));
     	teachers.add(new Teacher(123564125,"Teacher B","Ho Chi Minh"));
     	
-    	boolean check = management.exportDataOfTeachersToExcel(teachers, fileName);
+    	boolean check = fileExport.exportDataOfTeacherToFile(teachers, fileName);
     	assertEquals(true, check);
     }
     
-    // test load database of school list
+    // test load database of school list from text file
     public void testLoadDataOfSchoolFromFile(){
+    	fileImport = new TextImport();
     	List<School> schools = new ArrayList<School>();
     	String fileName = "truong.txt";
-    	management.loadDatabaseOfSchool(fileName, schools);
+    	fileImport.importDataOfSchoolFromFile(schools, fileName);
     	
     	// compare with number of student in database
     	assertEquals(2, schools.size());
     }
     
-    // test load database of school list
+    // test load database of school list  from text file
     public void testLoadDataOfTeacherFromFile(){
-    	School school = new School();
-    	school.setTeachers(new ArrayList<Teacher>());
+    	fileImport = new TextImport();
+    	List<Teacher> teachers = new ArrayList<Teacher>();
     	String fileName = "giaovien.txt";
-    	management.loadDatabaseOfTeacher(fileName, school);
+    	fileImport.importDataOfTeacherFromFile(teachers, fileName);
     	
     	// compare with number of teacher in database
-    	assertEquals(2, school.getTeachers().size());
+    	assertEquals(2, teachers.size());
     }
     
     // test add new school
     public void testAddSchoolIntoSchoolSystem() {
+    	management = new ManagementImpl();
     	List<School> schools = new ArrayList<School>();
     	School school = new School();
     	management.addSchool(schools, school);
@@ -100,16 +186,17 @@ public class AppTest extends TestCase {
     
     // test Sign a Contract With Teacher
     public void testSignContractWithTeacherOfEachSchool() {
-    	School school = new School();
-    	school.setTeachers(new ArrayList<Teacher>());
+    	management = new ManagementImpl();
+    	List<Teacher> teachers = new ArrayList<Teacher>();
     	Teacher teacher = new Teacher();
-    	management.signContractWithTeacher(school, teacher);
+    	management.signContractWithTeacher(teachers, teacher);
     	
-    	assertEquals(1, school.getTeachers().size());
+    	assertEquals(1, teachers.size());
     }
     
     // test search school by id 
     public void testSearchSchoolById() {
+    	management = new ManagementImpl();
     	List<School> schools = new ArrayList<School>();
     	School school = new School();
     	school.setId("E1");
@@ -120,22 +207,22 @@ public class AppTest extends TestCase {
     
     // test search school by name
     public void testSearchTeacherByName() {
+    	management = new ManagementImpl();
     	List<Teacher> teachers = new ArrayList<Teacher>();
     	teachers.add(new Teacher());
     	teachers.get(0).setName("John Carter");
     	
-    	assertEquals(teachers.get(0), 
-    			management.searchTeacherByName(teachers, "John Carter"));
+    	assertEquals(teachers.get(0), management.searchTeacherByName(teachers, "John Carter"));
     }
     
     // test search school by address
     public void testSearchTeacherByAddress() {
+    	management = new ManagementImpl();
     	List<Teacher> teachers = new ArrayList<Teacher>();
     	teachers.add(new Teacher());
     	teachers.get(0).setAddress("Ho Chi Minh");
     	
-    	assertEquals(teachers.get(0), 
-    			management.searchTeacherByAddress(teachers, "Ho Chi Minh"));
+    	assertEquals(teachers.get(0), management.searchTeacherByAddress(teachers, "Ho Chi Minh"));
     }
     
     
