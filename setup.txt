@@ -1,0 +1,4 @@
+1. Download chrome driver for linux (or Windows, or mac, depends on your OS)
+2. Setup path in file BaseTest System.setProperty("webdriver.chrome.driver","<yourpath>");
+3. run:  mvn test
+4. Enjoy Kasparov
