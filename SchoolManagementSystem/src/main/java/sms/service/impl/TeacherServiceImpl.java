@@ -14,57 +14,57 @@ import sms.view.SchoolView;
 import sms.view.TeacherView;
 
 public class TeacherServiceImpl implements TeacherService{
-	private static final MainView VIEW = new MainView();
-	private static final SchoolView SCHOOL_VIEW = new SchoolView();
-	private static final TeacherView TEACHER_VIEW = new TeacherView();
+	private MainView view = new MainView();
+	private SchoolView schoolView = new SchoolView();
+	private TeacherView teacherView = new TeacherView();
 
 	@Override
 	public void manageTeachers(List<School> schools, Scanner scanner, SchoolRepo schoolRepo, TeacherRepo teacherRepo) {
-		SCHOOL_VIEW.displayAllSchool(schools);
-		VIEW.enterSchoolId();
+		schoolView.displayAllSchool(schools);
+		view.enterSchoolId();
 		Optional<School> opSchool = schoolRepo.findSchoolById(schools, scanner.nextLine());
 		if (!opSchool.isPresent()) {
-			SCHOOL_VIEW.displaySchoolNotFound();
+			schoolView.displaySchoolNotFound();
 			return;
 		} else {
 			do {
 				School school = opSchool.get();
-				VIEW.displayManageTeacherMenu(school);
+				view.displayManageTeacherMenu(school);
 				List<Teacher> teachers = school.getTeachers();
 				int _choice = scanner.nextInt();
 				scanner.nextLine();
 				switch (_choice) {
 				case 1: {
-					TEACHER_VIEW.displayAllTeachersOfSchool(school);
+					teacherView.displayAllTeachersOfSchool(school);
 					break;
 				}
 				case 2: {
-					VIEW.enterTeacherName();
+					view.enterTeacherName();
 					Optional<Teacher> opTeacher = teacherRepo.findTeacherByName(teachers, scanner.nextLine());
 					if (!opTeacher.isPresent()) {
-						TEACHER_VIEW.displayTeacherNotFound();
+						teacherView.displayTeacherNotFound();
 					} else {
-						TEACHER_VIEW.displayTeacher(opTeacher.get());
+						teacherView.displayTeacher(opTeacher.get());
 					}
 					break;
 				}
 				case 3: {
-					VIEW.enterTeacherId();
+					view.enterTeacherId();
 					Optional<Teacher> opTeacher = teacherRepo.findTeacherById(teachers, scanner.nextInt());
 					scanner.nextLine();
 					if (!opTeacher.isPresent()) {
-						TEACHER_VIEW.displayTeacherNotFound();
+						teacherView.displayTeacherNotFound();
 					} else {
-						TEACHER_VIEW.displayTeacher(opTeacher.get());
+						teacherView.displayTeacher(opTeacher.get());
 					}
 					break;
 				}
 				case 4: {
-					VIEW.loopAgain(scanner);
+					view.loopAgain(scanner);
 					return;
 				}
 				}
-				VIEW.loopAgain(scanner);
+				view.loopAgain(scanner);
 			} while (true);
 		}
 	}

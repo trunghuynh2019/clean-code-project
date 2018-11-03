@@ -9,20 +9,20 @@ import sms.view.MainView;
 import sms.view.SchoolView;
 
 public class SchoolServiceImpl implements SchoolService{
-	private static final MainView VIEW = new MainView();
-	private static final SchoolView SCHOOL_VIEW = new SchoolView();
+	private MainView view = new MainView();
+	private SchoolView schoolView = new SchoolView();
 
 	@Override
 	public void viewAllSchools(List<School> schools, Scanner scanner) {
-		SCHOOL_VIEW.displayAllSchool(schools);
-		VIEW.loopAgain(scanner);
+		schoolView.displayAllSchool(schools);
+		view.loopAgain(scanner);
 	}
 
 	@Override
 	public void addNewSchool(List<School> schools, Scanner scanner) {
 		School school = new School();
-		SCHOOL_VIEW.insertSchoolData(school, scanner);
+		schoolView.insertSchoolData(school, scanner);
 		schools.add(school);
-		VIEW.loopAgain(scanner);
+		view.loopAgain(scanner);
 	}
 }

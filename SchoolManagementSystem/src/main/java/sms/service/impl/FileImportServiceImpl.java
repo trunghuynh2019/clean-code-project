@@ -24,24 +24,20 @@ public class FileImportServiceImpl implements FileImportService {
 		VIEW.enterTeacherFileName();
 		String teacherFile = scanner.nextLine();
 		FileReader textReader = new TextReader(schoolFile, teacherFile);
-		// Confuse!!!
 		List<Teacher> teachers = new ArrayList<>();
 
-		boolean importSuccessfully = textReader.importSchoolFromFile(schools)
-				&& textReader.importTeacherFromFile(schools, teachers);
-		VIEW.importFileResult(importSuccessfully, scanner);
-		return importSuccessfully;
+		return textReader.importSchoolFromFile(schools) && textReader.importTeacherFromFile(schools, teachers);
+		// VIEW.importFileResult(importSuccessfully, scanner);
+		// return importSuccessfully;
 	}
 
 	@Override
 	public boolean importByJsonFile(List<School> schools, Scanner scanner) {
 		FileReader jsonReader = new JsonReader(SCHOOL_FILE + ".json", TEACHER_FILE + ".json");
-		// Confuse!!!
 		List<Teacher> teachers = new ArrayList<>();
 
-		boolean importSuccessfully = jsonReader.importSchoolFromFile(schools)
-				&& jsonReader.importTeacherFromFile(schools, teachers);
-		VIEW.loopAgain(scanner);
-		return importSuccessfully;
+		return jsonReader.importSchoolFromFile(schools) && jsonReader.importTeacherFromFile(schools, teachers);
+		// VIEW.loopAgain(scanner);
+		// return importSuccessfully;
 	}
 }

@@ -60,23 +60,28 @@ public class Application {
 				break;
 			}
 			case 4: {
-				fileImportService.importByTextFile(schools, scanner);
+				boolean successful = fileImportService.importByTextFile(schools, scanner);
+				view.importFileResult(successful, scanner);
 				break;
 			}
 			case 5: {
-				fileExportService.exportToTextFile(schools, scanner);
+				boolean successful = fileExportService.exportToTextFile(schools, scanner);
+				view.exportFileResult(successful, scanner);
 				break;
 			}
 			case 6: {
-				fileExportService.exportToExcelFile(schools, scanner);
+				boolean successful = fileExportService.exportToExcelFile(schools, scanner);
+				view.exportFileResult(successful, scanner);
 				break;
 			}
 			case 7: {
-				fileExportService.exportToPdfFile(schools, scanner);
+				boolean successful = fileExportService.exportToPdfFile(schools, scanner);
+				view.exportFileResult(successful, scanner);
 				break;
 			}
 			case 8: {
-				fileExportService.exportToHtmlFile(schools, scanner);
+				boolean successful = fileExportService.exportToHtmlFile(schools, scanner);
+				view.exportFileResult(successful, scanner);
 				break;
 			}
 			case 9: {
