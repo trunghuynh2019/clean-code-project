@@ -86,7 +86,7 @@
 	      <goal>java</goal>  
 	     </goals>  
 	     <configuration>  
-	      <mainClass>com.cleancode.education.App</mainClass>  
+	      <mainClass>sma.view.MainMenu</mainClass>  
 	      <arguments>  
 	       <argument>arg0</argument>  
 	       <argument>arg1</argument>  
