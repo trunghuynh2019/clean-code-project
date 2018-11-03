@@ -20,8 +20,10 @@ public class MainView {
 		System.out.println("|  1. Export All "+type+" Into Excel File  ");
 		System.out.println("|  2. Export All "+type+" Into PDF File ");
 		System.out.println("|  3. Export All "+type+" Into HTML File ");
-		System.out.println("|  4. Import All "+type+" From Text File ");
-		System.out.println("|  5. Back To Main Menu                ");
+		System.out.println("|  4. Export All "+type+" From JSON File ");
+		System.out.println("|  5. Import All "+type+" From JSON File ");
+		System.out.println("|  6. Import All "+type+" From Text File ");
+		System.out.println("|  7. Back To Main Menu                ");
 		System.out.println("==============================================");
 		System.out.print("Please Enter Your Choice: ");
 	}

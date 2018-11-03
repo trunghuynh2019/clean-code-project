@@ -1,6 +1,5 @@
 package sms.view;
 
-import java.util.List;
 import java.util.Scanner;
 
 import sms.model.*;
@@ -12,20 +11,6 @@ public class TeacherView {
 
 	public static void showTeacherNotFound() {
 		System.out.println("Teacher not found!");
-	}
-	
-	public static void showAllTeachers(School school) {
-		if (school.getNumberOfTeachers() == 0) {
-			showMessageEmptyTeacherList();
-		}
-		else {
-			int i = 1;
-			List<Teacher> teachers = school.getTeachers();
-			for (Teacher teacher : teachers) {
-				System.out.println("Teacher " + i++ + ":");
-				showInformationOfTeacher(teacher);
-			}
-		}
 	}
 
 	public static void enterInformationOfTeacher(Teacher teacher, Scanner scanner) {
@@ -58,5 +43,13 @@ public class TeacherView {
 	
 	public static void enterFileNameOfTeacher() {
 		System.out.print("Enter file name for loading information of teacher: ");
+	}
+	
+	public static void showStatusExportFile(String status) {
+		System.out.println("Export Data Of School "+status);
+	}
+	
+	public static void showStatusImportFile(String status) {
+		System.out.println("Import Data Of School "+status);
 	}
 }

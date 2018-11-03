@@ -2,7 +2,6 @@ package sms.view;
 
 import sms.model.*;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class SchoolView {
@@ -14,16 +13,6 @@ public class SchoolView {
 		System.out.println("School has not found!");
 	}
 
-	public static void showAllSchool(List<School> schools) {
-		if (schools.isEmpty()) {
-			System.out.println("The school list is empty!");
-		}
-		else {
-			for (School school : schools) {
-				showInformationOfSchool(school);
-			}
-		}
-	}
 
 	public static void enterInformationOfSchool(School school, Scanner scanner) {
 		// add school's information
@@ -46,5 +35,17 @@ public class SchoolView {
 	
 	public static void enterSchoolId() {
 		System.out.print("Enter a school ID to manage its teacher list: ");
+	}
+	
+	public static void showEmptySchool() {
+		System.out.println("The school list is empty!");
+	}
+	
+	public static void showStatusExportFile(String status) {
+		System.out.println("Export Data Of School "+status);
+	}
+	
+	public static void showStatusImportFile(String status) {
+		System.out.println("Import Data Of School "+status);
 	}
 }
