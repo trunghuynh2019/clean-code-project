@@ -15,34 +15,30 @@ import sms.service.FileExportService;
 public class FileExportServiceImpl implements FileExportService {
 	private static final String SCHOOL_FILE = "truong";
 	private static final String TEACHER_FILE = "giaovien";
-	// private static final MainView VIEW = new MainView();
 
 	@Override
 	public boolean exportToTextFile(List<School> schools, Scanner scanner) {
 		FileWriter fileWriter = new TextWriter(SCHOOL_FILE + ".txt", TEACHER_FILE + ".txt");
 		return fileWriter.exportSchoolsToFile(schools) && fileWriter.exportTeachersToFile(schools);
-		// VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 
 	@Override
 	public boolean exportToExcelFile(List<School> schools, Scanner scanner) {
 		FileWriter fileWriter = new ExcelWriter(SCHOOL_FILE + ".xlsx", TEACHER_FILE + ".xlsx");
 		return fileWriter.exportSchoolsToFile(schools) && fileWriter.exportTeachersToFile(schools);
-		// VIEW.exportFileResult(exportSuccessfully, scanner);
+
 	}
 
 	@Override
 	public boolean exportToPdfFile(List<School> schools, Scanner scanner) {
 		FileWriter fileWriter = new PdfWriter(SCHOOL_FILE + ".pdf", TEACHER_FILE + ".pdf");
 		return fileWriter.exportSchoolsToFile(schools) && fileWriter.exportTeachersToFile(schools);
-		// VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 
 	@Override
 	public boolean exportToHtmlFile(List<School> schools, Scanner scanner) {
 		FileWriter fileWriter = new HtmlWriter(SCHOOL_FILE + ".html", TEACHER_FILE + ".html");
 		return fileWriter.exportSchoolsToFile(schools) && fileWriter.exportTeachersToFile(schools);
-		// VIEW.exportFileResult(exportSuccessfully, scanner);
 	}
 
 	@Override
